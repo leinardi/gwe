@@ -1,0 +1,14 @@
+build/
+dist/
+*.egg-info/
+*.egg
+*.py[cod]
+__pycache__/
+*.so
+*~
+/.idea
+*.autosave
+/.mypy_cache/
+.dmypy.json
+/venv/
+/gwe/data/gwe.db
