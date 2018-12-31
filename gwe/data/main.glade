@@ -283,9 +283,9 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                   <object class="GtkFrame">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">6</property>
+                    <property name="margin_left">10</property>
                     <property name="margin_right">6</property>
-                    <property name="margin_top">1</property>
+                    <property name="margin_top">2</property>
                     <property name="margin_bottom">3</property>
                     <property name="label_xalign">0.5</property>
                     <property name="shadow_type">in</property>
@@ -302,8 +302,8 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="can_focus">False</property>
                             <property name="margin_top">2</property>
                             <property name="margin_bottom">4</property>
-                            <property name="row_spacing">4</property>
-                            <property name="column_spacing">8</property>
+                            <property name="row_spacing">5</property>
+                            <property name="column_spacing">10</property>
                             <child>
                               <object class="GtkLabel" id="gpu_name_label">
                                 <property name="visible">True</property>
@@ -675,7 +675,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                   <object class="GtkFrame">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">6</property>
+                    <property name="margin_left">10</property>
                     <property name="margin_right">6</property>
                     <property name="margin_top">1</property>
                     <property name="margin_bottom">3</property>
@@ -694,8 +694,8 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="can_focus">False</property>
                             <property name="margin_top">2</property>
                             <property name="margin_bottom">4</property>
-                            <property name="row_spacing">4</property>
-                            <property name="column_spacing">8</property>
+                            <property name="row_spacing">5</property>
+                            <property name="column_spacing">10</property>
                             <child>
                               <object class="GtkLabel" id="gpu_power_draw_label">
                                 <property name="visible">True</property>
@@ -874,7 +874,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                   <object class="GtkFrame">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">6</property>
+                    <property name="margin_left">10</property>
                     <property name="margin_right">6</property>
                     <property name="margin_top">1</property>
                     <property name="margin_bottom">3</property>
@@ -893,8 +893,8 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="can_focus">False</property>
                             <property name="margin_top">2</property>
                             <property name="margin_bottom">4</property>
-                            <property name="row_spacing">4</property>
-                            <property name="column_spacing">8</property>
+                            <property name="row_spacing">5</property>
+                            <property name="column_spacing">10</property>
                             <child>
                               <object class="GtkLabel" id="gpu_clock_graphics_label">
                                 <property name="visible">True</property>
@@ -1078,7 +1078,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">6</property>
+                    <property name="margin_left">10</property>
                     <property name="margin_right">6</property>
                     <property name="margin_top">1</property>
                     <property name="margin_bottom">3</property>
@@ -1097,8 +1097,8 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="can_focus">False</property>
                             <property name="margin_top">2</property>
                             <property name="margin_bottom">4</property>
-                            <property name="row_spacing">4</property>
-                            <property name="column_spacing">8</property>
+                            <property name="row_spacing">5</property>
+                            <property name="column_spacing">10</property>
                             <child>
                               <object class="GtkLabel" id="gpu_name_label24">
                                 <property name="visible">True</property>
@@ -1204,8 +1204,8 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">6</property>
-                    <property name="margin_right">6</property>
-                    <property name="margin_top">1</property>
+                    <property name="margin_right">10</property>
+                    <property name="margin_top">2</property>
                     <property name="margin_bottom">3</property>
                     <property name="label_xalign">0.5</property>
                     <property name="shadow_type">in</property>
@@ -1222,8 +1222,8 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="can_focus">False</property>
                             <property name="margin_top">2</property>
                             <property name="margin_bottom">4</property>
-                            <property name="row_spacing">6</property>
-                            <property name="column_spacing">8</property>
+                            <property name="row_spacing">8</property>
+                            <property name="column_spacing">10</property>
                             <property name="column_homogeneous">True</property>
                             <child>
                               <object class="GtkLabel">
@@ -1244,7 +1244,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel" id="temp_gpu_value">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="xx-large"&gt;-&lt;/span&gt; °C</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1273,7 +1272,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel" id="temp_max_gpu_value">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; °C</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1302,7 +1300,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel" id="temp_slowdown_value">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; °C</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1331,7 +1328,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel" id="temp_shutdown_value">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; °C</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1364,7 +1360,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">6</property>
-                    <property name="margin_right">6</property>
+                    <property name="margin_right">10</property>
                     <property name="margin_top">1</property>
                     <property name="margin_bottom">3</property>
                     <property name="label_xalign">0.5</property>
@@ -1382,8 +1378,8 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="can_focus">False</property>
                             <property name="margin_top">2</property>
                             <property name="margin_bottom">4</property>
-                            <property name="row_spacing">6</property>
-                            <property name="column_spacing">8</property>
+                            <property name="row_spacing">8</property>
+                            <property name="column_spacing">10</property>
                             <property name="column_homogeneous">True</property>
                             <child>
                               <object class="GtkLabel">
@@ -1403,7 +1399,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkLabel" id="fan_duty_0">
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; %</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1431,7 +1426,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkLabel" id="fan_rpm_0">
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; RPM</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1444,7 +1438,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkLabel" id="fan_duty_1">
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; %</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1457,7 +1450,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkLabel" id="fan_duty_2">
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; %</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1470,7 +1462,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkLabel" id="fan_rpm_1">
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; RPM</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1483,7 +1474,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkLabel" id="fan_rpm_2">
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; RPM</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1496,7 +1486,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkLabel" id="fan_duty_3">
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; %</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1509,7 +1498,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkLabel" id="fan_duty_4">
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; %</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1522,7 +1510,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkLabel" id="fan_rpm_3">
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; RPM</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1535,7 +1522,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkLabel" id="fan_rpm_4">
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">&lt;span size="large"&gt;-&lt;/span&gt; RPM</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">center</property>
                                 <property name="single_line_mode">True</property>
@@ -1568,7 +1554,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">6</property>
-                    <property name="margin_right">6</property>
+                    <property name="margin_right">10</property>
                     <property name="margin_top">10</property>
                     <property name="margin_bottom">3</property>
                     <property name="label_xalign">0</property>
@@ -1587,7 +1573,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="margin_top">6</property>
                             <property name="margin_bottom">6</property>
                             <property name="orientation">vertical</property>
-                            <property name="spacing">6</property>
+                            <property name="spacing">10</property>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>

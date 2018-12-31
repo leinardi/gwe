@@ -20,6 +20,7 @@ from collections import OrderedDict
 from typing import Optional, Dict, Any, List, Tuple
 
 from gwe.di import MainBuilder
+from gwe.repository import NOT_AVAILABLE_STRING
 from gwe.view.edit_speed_profile import EditSpeedProfileView
 from gwe.util.path import get_data_path
 from gwe.util.view import hide_on_delete, init_plot_chart, get_speed_profile_data
@@ -225,19 +226,19 @@ class MainView(MainViewInterface):
             gpu_status = status.gpu_status_list[0]
             if self._first_refresh:
                 self._first_refresh = False
-                self._gpu_name_entry.set_text(gpu_status.info.name)
-                self._gpu_vbios_entry.set_text(gpu_status.info.vbios)
-                self._gpu_driver_entry.set_text(gpu_status.info.driver)
-                self._gpu_cuda_entry.set_text(gpu_status.info.cuda_cores)
-                self._gpu_uuid_entry.set_text(gpu_status.info.uuid)
-                self._gpu_memory_interface_entry.set_text(gpu_status.info.memory_interface)
-                self._gpu_power_min_entry.set_text(gpu_status.power.minimum)
-                self._gpu_power_max_entry.set_text(gpu_status.power.maximum)
-                self._temp_max_gpu_value.set_markup(
+                self._set_entry_text(self._gpu_name_entry, gpu_status.info.name)
+                self._set_entry_text(self._gpu_vbios_entry, gpu_status.info.vbios)
+                self._set_entry_text(self._gpu_driver_entry, gpu_status.info.driver)
+                self._set_entry_text(self._gpu_cuda_entry, gpu_status.info.cuda_cores)
+                self._set_entry_text(self._gpu_uuid_entry, gpu_status.info.uuid)
+                self._set_entry_text(self._gpu_memory_interface_entry, gpu_status.info.memory_interface)
+                self._set_entry_text(self._gpu_power_min_entry, gpu_status.power.minimum)
+                self._set_entry_text(self._gpu_power_max_entry, gpu_status.power.maximum)
+                self._set_label_markup(self._temp_max_gpu_value,
                     "<span size=\"large\">%s</span> °C" % gpu_status.temp.maximum.rstrip(' C'))
-                self._temp_slowdown_value.set_markup(
+                self._set_label_markup(self._temp_slowdown_value,
                     "<span size=\"large\">%s</span> °C" % gpu_status.temp.slowdown.rstrip(' C'))
-                self._temp_shutdown_value.set_markup(
+                self._set_label_markup(self._temp_shutdown_value,
                     "<span size=\"large\">%s</span> °C" % gpu_status.temp.shutdown.rstrip(' C'))
                 self._overclock_frame.set_sensitive(gpu_status.overclock.available)
                 if gpu_status.overclock.available:
@@ -248,33 +249,33 @@ class MainView(MainViewInterface):
                     self._gpu_clock_offset_scale.clear_marks()
                     self._gpu_clock_offset_scale.add_mark(0, Gtk.PositionType.BOTTOM, str(0))
 
-            self._gpu_pcie_entry.set_text(gpu_status.info.pcie)
-            self._gpu_memory_entry.set_text(gpu_status.info.memory_size)
-            self._gpu_memory_usage_entry.set_text(gpu_status.info.memory_usage)
-            self._gpu_usage_entry.set_text(gpu_status.info.gpu_usage)
-            self._gpu_encoder_usage_entry.set_text(gpu_status.info.encoder_usage)
-            self._gpu_decoder_usage_entry.set_text(gpu_status.info.decoder_usage)
-            self._gpu_power_draw_entry.set_text(gpu_status.power.draw)
-            self._gpu_power_limit_entry.set_text(gpu_status.power.limit)
-            self._gpu_power_default_entry.set_text(gpu_status.power.default)
-            self._gpu_power_enforced_entry.set_text(gpu_status.power.enforced)
-            self._gpu_clock_graphics_current_entry.set_text(gpu_status.clocks.graphic_current)
-            self._gpu_clock_graphics_max_entry.set_text(gpu_status.clocks.graphic_max)
-            self._gpu_clock_sm_current_entry.set_text(gpu_status.clocks.sm_current)
-            self._gpu_clock_sm_max_entry.set_text(gpu_status.clocks.sm_max)
-            self._gpu_clock_memory_current_entry.set_text(gpu_status.clocks.memory_current)
-            self._gpu_clock_memory_max_entry.set_text(gpu_status.clocks.memory_max)
-            self._gpu_clock_video_current_entry.set_text(gpu_status.clocks.video_current)
-            self._gpu_clock_video_max_entry.set_text(gpu_status.clocks.video_max)
+            self._set_entry_text(self._gpu_pcie_entry, gpu_status.info.pcie)
+            self._set_entry_text(self._gpu_memory_entry, gpu_status.info.memory_size)
+            self._set_entry_text(self._gpu_memory_usage_entry, gpu_status.info.memory_usage)
+            self._set_entry_text(self._gpu_usage_entry, gpu_status.info.gpu_usage)
+            self._set_entry_text(self._gpu_encoder_usage_entry, gpu_status.info.encoder_usage)
+            self._set_entry_text(self._gpu_decoder_usage_entry, gpu_status.info.decoder_usage)
+            self._set_entry_text(self._gpu_power_draw_entry, gpu_status.power.draw)
+            self._set_entry_text(self._gpu_power_limit_entry, gpu_status.power.limit)
+            self._set_entry_text(self._gpu_power_default_entry, gpu_status.power.default)
+            self._set_entry_text(self._gpu_power_enforced_entry, gpu_status.power.enforced)
+            self._set_entry_text(self._gpu_clock_graphics_current_entry, gpu_status.clocks.graphic_current)
+            self._set_entry_text(self._gpu_clock_graphics_max_entry, gpu_status.clocks.graphic_max)
+            self._set_entry_text(self._gpu_clock_sm_current_entry, gpu_status.clocks.sm_current)
+            self._set_entry_text(self._gpu_clock_sm_max_entry, gpu_status.clocks.sm_max)
+            self._set_entry_text(self._gpu_clock_memory_current_entry, gpu_status.clocks.memory_current)
+            self._set_entry_text(self._gpu_clock_memory_max_entry, gpu_status.clocks.memory_max)
+            self._set_entry_text(self._gpu_clock_video_current_entry, gpu_status.clocks.video_current)
+            self._set_entry_text(self._gpu_clock_video_max_entry, gpu_status.clocks.video_max)
             self._set_level_bar(self._gpu_memory_usage_levelbar, gpu_status.info.memory_usage)
             self._set_level_bar(self._gpu_usage_levelbar, gpu_status.info.gpu_usage)
             self._set_level_bar(self._gpu_encoder_usage_levelbar, gpu_status.info.encoder_usage)
             self._set_level_bar(self._gpu_decoder_usage_levelbar, gpu_status.info.decoder_usage)
-            self._temp_gpu_value.set_markup("<span size=\"xx-large\">%s</span> °C" % gpu_status.temp.gpu.rstrip(' C'))
+            self._set_label_markup(self._temp_gpu_value, "<span size=\"xx-large\">%s</span> °C" % gpu_status.temp.gpu.rstrip(' C'))
             for index, value in enumerate(self._fan_duty):
                 if index < len(gpu_status.fan.fan_list):
-                    value.set_markup("<span size=\"large\">%d</span> %%" % gpu_status.fan.fan_list[index][0])
-                    self._fan_rpm[index].set_markup(
+                    self._set_label_markup(value, "<span size=\"large\">%d</span> %%" % gpu_status.fan.fan_list[index][0])
+                    self._set_label_markup(self._fan_rpm[index],
                         "<span size=\"large\">%d</span> RPM" % gpu_status.fan.fan_list[index][1])
                 else:
                     value.set_visible(False)
@@ -301,12 +302,32 @@ class MainView(MainViewInterface):
         #             self._app_indicator.set_label("", "")
 
     @staticmethod
+    def _set_entry_text(label: Gtk.Entry, text: str) -> None:
+        if text and text != NOT_AVAILABLE_STRING:
+            label.set_sensitive(True)
+            label.set_text(text)
+        else:
+            label.set_sensitive(False)
+            label.set_text('')
+
+    @staticmethod
+    def _set_label_markup(label: Gtk.Label, markup: str) -> None:
+        if markup and NOT_AVAILABLE_STRING not in markup:
+            label.set_sensitive(True)
+            label.set_markup(markup)
+        else:
+            label.set_sensitive(False)
+            label.set_markup('')
+
+    @staticmethod
     def _set_level_bar(levelbar: Gtk.LevelBar, value: str) -> None:
         value_stripped = value.rstrip(' %')
         if value_stripped.isdigit():
             levelbar.set_value(int(value_stripped))
+            levelbar.set_sensitive(True)
         else:
             levelbar.set_value(0)
+            levelbar.set_sensitive(False)
 
     def refresh_chart(self, profile: Optional[SpeedProfile] = None, reset: Optional[str] = None) -> None:
         if profile is None and reset is None:

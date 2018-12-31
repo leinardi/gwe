@@ -100,7 +100,6 @@ class NvidiaRepository:
             gpu_index = 0
             for gpu in root.findall('gpu'):
                 gpu.append(root.find('driver_version'))
-                gpu.append(root.find('cuda_version'))
                 info = self._get_info_from_smi_xml(gpu)
                 info.cuda_cores = query_gpu_setting(gpu_index, 'CUDACores')
                 info.memory_interface = query_gpu_setting(gpu_index, 'GPUMemoryInterface') + ' bit'
@@ -125,17 +124,18 @@ class NvidiaRepository:
 
     @staticmethod
     def _get_info_from_smi_xml(gpu: Element) -> Info:
+        max_link_width = gpu.find('pci').find('pci_gpu_link_info').find('link_widths').find('max_link_width').text
+        pcie = "%s Gen%s @ %s Gen%s" % (
+            max_link_width,
+            gpu.find('pci').find('pci_gpu_link_info').find('pcie_gen').find('max_link_gen').text,
+            gpu.find('pci').find('pci_gpu_link_info').find('link_widths').find('current_link_width').text,
+            gpu.find('pci').find('pci_gpu_link_info').find('pcie_gen').find('current_link_gen').text,
+        ) if max_link_width != NOT_AVAILABLE_STRING else NOT_AVAILABLE_STRING
         return Info(
             name=gpu.find('product_name').text,
             vbios=gpu.find('vbios_version').text,
             driver=gpu.find('driver_version').text,
-            pcie="%s Gen%s @ %s Gen%s" % (
-                gpu.find('pci').find('pci_gpu_link_info').find('link_widths').find('max_link_width').text,
-                gpu.find('pci').find('pci_gpu_link_info').find('pcie_gen').find('max_link_gen').text,
-                gpu.find('pci').find('pci_gpu_link_info').find('link_widths').find('current_link_width').text,
-                gpu.find('pci').find('pci_gpu_link_info').find('pcie_gen').find('current_link_gen').text,
-            ),
-            cuda_version=gpu.find('cuda_version').text,
+            pcie=pcie,
             cuda_cores=NOT_AVAILABLE_STRING,
             uuid=gpu.find('uuid').text,
             memory_size="%s / %s" %
@@ -162,11 +162,14 @@ class NvidiaRepository:
 
     @staticmethod
     def _get_temp_from_smi_xml(gpu: Element) -> Temp:
+        maximum_element = gpu.find('temperature').find('gpu_temp_max_gpu_threshold')
+        slowdown_element = gpu.find('temperature').find('gpu_temp_slow_threshold')
+        shutdown_element = gpu.find('temperature').find('gpu_temp_max_threshold')
         return Temp(
             gpu=gpu.find('temperature').find('gpu_temp').text,
-            maximum=gpu.find('temperature').find('gpu_temp_max_gpu_threshold').text,
-            slowdown=gpu.find('temperature').find('gpu_temp_slow_threshold').text,
-            shutdown=gpu.find('temperature').find('gpu_temp_max_threshold').text,
+            maximum=maximum_element.text if maximum_element is not None else NOT_AVAILABLE_STRING,
+            slowdown=slowdown_element.text if slowdown_element is not None else NOT_AVAILABLE_STRING,
+            shutdown=shutdown_element.text if shutdown_element is not None else NOT_AVAILABLE_STRING,
         )
 
     @staticmethod
@@ -178,8 +181,10 @@ class NvidiaRepository:
             sm_max=gpu.find('max_clocks').find('sm_clock').text,
             memory_current=gpu.find('clocks').find('mem_clock').text,
             memory_max=gpu.find('max_clocks').find('mem_clock').text,
-            video_current=gpu.find('clocks').find('video_clock').text,
-            video_max=gpu.find('max_clocks').find('video_clock').text,
+            video_current=gpu.find('clocks').find('video_clock').text if gpu.find('clocks').find(
+                'video_clock') is not None else NOT_AVAILABLE_STRING,
+            video_max=gpu.find('max_clocks').find('video_clock').text if gpu.find('clocks').find(
+                'video_clock') is not None else NOT_AVAILABLE_STRING
         )
 
     @staticmethod

@@ -37,7 +37,6 @@ class Info:
                  vbios: str,
                  driver: str,
                  pcie: str,
-                 cuda_version: str,
                  cuda_cores: str,
                  uuid: str,
                  memory_size: str,
@@ -51,7 +50,6 @@ class Info:
         self.vbios: str = vbios
         self.driver: str = driver
         self.pcie: str = pcie
-        self.cuda_version: str = cuda_version
         self.cuda_cores: str = cuda_cores
         self.uuid: str = uuid
         self.memory_size: str = memory_size
