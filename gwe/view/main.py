@@ -82,6 +82,8 @@ class MainView(MainViewInterface):
         self._main_infobar.set_revealed(False)
         self._statusbar: Gtk.Statusbar = self._builder.get_object('statusbar')
         self._context = self._statusbar.get_context_id(APP_PACKAGE_NAME)
+        self._app_version: Gtk.Label = self._builder.get_object('app_version')
+        self._app_version.set_label("%s %s" % (APP_NAME, APP_VERSION))
         self._about_dialog: Gtk.AboutDialog = self._builder.get_object("about_dialog")
         self._init_about_dialog()
 
@@ -133,6 +135,7 @@ class MainView(MainViewInterface):
             self._builder.get_object('fan_rpm_3'),
             self._builder.get_object('fan_rpm_4')
         )
+        self._overclock_frame: Gtk.Frame = self._builder.get_object('overclock_frame')
         self._gpu_clock_offset_scale: Gtk.Scale = self._builder.get_object('gpu_clock_offset_scale')
         self._mem_clock_offset_scale: Gtk.Scale = self._builder.get_object('mem_clock_offset_scale')
         self._gpu_clock_offset_adjustment: Gtk.Adjustment = self._builder.get_object('gpu_clock_offset_adjustment')
@@ -142,7 +145,6 @@ class MainView(MainViewInterface):
         # self._cooling_fan_rpm: Gtk.Label = self._builder.get_object('cooling_fan_rpm')
         # self._cooling_liquid_temp: Gtk.Label = self._builder.get_object('cooling_liquid_temp')
         # self._cooling_pump_rpm: Gtk.Label = self._builder.get_object('cooling_pump_rpm')
-        # self._firmware_version: Gtk.Label = self._builder.get_object('firmware_version')
         # self._cooling_fan_combobox: Gtk.ComboBox = self._builder.get_object('cooling_fan_profile_combobox')
         # self._cooling_fan_liststore: Gtk.ListStore = self._builder.get_object('cooling_fan_profile_liststore')
         # self._cooling_pump_combobox: Gtk.ComboBox = self._builder.get_object('cooling_pump_profile_combobox')
@@ -237,6 +239,7 @@ class MainView(MainViewInterface):
                     "<span size=\"large\">%s</span> °C" % gpu_status.temp.slowdown.rstrip(' C'))
                 self._temp_shutdown_value.set_markup(
                     "<span size=\"large\">%s</span> °C" % gpu_status.temp.shutdown.rstrip(' C'))
+                self._overclock_frame.set_sensitive(gpu_status.overclock.available)
                 if gpu_status.overclock.available:
                     self._gpu_clock_offset_adjustment.set_value(gpu_status.overclock.gpu_offset)
                     self._mem_clock_offset_adjustment.set_value(gpu_status.overclock.memory_offset)
@@ -282,12 +285,11 @@ class MainView(MainViewInterface):
                 self._mem_clock_offset_adjustment.set_lower(gpu_status.overclock.memory_range[0])
                 self._mem_clock_offset_adjustment.set_upper(gpu_status.overclock.memory_range[1])
 
-        #     self._cooling_fan_rpm.set_markup("<span size=\"xx-large\">%s</span> RPM" % status.fan_rpm)
-        #     self._cooling_fan_duty.set_markup("<span size=\"xx-large\">%s</span> %%" %
-        #                                       ('-' if status.fan_duty is None else "%.0f" % status.fan_duty))
-        #     self._cooling_liquid_temp.set_markup("<span size=\"xx-large\">%s</span> °C" % status.liquid_temperature)
-        #     self._firmware_version.set_label("firmware %s - %s %s"
-        #                                      % (status.firmware_version, APP_NAME, APP_VERSION))
+            #     self._cooling_fan_rpm.set_markup("<span size=\"xx-large\">%s</span> RPM" % status.fan_rpm)
+            #     self._cooling_fan_duty.set_markup("<span size=\"xx-large\">%s</span> %%" %
+            #                                       ('-' if status.fan_duty is None else "%.0f" % status.fan_duty))
+            #     self._cooling_liquid_temp.set_markup("<span size=\"xx-large\">%s</span> °C" % status.liquid_temperature)
+
         #     if self._app_indicator:
         #         if self._settings_interactor.get_bool('settings_show_app_indicator'):
         #             self._app_indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)

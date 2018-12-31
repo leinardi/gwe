@@ -304,13 +304,13 @@ class MainPresenter:
 
     def _check_new_version(self) -> None:
         pass
-        # self._composite_disposable \
-        #     .add(self._check_new_version_interactor.execute()
-        #          .subscribe_on(self._scheduler)
-        #          .observe_on(GtkScheduler())
-        #          .subscribe(on_next=self._handle_new_version_response,
-        #                     on_error=lambda e: LOG.exception("Check new version error: %s", str(e)))
-        #          )
+        self._composite_disposable \
+            .add(self._check_new_version_interactor.execute()
+                 .subscribe_on(self._scheduler)
+                 .observe_on(GtkScheduler())
+                 .subscribe(on_next=self._handle_new_version_response,
+                            on_error=lambda e: LOG.exception("Check new version error: %s", str(e)))
+                 )
 
     def _handle_new_version_response(self, version: Optional[str]) -> None:
         if version is not None:

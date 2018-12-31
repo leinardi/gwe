@@ -103,7 +103,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
   <object class="GtkAdjustment" id="gpu_clock_offset_adjustment">
     <property name="lower">-100</property>
     <property name="upper">100</property>
-    <property name="value">-100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
@@ -156,7 +155,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
   <object class="GtkAdjustment" id="mem_clock_offset_adjustment">
     <property name="lower">-100</property>
     <property name="upper">100</property>
-    <property name="value">-100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
@@ -323,7 +321,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
-                                <property name="text">XXXXX XXXXX XXXX</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -351,7 +348,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">28</property>
-                                <property name="text">XX.XX.XX.XX.XX</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -379,7 +375,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX.XX </property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -406,7 +401,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XX.X</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -432,7 +426,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">40</property>
-                                <property name="text">GPU-XXXXXXXXX-XXXx-XXXX-XXXX-XXXXXXXXXXXX</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -459,7 +452,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
-                                <property name="text">XXx gX @ XXx gX</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -484,7 +476,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLevelBar" id="gpu_decoder_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="value">50</property>
                                 <property name="max_value">100</property>
                               </object>
                               <packing>
@@ -500,7 +491,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX %</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -524,7 +514,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLevelBar" id="gpu_encoder_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="value">50</property>
                                 <property name="max_value">100</property>
                               </object>
                               <packing>
@@ -540,7 +529,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX %</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -564,7 +552,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLevelBar" id="gpu_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="value">50</property>
                                 <property name="max_value">100</property>
                               </object>
                               <packing>
@@ -580,7 +567,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX %</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -604,7 +590,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLevelBar" id="gpu_memory_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="value">50</property>
                                 <property name="max_value">100</property>
                               </object>
                               <packing>
@@ -620,7 +605,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">5</property>
-                                <property name="text">XXXXX/XXXXX MiB</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -636,7 +620,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX %</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -663,7 +646,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX bit</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -733,7 +715,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX.XX W</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -748,7 +729,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX.XX W</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -787,7 +767,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX.XX W</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -802,7 +781,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX.XX W</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -853,7 +831,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX.XX W</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -868,7 +845,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXX.XX W</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -938,7 +914,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXXX.XX MHz</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -953,7 +928,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXXX.XX MHz</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -980,7 +954,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXXX.XX MHz</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -995,7 +968,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXXX.XX MHz</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -1034,7 +1006,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXXX.XX MHz</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -1049,7 +1020,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXXX.XX MHz</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -1064,7 +1034,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXXX.XX MHz</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -1079,7 +1048,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
-                                <property name="text">XXXX.XX MHz</property>
                                 <property name="xalign">0.5</property>
                               </object>
                               <packing>
@@ -1106,8 +1074,9 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFrame">
+                  <object class="GtkFrame" id="overclock_frame">
                     <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">6</property>
                     <property name="margin_right">6</property>
@@ -1750,7 +1719,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkLabel" id="firmware_version">
+              <object class="GtkLabel" id="app_version">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <style>
