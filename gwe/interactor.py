@@ -44,6 +44,20 @@ class GetStatusInteractor:
 
 
 @singleton
+class SetOverclockInteractor:
+    @inject
+    def __init__(self,
+                 nvidia_repository: NvidiaRepository,
+                 ) -> None:
+        self._nvidia_repository = nvidia_repository
+
+    def execute(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> Observable:
+        LOG.debug("SetOverclockInteractor.execute()")
+        return Observable.defer(
+            lambda: Observable.just(self._nvidia_repository._set_overclock(gpu_index, perf, gpu_offset, memory_offset)))
+
+
+@singleton
 class SettingsInteractor:
     @inject
     def __init__(self) -> None:

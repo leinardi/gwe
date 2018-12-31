@@ -124,12 +124,14 @@ class Overclock:
                  gpu_range: Tuple[int, int],
                  gpu_offset: int,
                  memory_range: Tuple[int, int],
-                 memory_offset: int) -> None:
+                 memory_offset: int,
+                 perf: int) -> None:
         self.available = available
         self.gpu_range = gpu_range
         self.gpu_offset = gpu_offset
         self.memory_range = memory_range
         self.memory_offset = memory_offset
+        self.perf = perf
 
 
 class GpuStatus:

@@ -100,12 +100,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkAdjustment" id="gpu_clock_offset_adjustment">
-    <property name="lower">-100</property>
-    <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
   <object class="GtkMenu" id="main_menu">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -152,7 +146,13 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
       </object>
     </child>
   </object>
-  <object class="GtkAdjustment" id="mem_clock_offset_adjustment">
+  <object class="GtkAdjustment" id="overclock_gpu_offset_adjustment">
+    <property name="lower">-100</property>
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="overclock_memory_offset_adjustment">
     <property name="lower">-100</property>
     <property name="upper">100</property>
     <property name="step_increment">1</property>
@@ -305,7 +305,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="row_spacing">5</property>
                             <property name="column_spacing">10</property>
                             <child>
-                              <object class="GtkLabel" id="gpu_name_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -317,7 +317,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_name_entry">
+                              <object class="GtkEntry" id="info_name_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
@@ -330,7 +330,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_vbios_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -342,7 +342,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_vbios_entry">
+                              <object class="GtkEntry" id="info_vbios_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -357,7 +357,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_driver_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -369,7 +369,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_driver_entry">
+                              <object class="GtkEntry" id="info_driver_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -383,7 +383,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_cuda_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -395,7 +395,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_cuda_entry">
+                              <object class="GtkEntry" id="info_cuda_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -409,7 +409,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_uuid_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -421,7 +421,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_uuid_entry">
+                              <object class="GtkEntry" id="info_uuid_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
@@ -435,7 +435,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_pcie_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -447,7 +447,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_pcie_entry">
+                              <object class="GtkEntry" id="info_pcie_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -461,7 +461,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_decoder_usage_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -473,7 +473,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLevelBar" id="gpu_decoder_usage_levelbar">
+                              <object class="GtkLevelBar" id="info_decoder_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="max_value">100</property>
@@ -485,7 +485,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_decoder_usage_entry">
+                              <object class="GtkEntry" id="info_decoder_usage_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -499,7 +499,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_encoded_usage_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -511,7 +511,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLevelBar" id="gpu_encoder_usage_levelbar">
+                              <object class="GtkLevelBar" id="info_encoder_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="max_value">100</property>
@@ -523,7 +523,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_encoder_usage_entry">
+                              <object class="GtkEntry" id="info_encoder_usage_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -537,7 +537,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_usage_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -549,7 +549,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLevelBar" id="gpu_usage_levelbar">
+                              <object class="GtkLevelBar" id="info_gpu_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="max_value">100</property>
@@ -561,7 +561,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_usage_entry">
+                              <object class="GtkEntry" id="info_gpu_usage_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -575,7 +575,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_memory_usage_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -587,7 +587,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLevelBar" id="gpu_memory_usage_levelbar">
+                              <object class="GtkLevelBar" id="info_memory_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="max_value">100</property>
@@ -599,7 +599,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_memory_entry">
+                              <object class="GtkEntry" id="info_memory_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -614,7 +614,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_memory_usage_entry">
+                              <object class="GtkEntry" id="info_memory_usage_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -628,7 +628,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_memory_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -640,7 +640,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_memory_interface_entry">
+                              <object class="GtkEntry" id="info_memory_interface_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -697,7 +697,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="row_spacing">5</property>
                             <property name="column_spacing">10</property>
                             <child>
-                              <object class="GtkLabel" id="gpu_power_draw_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -709,7 +709,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_power_draw_entry">
+                              <object class="GtkEntry" id="power_draw_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -723,7 +723,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_power_limit_entry">
+                              <object class="GtkEntry" id="power_limit_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -737,7 +737,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_power_limit_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -749,7 +749,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_power_default_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -761,7 +761,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_power_default_entry">
+                              <object class="GtkEntry" id="power_default_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -775,7 +775,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_power_min_entry">
+                              <object class="GtkEntry" id="power_min_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -789,7 +789,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_power_min_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -801,7 +801,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_power_enforced_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -813,7 +813,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_power_max_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -825,7 +825,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_power_enforced_entry">
+                              <object class="GtkEntry" id="power_enforced_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -839,7 +839,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_power_max_entry">
+                              <object class="GtkEntry" id="power_max_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -896,7 +896,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="row_spacing">5</property>
                             <property name="column_spacing">10</property>
                             <child>
-                              <object class="GtkLabel" id="gpu_clock_graphics_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -908,7 +908,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_clock_graphics_current_entry">
+                              <object class="GtkEntry" id="clocks_graphics_current_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -922,7 +922,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_clock_sm_current_entry">
+                              <object class="GtkEntry" id="clocks_sm_current_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -936,7 +936,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_clock_sm_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -948,7 +948,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_clock_memory_current_entry">
+                              <object class="GtkEntry" id="clocks_memory_current_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -962,7 +962,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_clock_video_current_entry">
+                              <object class="GtkEntry" id="clocks_video_current_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -976,7 +976,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_clock_memory_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -988,7 +988,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_clock_video_label">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -1000,7 +1000,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_clock_video_max_entry">
+                              <object class="GtkEntry" id="clocks_video_max_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -1014,7 +1014,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_clock_memory_max_entry">
+                              <object class="GtkEntry" id="clocks_memory_max_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -1028,7 +1028,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_clock_sm_max_entry">
+                              <object class="GtkEntry" id="clocks_sm_max_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -1042,7 +1042,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="gpu_clock_graphics_max_entry">
+                              <object class="GtkEntry" id="clocks_graphics_max_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
@@ -1100,7 +1100,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="row_spacing">5</property>
                             <property name="column_spacing">10</property>
                             <child>
-                              <object class="GtkLabel" id="gpu_name_label24">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -1112,7 +1112,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="gpu_name_label25">
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
@@ -1124,11 +1124,11 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkScale" id="gpu_clock_offset_scale">
+                              <object class="GtkScale" id="overclock_gpu_offset_scale">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
-                                <property name="adjustment">gpu_clock_offset_adjustment</property>
+                                <property name="adjustment">overclock_gpu_offset_adjustment</property>
                                 <property name="round_digits">1</property>
                                 <property name="digits">0</property>
                                 <property name="value_pos">left</property>
@@ -1139,14 +1139,14 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="cooling_fan_apply_button">
+                              <object class="GtkButton" id="overclock_apply_button">
                                 <property name="label">gtk-apply</property>
                                 <property name="visible">True</property>
-                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="margin_top">4</property>
                                 <property name="use_stock">True</property>
+                                <signal name="clicked" handler="on_overclock_apply_button_clicked" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="left_attach">0</property>
@@ -1155,11 +1155,11 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkScale" id="mem_clock_offset_scale">
+                              <object class="GtkScale" id="overclock_memory_offset_scale">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
-                                <property name="adjustment">mem_clock_offset_adjustment</property>
+                                <property name="adjustment">overclock_memory_offset_adjustment</property>
                                 <property name="round_digits">0</property>
                                 <property name="digits">0</property>
                                 <property name="value_pos">left</property>

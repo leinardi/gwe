@@ -29,7 +29,7 @@ from rx.disposables import CompositeDisposable
 from gwe.conf import SETTINGS_DEFAULTS, APP_NAME, APP_SOURCE_URL
 from gwe.di import SpeedProfileChangedSubject, SpeedStepChangedSubject
 from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
-    CheckNewVersionInteractor
+    CheckNewVersionInteractor, SetOverclockInteractor
 from gwe.model import Status, SpeedProfile, CurrentSpeedProfile, SpeedStep, DbChange
 from gwe.presenter.edit_speed_profile import EditSpeedProfilePresenter
 from gwe.presenter.preferences import PreferencesPresenter
@@ -64,6 +64,9 @@ class MainViewInterface:
     def show_main_infobar_message(self, message: str, markup: bool = False) -> None:
         raise NotImplementedError()
 
+    def get_overclock_offsets(self) -> Tuple[int, int, int, int]:
+        raise NotImplementedError()
+
     # def show_add_speed_profile_dialog(self, channel: ChannelType) -> None:
     #     raise NotImplementedError()
     #
@@ -88,6 +91,7 @@ class MainPresenter:
                  edit_speed_profile_presenter: EditSpeedProfilePresenter,
                  preferences_presenter: PreferencesPresenter,
                  get_status_interactor: GetStatusInteractor,
+                 set_overclock_interactor: SetOverclockInteractor,
                  settings_interactor: SettingsInteractor,
                  check_new_version_interactor: CheckNewVersionInteractor,
                  speed_profile_changed_subject: SpeedProfileChangedSubject,
@@ -100,6 +104,7 @@ class MainPresenter:
         self._preferences_presenter = preferences_presenter
         self._scheduler: SchedulerBase = ThreadPoolScheduler(multiprocessing.cpu_count())
         self._get_status_interactor: GetStatusInteractor = get_status_interactor
+        self._set_overclock_interactor = set_overclock_interactor
         self._settings_interactor = settings_interactor
         self._check_new_version_interactor = check_new_version_interactor
         self._speed_profile_changed_subject = speed_profile_changed_subject
@@ -120,6 +125,14 @@ class MainPresenter:
                                                       on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
         self._speed_step_changed_subject.subscribe(on_next=self._on_speed_step_list_changed,
                                                    on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
+
+    def on_overclock_apply_button_clicked(self, *_: Any) -> None:
+        self._composite_disposable \
+            .add(self._set_overclock_interactor.execute(*self.main_view.get_overclock_offsets())
+                 .subscribe_on(self._scheduler)
+                 .observe_on(GtkScheduler())
+                 .subscribe(on_error=lambda e: LOG.exception("Set overclock error: %s", str(e)))
+                 )
 
     def _on_speed_profile_list_changed(self, db_change: DbChange) -> None:
         profile = db_change.entry
@@ -303,7 +316,6 @@ class MainPresenter:
             .catch_exception(self._log_exception_return_empty_observable)
 
     def _check_new_version(self) -> None:
-        pass
         self._composite_disposable \
             .add(self._check_new_version_interactor.execute()
                  .subscribe_on(self._scheduler)
