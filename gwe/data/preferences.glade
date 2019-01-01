@@ -24,8 +24,8 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
   <!-- interface-license-type gplv3 -->
   <!-- interface-name GSI -->
   <object class="GtkAdjustment" id="settings_refresh_interval_adjustment">
-    <property name="lower">1</property>
-    <property name="upper">3600</property>
+    <property name="lower">3</property>
+    <property name="upper">10</property>
     <property name="value">3</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
@@ -233,7 +233,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="label" translatable="yes">Automatically apply last used profile when the app starts</property>
+                                                <property name="label" translatable="yes">Automatically apply last used fan profile when the app starts</property>
                                                 <property name="xalign">0</property>
                                                 <attributes>
                                                   <attribute name="scale" value="0.90000000000000002"/>
@@ -478,7 +478,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="label" translatable="yes">Show gpu temperature</property>
+                                                <property name="label" translatable="yes">Show GPU temperature</property>
                                                 <property name="use_underline">True</property>
                                                 <property name="xalign">0</property>
                                               </object>

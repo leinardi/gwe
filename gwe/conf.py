@@ -17,13 +17,13 @@
 from typing import Dict, Any
 
 APP_PACKAGE_NAME = "gwe"
-APP_NAME = "gwe"
+APP_NAME = "GWE"
 APP_ID = "com.leinardi.gwe"
 APP_VERSION = "0.3.2"
 APP_ICON_NAME = APP_PACKAGE_NAME + ".svg"
 APP_DB_NAME = APP_PACKAGE_NAME + ".db"
 APP_MAIN_UI_NAME = "main.glade"
-APP_EDIT_SPEED_PROFILE_UI_NAME = "edit_speed_profile.glade"
+APP_EDIT_FAN_PROFILE_UI_NAME = "edit_fan_profile.glade"
 APP_PREFERENCES_UI_NAME = "preferences.glade"
 APP_DESKTOP_ENTRY_NAME = APP_PACKAGE_NAME + ".desktop"
 APP_DESCRIPTION = 'GUI to control cooling and overclock of nVidia cards'
@@ -31,7 +31,7 @@ APP_SOURCE_URL = 'https://gitlab.com/leinardi/gwe'
 APP_AUTHOR = 'Roberto Leinardi'
 APP_AUTHOR_EMAIL = 'roberto@leinardi.com'
 
-MIN_TEMP = 20
+MIN_TEMP = 0
 MAX_TEMP = 100
 FAN_MIN_DUTY = 25
 FAN_MAX_DUTY = 100

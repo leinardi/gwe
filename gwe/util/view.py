@@ -23,7 +23,7 @@ from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCan
 from matplotlib.figure import Figure
 
 from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY
-from gwe.model import SpeedProfile
+from gwe.model import FanProfile
 
 
 def build_glib_option(long_name: str,
@@ -63,19 +63,19 @@ def init_plot_chart(scrolled_window: Gtk.ScrolledWindow,
     scrolled_window.add_with_viewport(canvas)
     # Returns a tuple of line objects, thus the comma
     lines = axis.plot([], [], 'o-', linewidth=3.0, markersize=10, antialiased=True)
-    axis.set_ybound(lower=0, upper=105)
+    axis.set_ybound(lower=-5, upper=105)
     axis.set_xbound(MIN_TEMP, MAX_TEMP)
     figure.canvas.draw()
     return lines
 
 
-def get_speed_profile_data(profile: SpeedProfile) -> Dict[int, int]:
+def get_fan_profile_data(profile: FanProfile) -> Dict[int, int]:
     data = {p.temperature: p.duty for p in profile.steps}
     if data:
-        if profile.single_step:
-            data.update({MAX_TEMP: profile.steps[0].duty})
-        else:
-            if MIN_TEMP not in data:
-                data[MIN_TEMP] = data[min(data.keys())]
-            data.update({MAX_TEMP: FAN_MAX_DUTY})
+        # if profile.single_step:
+        #     data.update({MAX_TEMP: profile.steps[0].duty})
+        # else:
+        if MIN_TEMP not in data:
+            data[MIN_TEMP] = data[min(data.keys())]
+        data.update({MAX_TEMP: FAN_MAX_DUTY})
     return data

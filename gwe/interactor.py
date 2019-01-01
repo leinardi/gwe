@@ -17,7 +17,7 @@
 import json
 import logging
 from distutils.version import LooseVersion
-from typing import List, Tuple, Optional
+from typing import Optional
 
 import requests
 from injector import singleton, inject
@@ -50,7 +50,7 @@ class SetOverclockInteractor:
     def execute(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> Observable:
         LOG.debug("SetOverclockInteractor.execute()")
         return Observable.defer(
-            lambda: Observable.just(self._nvidia_repository._set_overclock(gpu_index, perf, gpu_offset, memory_offset)))
+            lambda: Observable.just(self._nvidia_repository.set_overclock(gpu_index, perf, gpu_offset, memory_offset)))
 
 
 @singleton
@@ -61,7 +61,19 @@ class SetPowerLimitInteractor:
 
     def execute(self, gpu_index: int, limit: int) -> Observable:
         LOG.debug("SetPowerLimitInteractor.execute()")
-        return Observable.defer(lambda: Observable.just(self._nvidia_repository._set_power_limit(gpu_index, limit)))
+        return Observable.defer(lambda: Observable.just(self._nvidia_repository.set_power_limit(gpu_index, limit)))
+
+
+@singleton
+class SetFanSpeedInteractor:
+    @inject
+    def __init__(self, nvidia_repository: NvidiaRepository, ) -> None:
+        self._nvidia_repository = nvidia_repository
+
+    def execute(self, gpu_index: int, speed: int = 100, manual_control: bool = True) -> Observable:
+        LOG.debug("SetSpeedProfileInteractor.execute()")
+        return Observable.defer(
+            lambda: Observable.just(self._nvidia_repository.set_fan_speed(gpu_index, speed, manual_control)))
 
 
 @singleton

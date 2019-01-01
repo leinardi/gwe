@@ -20,15 +20,15 @@ from typing import Optional, Any
 from gi.repository import Gtk
 from injector import singleton, inject
 
-from gwe.conf import MIN_TEMP
-from gwe.model import SpeedProfile, SpeedStep
+from gwe.conf import MIN_TEMP, FAN_MIN_DUTY
+from gwe.model import FanProfile, SpeedStep
 from gwe.util.view import hide_on_delete
 
 LOG = logging.getLogger(__name__)
 
 
-class EditSpeedProfileViewInterface:
-    def show(self, profile: SpeedProfile) -> None:
+class EditFanProfileViewInterface:
+    def show(self, profile: FanProfile) -> None:
         raise NotImplementedError()
 
     def hide(self) -> None:
@@ -49,26 +49,26 @@ class EditSpeedProfileViewInterface:
     def refresh_controls(self, step: Optional[SpeedStep] = None, unselect_list: bool = False) -> None:
         raise NotImplementedError()
 
-    def refresh_liststore(self, profile: SpeedProfile) -> None:
+    def refresh_liststore(self, profile: FanProfile) -> None:
         raise NotImplementedError()
 
 
 @singleton
-class EditSpeedProfilePresenter:
+class EditFanProfilePresenter:
     @inject
     def __init__(self) -> None:
-        LOG.debug("init EditSpeedProfilePresenter ")
-        self.view: EditSpeedProfileViewInterface = EditSpeedProfileViewInterface()
-        self._profile = SpeedProfile()
+        LOG.debug("init EditFanProfilePresenter ")
+        self.view: EditFanProfileViewInterface = EditFanProfileViewInterface()
+        self._profile = FanProfile()
         self._selected_step: Optional[SpeedStep] = None
 
     def show_add(self) -> None:
-        profile = SpeedProfile()
+        profile = FanProfile()
         profile.name = 'New profile'
         profile.save()
         self.show_edit(profile)
 
-    def show_edit(self, profile: SpeedProfile) -> None:
+    def show_edit(self, profile: FanProfile) -> None:
         self._profile = profile
         self.view.show(profile)
 
@@ -80,9 +80,9 @@ class EditSpeedProfilePresenter:
                 self._profile.save()
         return hide_on_delete(widget)
 
-    def refresh_controls(self, step: Optional[SpeedStep] = None, unselect_list: bool = False) -> None:
+    def refresh_controls(self, step: Optional[SpeedStep] = None, deselect_list: bool = False) -> None:
         self._selected_step = step
-        self.view.refresh_controls(step, unselect_list)
+        self.view.refresh_controls(step, deselect_list)
 
     def on_step_selected(self, tree_selection: Gtk.TreeSelection) -> None:
         LOG.debug("selected")

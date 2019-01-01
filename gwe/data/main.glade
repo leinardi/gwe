@@ -87,12 +87,12 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="cooling_pump_edit_image">
+  <object class="GtkImage" id="fan_edit_image">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="stock">gtk-edit</property>
   </object>
-  <object class="GtkListStore" id="cooling_pump_profile_liststore">
+  <object class="GtkListStore" id="fan_profile_liststore">
     <columns>
       <!-- column-name id -->
       <column type="gint"/>
@@ -159,6 +159,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
     <property name="page_increment">10</property>
   </object>
   <object class="GtkAdjustment" id="power_limit_adjustment">
+    <property name="lower">-100</property>
     <property name="upper">100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
@@ -324,6 +325,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_name_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
                                 <property name="xalign">0.5</property>
@@ -349,6 +351,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_vbios_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -376,6 +379,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_driver_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -402,6 +406,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_cuda_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -428,6 +433,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_uuid_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">40</property>
@@ -454,6 +460,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_pcie_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -492,6 +499,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_decoder_usage_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -530,6 +538,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_encoder_usage_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -544,6 +553,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_memory_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -571,6 +581,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_memory_interface_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -633,6 +644,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_gpu_usage_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -647,6 +659,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="info_memory_usage_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -716,6 +729,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="power_draw_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -730,6 +744,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="power_limit_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -768,6 +783,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="power_default_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -782,6 +798,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="power_min_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -832,6 +849,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="power_enforced_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -846,6 +864,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="power_max_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -861,6 +880,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkButton" id="power_limit_apply_button">
                                 <property name="label">gtk-apply</property>
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="margin_top">6</property>
@@ -875,6 +895,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkScale" id="power_limit_scale">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="adjustment">power_limit_adjustment</property>
@@ -946,6 +967,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="clocks_graphics_current_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -960,6 +982,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="clocks_sm_current_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -986,6 +1009,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="clocks_memory_current_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -1000,6 +1024,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="clocks_video_current_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -1038,6 +1063,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="clocks_video_max_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -1052,6 +1078,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="clocks_memory_max_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -1066,6 +1093,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="clocks_sm_max_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -1080,6 +1108,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <child>
                               <object class="GtkEntry" id="clocks_graphics_max_entry">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
@@ -1203,6 +1232,21 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="top_attach">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="overclock_warning_label">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="margin_top">5</property>
+                                <property name="label" translatable="yes">Overclock control requires Coolbits 8 to be set</property>
+                                <property name="use_markup">True</property>
+                                <property name="justify">center</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">3</property>
+                                <property name="width">2</property>
                               </packing>
                             </child>
                           </object>
@@ -1586,8 +1630,9 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFrame">
+                  <object class="GtkFrame" id="fan_profile_frame">
                     <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">6</property>
                     <property name="margin_right">10</property>
@@ -1609,7 +1654,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="margin_top">6</property>
                             <property name="margin_bottom">6</property>
                             <property name="orientation">vertical</property>
-                            <property name="spacing">10</property>
+                            <property name="spacing">5</property>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
@@ -1632,13 +1677,14 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkComboBox" id="cooling_pump_profile_combobox">
+                                  <object class="GtkComboBox" id="fan_profile_combobox">
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
                                     <property name="can_focus">False</property>
                                     <property name="hexpand">True</property>
-                                    <property name="model">cooling_pump_profile_liststore</property>
+                                    <property name="model">fan_profile_liststore</property>
                                     <property name="id_column">0</property>
+                                    <signal name="changed" handler="on_fan_profile_selected" swapped="no"/>
                                     <child>
                                       <object class="GtkCellRendererText" id="cooling_fan_profile_renderer1"/>
                                       <attributes>
@@ -1653,13 +1699,14 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="cooling_pump_edit_button">
+                                  <object class="GtkButton" id="fan_edit_button">
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
-                                    <property name="image">cooling_pump_edit_image</property>
+                                    <property name="image">fan_edit_image</property>
                                     <property name="always_show_image">True</property>
+                                    <signal name="clicked" handler="on_fan_edit_button_clicked" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1678,6 +1725,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkScrolledWindow" id="fan_scrolled_window">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="margin_top">5</property>
                                 <property name="min_content_width">400</property>
                                 <property name="min_content_height">300</property>
                                 <property name="propagate_natural_width">True</property>
@@ -1693,7 +1741,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="cooling_pump_apply_button">
+                              <object class="GtkButton" id="fan_apply_button">
                                 <property name="label">gtk-apply</property>
                                 <property name="visible">True</property>
                                 <property name="sensitive">False</property>
@@ -1701,11 +1749,26 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="receives_default">True</property>
                                 <property name="margin_top">6</property>
                                 <property name="use_stock">True</property>
+                                <signal name="clicked" handler="on_fan_apply_button_clicked" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="fan_warning_label">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="margin_top">5</property>
+                                <property name="label" translatable="yes">Fan control requires Coolbits 4 to be set</property>
+                                <property name="justify">center</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">3</property>
                               </packing>
                             </child>
                           </object>

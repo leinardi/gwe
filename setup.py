@@ -1,7 +1,7 @@
 import setuptools
 
 from gwe.conf import APP_PACKAGE_NAME, APP_VERSION, APP_SOURCE_URL, APP_AUTHOR, APP_AUTHOR_EMAIL, APP_MAIN_UI_NAME, \
-    APP_EDIT_SPEED_PROFILE_UI_NAME, APP_PREFERENCES_UI_NAME, APP_DESCRIPTION
+    APP_EDIT_FAN_PROFILE_UI_NAME, APP_PREFERENCES_UI_NAME, APP_DESCRIPTION
 
 # with open('README.md', 'r', encoding='utf-8') as fh:
 #     long_description = (fh.read().split('<!-- stop here for PyPI -->', 1)[0]
@@ -35,7 +35,7 @@ setuptools.setup(
             'data/gwe.svg',
             'data/gwe-symbolic.svg',
             'data/' + APP_MAIN_UI_NAME,
-            'data/' + APP_EDIT_SPEED_PROFILE_UI_NAME,
+            'data/' + APP_EDIT_FAN_PROFILE_UI_NAME,
             'data/' + APP_PREFERENCES_UI_NAME,
         ],
 
@@ -49,8 +49,8 @@ setuptools.setup(
     },
     install_requires=[
         'injector==0.14.1',
-        'matplotlib==3.0.0',
-        'peewee==3.7.1',
+        'matplotlib==3.0.2',
+        'peewee==3.8.0',
         'pygobject',
         'pyxdg',
         'requests',

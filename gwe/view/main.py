@@ -21,9 +21,9 @@ from typing import Optional, Dict, Any, List, Tuple
 
 from gwe.di import MainBuilder
 from gwe.repository import NOT_AVAILABLE_STRING
-from gwe.view.edit_speed_profile import EditSpeedProfileView
+from gwe.view.edit_fan_profile import EditFanProfileView
 from gwe.util.path import get_data_path
-from gwe.util.view import hide_on_delete, init_plot_chart, get_speed_profile_data
+from gwe.util.view import hide_on_delete, init_plot_chart, get_fan_profile_data
 from injector import inject, singleton
 import gi
 from gi.repository import Gtk
@@ -42,7 +42,7 @@ except (ImportError, ValueError):
 
 from gwe.conf import APP_PACKAGE_NAME, APP_ID, FAN_MIN_DUTY, FAN_MAX_DUTY, APP_NAME, \
     APP_VERSION, APP_SOURCE_URL
-from gwe.model import Status, SpeedProfile
+from gwe.model import Status, FanProfile
 from gwe.presenter.main import MainPresenter, MainViewInterface
 
 LOG = logging.getLogger(__name__)
@@ -56,14 +56,14 @@ class MainView(MainViewInterface):
     @inject
     def __init__(self,
                  presenter: MainPresenter,
-                 edit_speed_profile_view: EditSpeedProfileView,
+                 edit_fan_profile_view: EditFanProfileView,
                  preferences_view: PreferencesView,
                  builder: MainBuilder,
                  settings_interactor: SettingsInteractor,
                  ) -> None:
         LOG.debug('init MainView')
         self._presenter: MainPresenter = presenter
-        self._edit_speed_profile_view = edit_speed_profile_view
+        self._edit_fan_profile_view = edit_fan_profile_view
         self._preferences_view = preferences_view
         self._presenter.main_view = self
         self._builder: Gtk.Builder = builder
@@ -75,7 +75,7 @@ class MainView(MainViewInterface):
     def _init_widgets(self) -> None:
         self._app_indicator: Optional[AppIndicator3.Indicator] = None
         self._window = self._builder.get_object("application_window")
-        # self._edit_speed_profile_view.set_transient_for(self._window)
+        self._edit_fan_profile_view.set_transient_for(self._window)
         self._preferences_view.set_transient_for(self._window)
         self._main_menu: Gtk.Menu = self._builder.get_object("main_menu")
         self._main_infobar: Gtk.InfoBar = self._builder.get_object("main_infobar")
@@ -85,7 +85,7 @@ class MainView(MainViewInterface):
         self._statusbar: Gtk.Statusbar = self._builder.get_object('statusbar')
         self._context = self._statusbar.get_context_id(APP_PACKAGE_NAME)
         self._app_version: Gtk.Label = self._builder.get_object('app_version')
-        self._app_version.set_label("%s %s" % (APP_NAME, APP_VERSION))
+        self._app_version.set_label("%s v%s" % (APP_NAME, APP_VERSION))
         self._about_dialog: Gtk.AboutDialog = self._builder.get_object("about_dialog")
         self._init_about_dialog()
 
@@ -137,6 +137,9 @@ class MainView(MainViewInterface):
             self._builder.get_object('fan_rpm_3'),
             self._builder.get_object('fan_rpm_4')
         )
+        self._fan_warning_label: Gtk.Label = self._builder.get_object('fan_warning_label')
+        self._overclock_warning_label: Gtk.Label = self._builder.get_object('overclock_warning_label')
+        self._fan_profile_frame: Gtk.Frame = self._builder.get_object('fan_profile_frame')
         self._overclock_frame: Gtk.Frame = self._builder.get_object('overclock_frame')
         self._power_limit_scale: Gtk.Scale = self._builder.get_object('power_limit_scale')
         self._overclock_gpu_offset_scale: Gtk.Scale = self._builder.get_object('overclock_gpu_offset_scale')
@@ -146,22 +149,14 @@ class MainView(MainViewInterface):
             'overclock_gpu_offset_adjustment')
         self._overclock_memory_offset_adjustment: Gtk.Adjustment = self._builder.get_object(
             'overclock_memory_offset_adjustment')
-
+        self._fan_apply_button: Gtk.Button = self._builder.get_object('fan_apply_button')
         self._power_limit_apply_button: Gtk.Button = self._builder.get_object('power_limit_apply_button')
 
-        # self._cooling_fan_duty: Gtk.Label = self._builder.get_object('cooling_fan_duty')
-        # self._cooling_fan_rpm: Gtk.Label = self._builder.get_object('cooling_fan_rpm')
-        # self._cooling_liquid_temp: Gtk.Label = self._builder.get_object('cooling_liquid_temp')
-        # self._cooling_pump_rpm: Gtk.Label = self._builder.get_object('cooling_pump_rpm')
-        # self._cooling_fan_combobox: Gtk.ComboBox = self._builder.get_object('cooling_fan_profile_combobox')
-        # self._cooling_fan_liststore: Gtk.ListStore = self._builder.get_object('cooling_fan_profile_liststore')
-        # self._cooling_pump_combobox: Gtk.ComboBox = self._builder.get_object('cooling_pump_profile_combobox')
-        # self._cooling_pump_liststore: Gtk.ListStore = self._builder.get_object('cooling_pump_profile_liststore')
-        # cooling_fan_scrolled_window: Gtk.ScrolledWindow = self._builder.get_object('cooling_fan_scrolled_window')
+        self._fan_liststore: Gtk.ListStore = self._builder.get_object('fan_profile_liststore')
+        self._fan_combobox: Gtk.ComboBox = self._builder.get_object('fan_profile_combobox')
         fan_scrolled_window: Gtk.ScrolledWindow = self._builder.get_object('fan_scrolled_window')
-        # self._cooling_fan_edit_button: Gtk.Button = self._builder.get_object('cooling_fan_edit_button')
-        # self._cooling_pump_edit_button: Gtk.Button = self._builder.get_object('cooling_pump_edit_button')
-        # self._cooling_fixed_speed_popover: Gtk.Popover = self._builder.get_object('cooling_fixed_speed_popover')
+        self._fan_edit_button: Gtk.Button = self._builder.get_object('fan_edit_button')
+        # self._cooling_fixed_speed_p\opover: Gtk.Popover = self._builder.get_object('cooling_fixed_speed_popover')
         # self._cooling_fixed_speed_adjustment: Gtk.Adjustment = \
         #     self._builder.get_object('cooling_fixed_speed_adjustment')
         # self._cooling_fixed_speed_scale: Gtk.Scale = self._builder.get_object('cooling_fixed_speed_scale')
@@ -200,12 +195,12 @@ class MainView(MainViewInterface):
         else:
             self._window.show()
 
-    # def show_add_speed_profile_dialog(self, channel: ChannelType) -> None:
-    #     LOG.debug("view show_add_speed_profile_dialog %s", channel.name)
+    # def show_add_fan_profile_dialog(self, channel: ChannelType) -> None:
+    #     LOG.debug("view show_add_fan_profile_dialog %s", channel.name)
 
-    # def show_fixed_speed_profile_popover(self, profile: SpeedProfile) -> None:
+    # def show_fixed_fan_profile_popover(self, profile: FanProfile) -> None:
     #     if profile.channel == ChannelType.FAN.value:
-    #         self._cooling_fixed_speed_popover.set_relative_to(self._cooling_fan_edit_button)
+    #         self._cooling_fixed_speed_popover.set_relative_to(self._fan_edit_button)
     #         self._cooling_fixed_speed_adjustment.set_lower(FAN_MIN_DUTY)
     #         self._cooling_fixed_speed_adjustment.set_upper(FAN_MAX_DUTY)
     #     else:
@@ -258,21 +253,24 @@ class MainView(MainViewInterface):
                 self._set_label_markup(self._temp_shutdown_value,
                                        "<span size=\"large\">%s</span> °C" % gpu_status.temp.shutdown.rstrip(' C'))
                 self._overclock_frame.set_sensitive(gpu_status.overclock.available)
-
-                if ' W' in gpu_status.power.default:
-                    minimum = self._get_power_value(gpu_status.power.minimum)
-                    maximum = self._get_power_value(gpu_status.power.maximum)
-                    default = self._get_power_value(gpu_status.power.default)
-                    if minimum != 0 and maximum != 0 and default != 0:
-                        limit = self._get_power_value(gpu_status.power.limit)
-                        self._power_limit_adjustment.set_lower(minimum)
-                        self._power_limit_adjustment.set_upper(maximum)
-                        self._power_limit_adjustment.set_value(limit)
-                        self._power_limit_scale.clear_marks()
-                        self._power_limit_scale.add_mark(default, Gtk.PositionType.BOTTOM, str(0))
-                    else:
-                        self._power_limit_scale.set_sensitive(False)
-                        self._power_limit_apply_button.set_sensitive(False)
+                self._overclock_warning_label.set_visible(not gpu_status.overclock.available)
+                self._fan_profile_frame.set_sensitive(gpu_status.fan.control_allowed)
+                self._fan_warning_label.set_visible(not gpu_status.fan.control_allowed)
+                minimum = self._get_power_value(gpu_status.power.minimum)
+                maximum = self._get_power_value(gpu_status.power.maximum)
+                default = self._get_power_value(gpu_status.power.default)
+                if minimum != 0 and maximum != 0 and default != 0 and minimum != maximum:
+                    limit = self._get_power_value(gpu_status.power.limit)
+                    self._power_limit_adjustment.set_lower(minimum)
+                    self._power_limit_adjustment.set_upper(maximum)
+                    self._power_limit_adjustment.set_value(limit)
+                    self._power_limit_scale.clear_marks()
+                    self._power_limit_scale.add_mark(default, Gtk.PositionType.BOTTOM, "%.0f" % default)
+                    self._power_limit_scale.set_sensitive(True)
+                    self._power_limit_apply_button.set_sensitive(True)
+                else:
+                    self._power_limit_scale.set_sensitive(False)
+                    self._power_limit_apply_button.set_sensitive(False)
 
                 if gpu_status.overclock.available:
                     self._overclock_gpu_offset_adjustment.set_lower(gpu_status.overclock.gpu_range[0])
@@ -320,20 +318,15 @@ class MainView(MainViewInterface):
                     value.set_visible(False)
                     self._fan_rpm[index].set_visible(False)
 
-            #     self._cooling_fan_rpm.set_markup("<span size=\"xx-large\">%s</span> RPM" % status.fan_rpm)
-            #     self._cooling_fan_duty.set_markup("<span size=\"xx-large\">%s</span> %%" %
-            #                                       ('-' if status.fan_duty is None else "%.0f" % status.fan_duty))
-            #     self._cooling_liquid_temp.set_markup("<span size=\"xx-large\">%s</span> °C" % status.liquid_temperature)
-
-        #     if self._app_indicator:
-        #         if self._settings_interactor.get_bool('settings_show_app_indicator'):
-        #             self._app_indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
-        #         else:
-        #             self._app_indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
-        #         if self._settings_interactor.get_bool('settings_app_indicator_show_gpu_temp'):
-        #             self._app_indicator.set_label("  %s°C" % status.liquid_temperature, "  XX°C")
-        #         else:
-        #             self._app_indicator.set_label("", "")
+            if self._app_indicator:
+                if self._settings_interactor.get_bool('settings_show_app_indicator'):
+                    self._app_indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
+                else:
+                    self._app_indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
+                if self._settings_interactor.get_bool('settings_app_indicator_show_gpu_temp'):
+                    self._app_indicator.set_label("  %s°C" % gpu_status.temp.gpu.rstrip(' C'), "  XX°C")
+                else:
+                    self._app_indicator.set_label("", "")
 
     @staticmethod
     def _set_entry_text(label: Gtk.Entry, text: str) -> None:
@@ -372,41 +365,31 @@ class MainView(MainViewInterface):
             LOG.exception("Error while reading power from %s", string)
         return 0
 
-    def refresh_chart(self, profile: Optional[SpeedProfile] = None, reset: Optional[str] = None) -> None:
+    def refresh_chart(self, profile: Optional[FanProfile] = None, reset: bool = False) -> None:
         if profile is None and reset is None:
             raise ValueError("Both parameters are note!")
 
-        if reset is not None:
+        if reset:
             self._plot_chart({})
         else:
-            self._plot_chart(get_speed_profile_data(profile))
+            self._plot_chart(get_fan_profile_data(profile))
 
-    # def refresh_profile_combobox(self, channel: ChannelType, data: List[Tuple[int, str]],
-    #                              active: Optional[int]) -> None:
-    #     if channel is ChannelType.FAN:
-    #         self._cooling_fan_liststore.clear()
-    #         for item in data:
-    #             self._cooling_fan_liststore.append([item[0], item[1]])
-    #         self._cooling_fan_combobox.set_model(self._cooling_fan_liststore)
-    #         self._cooling_fan_combobox.set_sensitive(len(self._cooling_fan_liststore) > 1)
-    #         if active is not None:
-    #             self._cooling_fan_combobox.set_active(active)
-    #         else:
-    #             self.refresh_chart(channel_to_reset=channel.value)
-    #     else:
-    #         raise ValueError("Unknown channel: %s" % channel.name)
+    def refresh_fan_profile_combobox(self, data: List[Tuple[int, str]], active: Optional[int]) -> None:
+        self._fan_liststore.clear()
+        for item in data:
+            self._fan_liststore.append([item[0], item[1]])
+        self._fan_combobox.set_model(self._fan_liststore)
+        self._fan_combobox.set_sensitive(len(self._fan_liststore) > 1)
+        if active is not None:
+            self._fan_combobox.set_active(active)
+        else:
+            self.refresh_chart(reset=True)
 
-    # def set_apply_button_enabled(self, channel: ChannelType, enabled: bool) -> None:
-    #     if channel is ChannelType.FAN:
-    #         self._cooling_fan_apply_button.set_sensitive(enabled)
-    #     else:
-    #         raise ValueError("Unknown channel: %s" % channel.name)
-    #
-    # def set_edit_button_enabled(self, channel: ChannelType, enabled: bool) -> None:
-    #     if channel is ChannelType.FAN:
-    #         self._cooling_fan_edit_button.set_sensitive(enabled)
-    #     else:
-    #         raise ValueError("Unknown channel: %s" % channel.name)
+    def set_apply_fan_profile_button_enabled(self, enabled: bool) -> None:
+        self._fan_apply_button.set_sensitive(enabled)
+
+    def set_edit_fan_profile_button_enabled(self, enabled: bool) -> None:
+        self._fan_edit_button.set_sensitive(enabled)
 
     # pylint: disable=attribute-defined-outside-init
     def _init_plot_charts(self, fan_scrolled_window: Gtk.ScrolledWindow) -> None:
