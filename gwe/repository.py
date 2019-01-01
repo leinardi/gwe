@@ -209,12 +209,12 @@ class NvidiaRepository:
 
             result = query_settings(0, False, True,
                                     "GPUGraphicsClockOffset[%d]" % perf, "GPUMemoryTransferRateOffset[%d]" % perf)
-            if result[0] == 0:
-                ranges_raw = re.findall('range -?\d+ - -?\d+ ', result[1])
+            if result[0] == 0 and result[1]:
+                ranges_raw = re.findall(r'range -?\d+ - -?\d+ ', result[1])
                 gpu_offsets = ranges_raw[0].replace('range ', '').split(' - ')
                 memory_offsets = ranges_raw[1].replace('range ', '').split(' - ')
 
-                offsets_raw = re.findall(': -?\d+. The valid', result[1])
+                offsets_raw = re.findall(r': -?\d+. The valid', result[1])
                 return Overclock(
                     available=True,
                     gpu_range=(int(gpu_offsets[0]), int(gpu_offsets[1])),

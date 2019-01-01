@@ -56,7 +56,7 @@ def init_plot_chart(scrolled_window: Gtk.ScrolledWindow,
     axis.grid(True, linestyle=':')
     axis.margins(x=0, y=0.05)
     axis.set_facecolor('#00000000')
-    axis.set_xlabel('Liquid temperature [°C]')
+    axis.set_xlabel('Temperature [°C]')
     axis.set_ylabel('Duty [%]')
     figure.subplots_adjust(top=1)
     canvas.set_size_request(400, 300)

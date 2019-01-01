@@ -154,14 +154,14 @@ class MainView(MainViewInterface):
         # self._cooling_pump_combobox: Gtk.ComboBox = self._builder.get_object('cooling_pump_profile_combobox')
         # self._cooling_pump_liststore: Gtk.ListStore = self._builder.get_object('cooling_pump_profile_liststore')
         # cooling_fan_scrolled_window: Gtk.ScrolledWindow = self._builder.get_object('cooling_fan_scrolled_window')
-        # cooling_pump_scrolled_window: Gtk.ScrolledWindow = self._builder.get_object('cooling_pump_scrolled_window')
+        fan_scrolled_window: Gtk.ScrolledWindow = self._builder.get_object('fan_scrolled_window')
         # self._cooling_fan_edit_button: Gtk.Button = self._builder.get_object('cooling_fan_edit_button')
         # self._cooling_pump_edit_button: Gtk.Button = self._builder.get_object('cooling_pump_edit_button')
         # self._cooling_fixed_speed_popover: Gtk.Popover = self._builder.get_object('cooling_fixed_speed_popover')
         # self._cooling_fixed_speed_adjustment: Gtk.Adjustment = \
         #     self._builder.get_object('cooling_fixed_speed_adjustment')
         # self._cooling_fixed_speed_scale: Gtk.Scale = self._builder.get_object('cooling_fixed_speed_scale')
-        # self._init_plot_charts(cooling_fan_scrolled_window, cooling_pump_scrolled_window)
+        self._init_plot_charts(fan_scrolled_window)
 
     def _init_about_dialog(self) -> None:
         self._about_dialog.set_program_name(APP_NAME)
@@ -378,9 +378,7 @@ class MainView(MainViewInterface):
     #         raise ValueError("Unknown channel: %s" % channel.name)
 
     # pylint: disable=attribute-defined-outside-init
-    def _init_plot_charts(self,
-                          fan_scrolled_window: Gtk.ScrolledWindow,
-                          pump_scrolled_window: Gtk.ScrolledWindow) -> None:
+    def _init_plot_charts(self, fan_scrolled_window: Gtk.ScrolledWindow) -> None:
         self._fan_figure = Figure(figsize=(8, 6), dpi=72, facecolor='#00000000')
         self._fan_canvas = FigureCanvas(self._fan_figure)  # a Gtk.DrawingArea+
         self._fan_axis = self._fan_figure.add_subplot(111)
@@ -389,16 +387,6 @@ class MainView(MainViewInterface):
             self._fan_figure,
             self._fan_canvas,
             self._fan_axis
-        )
-
-        self._pump_figure = Figure(figsize=(8, 6), dpi=72, facecolor='#00000000')
-        self._pump_canvas = FigureCanvas(self._pump_figure)  # a Gtk.DrawingArea+
-        self._pump_axis = self._pump_figure.add_subplot(111)
-        self._pump_line, = init_plot_chart(
-            pump_scrolled_window,
-            self._pump_figure,
-            self._pump_canvas,
-            self._pump_axis
         )
 
     def _plot_chart(self, data: Dict[int, int]) -> None:

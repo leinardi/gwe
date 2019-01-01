@@ -32,7 +32,7 @@ APP_AUTHOR = 'Roberto Leinardi'
 APP_AUTHOR_EMAIL = 'roberto@leinardi.com'
 
 MIN_TEMP = 20
-MAX_TEMP = 90
+MAX_TEMP = 100
 FAN_MIN_DUTY = 25
 FAN_MAX_DUTY = 100
 
