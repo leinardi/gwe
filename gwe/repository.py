@@ -24,10 +24,6 @@ from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 
 from injector import singleton, inject
-from py3nvml import py3nvml
-from py3nvml.py3nvml import NVMLError, NVML_ERROR_NOT_SUPPORTED, NVML_TEMPERATURE_GPU, \
-    NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_CLOCK_MEM, NVML_CLOCK_SM, \
-    NVML_CLOCK_GRAPHICS
 
 from gwe.model import Status, Info, Power, Temp, Clocks, GpuStatus, Fan, Overclock
 from gwe.util.concurrency import synchronized_with_attr
