@@ -92,9 +92,13 @@ class Temp:
 
 class Fan:
     def __init__(self,
-                 fan_list: List[Tuple[int, int]]
+                 fan_list: List[Tuple[int, int]],
+                 control_allowed: bool,
+                 manual_control: bool
                  ) -> None:
         self.fan_list = fan_list
+        self.control_allowed = control_allowed
+        self.manual_control = manual_control
 
 
 class Clocks:

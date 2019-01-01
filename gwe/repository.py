@@ -106,8 +106,8 @@ class NvidiaRepository:
                 power = self._get_power_from_smi_xml(gpu)
                 temp = self._get_temp_from_smi_xml(gpu)
                 clocks = self._get_clocks_from_smi_xml(gpu)
-                fan = self._get_fan_from_settings()
-                overclock = self._get_overclock_from_settings()
+                fan = self._get_fan_from_settings(gpu_index)
+                overclock = self._get_overclock_from_settings(gpu_index)
                 gpu_status = GpuStatus(
                     gpu_id=gpu.get('id'),
                     info=info,
@@ -188,7 +188,7 @@ class NvidiaRepository:
         )
 
     @staticmethod
-    def _get_fan_from_settings() -> Fan:
+    def _get_fan_from_settings(gpu_index: int) -> Fan:
         result = query_settings(None, True, False, "GPUCurrentFanSpeed", "GPUCurrentFanSpeedRPM")
         if result[0] == 0:
             fan_list: List[Tuple[int, int]] = []
@@ -197,17 +197,27 @@ class NvidiaRepository:
             rpm_list = output[len(output) // 2:]
             for index, val in enumerate(duty_list):
                 fan_list.append((int(val), int(rpm_list[index])))
-            return Fan(fan_list[::-1])
-        else:
-            return Fan([])
+            result = query_settings(gpu_index, True, True, 'GPUFanControlState')
+            manual_control = result[1].strip() == '1'
+            contro_allowed = result[0] == 0 and result[1] != ''
+            return Fan(
+                fan_list=fan_list[::-1],
+                control_allowed=contro_allowed,
+                manual_control=manual_control
+            )
+        return Fan(
+            fan_list=[],
+            control_allowed=False,
+            manual_control=False
+        )
 
     @staticmethod
-    def _get_overclock_from_settings() -> Overclock:
-        result = query_settings(0, True, True, "GPUPerfModes")
+    def _get_overclock_from_settings(gpu_index: int) -> Overclock:
+        result = query_settings(gpu_index, True, True, "GPUPerfModes")
         if result[0] == 0:
             perf = len(result[1].split(';')) - 1  # it would be safer to parse and search
 
-            result = query_settings(0, False, True,
+            result = query_settings(gpu_index, False, True,
                                     "GPUGraphicsClockOffset[%d]" % perf, "GPUMemoryTransferRateOffset[%d]" % perf)
             if result[0] == 0 and result[1]:
                 ranges_raw = re.findall(r'range -?\d+ - -?\d+ ', result[1])
