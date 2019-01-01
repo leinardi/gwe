@@ -225,8 +225,8 @@ class NvidiaRepository:
                     available=True,
                     gpu_range=(int(gpu_offsets[0]), int(gpu_offsets[1])),
                     gpu_offset=int(offsets_raw[0].replace(':', '').replace('. The valid', '').strip()),
-                    memory_range=(int(memory_offsets[0]), int(memory_offsets[1])),
-                    memory_offset=int(offsets_raw[1].replace(':', '').replace('. The valid', '').strip()),
+                    memory_range=(int(memory_offsets[0]) // 2, int(memory_offsets[1]) // 2),
+                    memory_offset=int(offsets_raw[1].replace(':', '').replace('. The valid', '').strip()) // 2,
                     perf=perf
                 )
 
@@ -245,7 +245,7 @@ class NvidiaRepository:
                '-a',
                "[gpu:%d]/GPUGraphicsClockOffset[%d]=%d" % (gpu_index, perf, gpu_offset),
                '-a',
-               "[gpu:%d]/GPUMemoryTransferRateOffset[%d]=%d" % (gpu_index, perf, memory_offset)]
+               "[gpu:%d]/GPUMemoryTransferRateOffset[%d]=%d" % (gpu_index, perf, memory_offset * 2)]
         result = run_and_get_stdout(cmd, ['xargs'])
         LOG.info("Exit code: %d. %s", result[0], result[1])
         return result[0] == 0

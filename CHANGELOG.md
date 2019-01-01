@@ -1,3 +1,6 @@
+**[0.3.2] 2019-01-01**
+ - Fixed overclock slider value not correctly restored on startup
+
 **[0.3.1] 2019-01-01**
  - Removed unnecessary dependency from py3nvml
  

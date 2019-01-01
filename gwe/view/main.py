@@ -275,16 +275,16 @@ class MainView(MainViewInterface):
                         self._power_limit_apply_button.set_sensitive(False)
 
                 if gpu_status.overclock.available:
+                    self._overclock_gpu_offset_adjustment.set_lower(gpu_status.overclock.gpu_range[0])
+                    self._overclock_gpu_offset_adjustment.set_upper(gpu_status.overclock.gpu_range[1])
+                    self._overclock_memory_offset_adjustment.set_lower(gpu_status.overclock.memory_range[0])
+                    self._overclock_memory_offset_adjustment.set_upper(gpu_status.overclock.memory_range[1])
                     self._overclock_gpu_offset_adjustment.set_value(gpu_status.overclock.gpu_offset)
                     self._overclock_memory_offset_adjustment.set_value(gpu_status.overclock.memory_offset)
                     self._overclock_gpu_offset_scale.clear_marks()
                     self._overclock_gpu_offset_scale.add_mark(0, Gtk.PositionType.BOTTOM, str(0))
                     self._overclock_memory_offset_scale.clear_marks()
                     self._overclock_memory_offset_scale.add_mark(0, Gtk.PositionType.BOTTOM, str(0))
-                    self._overclock_gpu_offset_adjustment.set_lower(gpu_status.overclock.gpu_range[0])
-                    self._overclock_gpu_offset_adjustment.set_upper(gpu_status.overclock.gpu_range[1])
-                    self._overclock_memory_offset_adjustment.set_lower(gpu_status.overclock.memory_range[0])
-                    self._overclock_memory_offset_adjustment.set_upper(gpu_status.overclock.memory_range[1])
 
             self._set_entry_text(self._info_pcie_entry, gpu_status.info.pcie)
             self._set_entry_text(self._info_memory_entry, gpu_status.info.memory_size)
