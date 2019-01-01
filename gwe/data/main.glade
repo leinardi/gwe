@@ -158,6 +158,11 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
+  <object class="GtkAdjustment" id="power_limit_adjustment">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkApplicationWindow" id="application_window">
     <property name="can_focus">False</property>
     <property name="icon">gwe.svg</property>
@@ -537,68 +542,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="halign">end</property>
-                                <property name="label" translatable="yes">GPU %</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">6</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLevelBar" id="info_gpu_usage_levelbar">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="max_value">100</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">6</property>
-                                <property name="width">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkEntry" id="info_gpu_usage_entry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="editable">False</property>
-                                <property name="width_chars">8</property>
-                                <property name="xalign">0.5</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">4</property>
-                                <property name="top_attach">6</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="halign">end</property>
-                                <property name="label" translatable="yes">Memory %</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">5</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLevelBar" id="info_memory_usage_levelbar">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="max_value">100</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">5</property>
-                                <property name="width">3</property>
-                              </packing>
-                            </child>
-                            <child>
                               <object class="GtkEntry" id="info_memory_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -611,20 +554,6 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="left_attach">1</property>
                                 <property name="top_attach">4</property>
                                 <property name="width">3</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkEntry" id="info_memory_usage_entry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="editable">False</property>
-                                <property name="width_chars">8</property>
-                                <property name="xalign">0.5</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">4</property>
-                                <property name="top_attach">5</property>
                               </packing>
                             </child>
                             <child>
@@ -651,6 +580,82 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <packing>
                                 <property name="left_attach">4</property>
                                 <property name="top_attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLevelBar" id="info_gpu_usage_levelbar">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="max_value">100</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">5</property>
+                                <property name="width">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLevelBar" id="info_memory_usage_levelbar">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="max_value">100</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">6</property>
+                                <property name="width">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="label" translatable="yes">Memory %</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">6</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="label" translatable="yes">GPU %</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="info_gpu_usage_entry">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="editable">False</property>
+                                <property name="width_chars">8</property>
+                                <property name="xalign">0.5</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">4</property>
+                                <property name="top_attach">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="info_memory_usage_entry">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="editable">False</property>
+                                <property name="width_chars">8</property>
+                                <property name="xalign">0.5</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">4</property>
+                                <property name="top_attach">6</property>
                               </packing>
                             </child>
                           </object>
@@ -850,6 +855,37 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <packing>
                                 <property name="left_attach">5</property>
                                 <property name="top_attach">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="power_limit_apply_button">
+                                <property name="label">gtk-apply</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="margin_top">6</property>
+                                <property name="use_stock">True</property>
+                                <signal name="clicked" handler="on_power_limit_apply_button_clicked" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">5</property>
+                                <property name="top_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkScale" id="power_limit_scale">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="adjustment">power_limit_adjustment</property>
+                                <property name="round_digits">0</property>
+                                <property name="digits">0</property>
+                                <property name="value_pos">left</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">2</property>
+                                <property name="width">5</property>
                               </packing>
                             </child>
                           </object>

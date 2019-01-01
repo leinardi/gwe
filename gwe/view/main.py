@@ -138,12 +138,16 @@ class MainView(MainViewInterface):
             self._builder.get_object('fan_rpm_4')
         )
         self._overclock_frame: Gtk.Frame = self._builder.get_object('overclock_frame')
+        self._power_limit_scale: Gtk.Scale = self._builder.get_object('power_limit_scale')
         self._overclock_gpu_offset_scale: Gtk.Scale = self._builder.get_object('overclock_gpu_offset_scale')
         self._overclock_memory_offset_scale: Gtk.Scale = self._builder.get_object('overclock_memory_offset_scale')
+        self._power_limit_adjustment: Gtk.Adjustment = self._builder.get_object('power_limit_adjustment')
         self._overclock_gpu_offset_adjustment: Gtk.Adjustment = self._builder.get_object(
             'overclock_gpu_offset_adjustment')
         self._overclock_memory_offset_adjustment: Gtk.Adjustment = self._builder.get_object(
             'overclock_memory_offset_adjustment')
+
+        self._power_limit_apply_button: Gtk.Button = self._builder.get_object('power_limit_apply_button')
 
         # self._cooling_fan_duty: Gtk.Label = self._builder.get_object('cooling_fan_duty')
         # self._cooling_fan_rpm: Gtk.Label = self._builder.get_object('cooling_fan_rpm')
@@ -210,6 +214,9 @@ class MainView(MainViewInterface):
     #     self._cooling_fixed_speed_adjustment.set_value(profile.steps[0].duty)
     #     self._cooling_fixed_speed_popover.show_all()
 
+    def get_power_limit(self) -> Tuple[int, int]:
+        return 0, self._power_limit_adjustment.get_value()
+
     def get_overclock_offsets(self) -> Tuple[int, int, int, int]:
         return (
             0,
@@ -251,13 +258,33 @@ class MainView(MainViewInterface):
                 self._set_label_markup(self._temp_shutdown_value,
                                        "<span size=\"large\">%s</span> °C" % gpu_status.temp.shutdown.rstrip(' C'))
                 self._overclock_frame.set_sensitive(gpu_status.overclock.available)
+
+                if ' W' in gpu_status.power.default:
+                    minimum = self._get_power_value(gpu_status.power.minimum)
+                    maximum = self._get_power_value(gpu_status.power.maximum)
+                    default = self._get_power_value(gpu_status.power.default)
+                    if minimum != 0 and maximum != 0 and default != 0:
+                        limit = self._get_power_value(gpu_status.power.limit)
+                        self._power_limit_adjustment.set_lower(minimum)
+                        self._power_limit_adjustment.set_upper(maximum)
+                        self._power_limit_adjustment.set_value(limit)
+                        self._power_limit_scale.clear_marks()
+                        self._power_limit_scale.add_mark(default, Gtk.PositionType.BOTTOM, str(0))
+                    else:
+                        self._power_limit_scale.set_sensitive(False)
+                        self._power_limit_apply_button.set_sensitive(False)
+
                 if gpu_status.overclock.available:
                     self._overclock_gpu_offset_adjustment.set_value(gpu_status.overclock.gpu_offset)
                     self._overclock_memory_offset_adjustment.set_value(gpu_status.overclock.memory_offset)
-                    self._overclock_memory_offset_scale.clear_marks()
-                    self._overclock_memory_offset_scale.add_mark(0, Gtk.PositionType.BOTTOM, str(0))
                     self._overclock_gpu_offset_scale.clear_marks()
                     self._overclock_gpu_offset_scale.add_mark(0, Gtk.PositionType.BOTTOM, str(0))
+                    self._overclock_memory_offset_scale.clear_marks()
+                    self._overclock_memory_offset_scale.add_mark(0, Gtk.PositionType.BOTTOM, str(0))
+                    self._overclock_gpu_offset_adjustment.set_lower(gpu_status.overclock.gpu_range[0])
+                    self._overclock_gpu_offset_adjustment.set_upper(gpu_status.overclock.gpu_range[1])
+                    self._overclock_memory_offset_adjustment.set_lower(gpu_status.overclock.memory_range[0])
+                    self._overclock_memory_offset_adjustment.set_upper(gpu_status.overclock.memory_range[1])
 
             self._set_entry_text(self._info_pcie_entry, gpu_status.info.pcie)
             self._set_entry_text(self._info_memory_entry, gpu_status.info.memory_size)
@@ -292,11 +319,6 @@ class MainView(MainViewInterface):
                 else:
                     value.set_visible(False)
                     self._fan_rpm[index].set_visible(False)
-            if gpu_status.overclock.available:
-                self._overclock_gpu_offset_adjustment.set_lower(gpu_status.overclock.gpu_range[0])
-                self._overclock_gpu_offset_adjustment.set_upper(gpu_status.overclock.gpu_range[1])
-                self._overclock_memory_offset_adjustment.set_lower(gpu_status.overclock.memory_range[0])
-                self._overclock_memory_offset_adjustment.set_upper(gpu_status.overclock.memory_range[1])
 
             #     self._cooling_fan_rpm.set_markup("<span size=\"xx-large\">%s</span> RPM" % status.fan_rpm)
             #     self._cooling_fan_duty.set_markup("<span size=\"xx-large\">%s</span> %%" %
@@ -340,6 +362,15 @@ class MainView(MainViewInterface):
         else:
             levelbar.set_value(0)
             levelbar.set_sensitive(False)
+
+    @staticmethod
+    def _get_power_value(string: str) -> float:
+        try:
+            if " W" in string:
+                return float(string.replace(' W', '').strip())
+        except ValueError:
+            LOG.exception("Error while reading power from %s", string)
+        return 0
 
     def refresh_chart(self, profile: Optional[SpeedProfile] = None, reset: Optional[str] = None) -> None:
         if profile is None and reset is None:

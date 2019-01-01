@@ -234,7 +234,7 @@ class NvidiaRepository:
         )
 
     @staticmethod
-    def _set_overclock(gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> None:
+    def _set_overclock(gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> bool:
         cmd = [_NVIDIA_SETTINGS_BINARY_NAME,
                '-a',
                "[gpu:%d]/GPUGraphicsClockOffset[%d]=%d" % (gpu_index, perf, gpu_offset),
@@ -242,6 +242,19 @@ class NvidiaRepository:
                "[gpu:%d]/GPUMemoryTransferRateOffset[%d]=%d" % (gpu_index, perf, memory_offset)]
         result = run_and_get_stdout(cmd, ['xargs'])
         LOG.info("Exit code: %d. %s", result[0], result[1])
+        return result[0] == 0
+
+    @staticmethod
+    def _set_power_limit(gpu_index: int, limit: int) -> bool:
+        cmd = ['pkexec',
+               _NVIDIA_SMI_BINARY_NAME,
+               '-i',
+               str(gpu_index),
+               '-pl',
+               str(limit)]
+        result = run_and_get_stdout(cmd, ['xargs'])
+        LOG.info("Exit code: %d. %s", result[0], result[1])
+        return result[0] == 0
 
 # @staticmethod
 # def _py3nvml_error_handler(a_function: Callable, *args: Any) -> Any:

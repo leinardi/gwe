@@ -33,9 +33,7 @@ LOG = logging.getLogger(__name__)
 @singleton
 class GetStatusInteractor:
     @inject
-    def __init__(self,
-                 nvidia_repository: NvidiaRepository,
-                 ) -> None:
+    def __init__(self, nvidia_repository: NvidiaRepository, ) -> None:
         self._nvidia_repository = nvidia_repository
 
     def execute(self) -> Observable:
@@ -46,15 +44,24 @@ class GetStatusInteractor:
 @singleton
 class SetOverclockInteractor:
     @inject
-    def __init__(self,
-                 nvidia_repository: NvidiaRepository,
-                 ) -> None:
+    def __init__(self, nvidia_repository: NvidiaRepository, ) -> None:
         self._nvidia_repository = nvidia_repository
 
     def execute(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> Observable:
         LOG.debug("SetOverclockInteractor.execute()")
         return Observable.defer(
             lambda: Observable.just(self._nvidia_repository._set_overclock(gpu_index, perf, gpu_offset, memory_offset)))
+
+
+@singleton
+class SetPowerLimitInteractor:
+    @inject
+    def __init__(self, nvidia_repository: NvidiaRepository, ) -> None:
+        self._nvidia_repository = nvidia_repository
+
+    def execute(self, gpu_index: int, limit: int) -> Observable:
+        LOG.debug("SetPowerLimitInteractor.execute()")
+        return Observable.defer(lambda: Observable.just(self._nvidia_repository._set_power_limit(gpu_index, limit)))
 
 
 @singleton
