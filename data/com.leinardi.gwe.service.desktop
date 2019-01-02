@@ -6,4 +6,4 @@ TryExec=gwe
 Exec=gwe --gapplication-service
 Type=Application
 NoDisplay=true
-Name[en_US]=org.leinardi.gwe.service.desktop
+Name[en_US]=com.leinardi.gwe.service.desktop

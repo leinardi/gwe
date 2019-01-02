@@ -23,8 +23,8 @@ if get_option('with-flatpak')
   # we want builds to use the local files so simply rewrite it
   make_local_manifest = find_program('scripts/make_local_manifest.py')
   local_manifest = custom_target('manifest',
-    input: 'dist/flatpak/org.leinardi.gwe.json',
-    output: 'org.leinardi.gwe.json',
+    input: 'dist/flatpak/com.leinardi.gwe.json',
+    output: 'com.leinardi.gwe.json',
     command: [make_local_manifest, '@INPUT@', '@OUTPUT@']
   )
 
@@ -32,7 +32,7 @@ if get_option('with-flatpak')
   build_flatpak = find_program('scripts/build_flatpak.py')
   custom_target('flatpak',
     input: local_manifest,
-    output: 'org.leinardi.gwe.flatpak',
+    output: 'com.leinardi.gwe.flatpak',
     command: [build_flatpak, '@INPUT@', '@OUTPUT@'],
     build_always: true
     # TODO: This shouldn't build unless explicit

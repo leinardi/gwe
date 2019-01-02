@@ -1,5 +1,5 @@
 {
-    "app-id": "org.leinardi.gwe",
+    "app-id": "com.leinardi.gwe",
     "command": "gwe",
     "runtime": "org.gnome.Platform",
     "runtime-version": "3.28",

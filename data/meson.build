@@ -1,6 +1,6 @@
 gnome = import('gnome')
 
-app_id = 'org.leinardi.gwe'
+app_id = 'com.leinardi.gwe'
 
 desktop_conf = configuration_data()
 desktop_conf.set('bindir', join_paths(prefix, get_option('bindir')))
@@ -73,23 +73,23 @@ if false
   icon_targets = []
   foreach size: sizes
     icon_targets += custom_target('symbolic-icon-' + size,
-      input: 'icons/org.leinardi.gwe-symbolic.svg',
-      output: 'icons/org.leinardi.gwe-symbolic.png',
+      input: 'icons/com.leinardi.gwe-symbolic.svg',
+      output: 'icons/com.leinardi.gwe-symbolic.png',
       command: [gtk_encode_symbolic, '--output=' + meson.current_build_dir(), '@INPUT@', size]
     )
   endforeach
 endif
 
 icondir = join_paths(get_option('datadir'), 'icons/hicolor')
-install_data('icons/org.leinardi.gwe.svg',
+install_data('icons/com.leinardi.gwe.svg',
   install_dir: join_paths(icondir, 'scalable/apps')
 )
-install_data('icons/org.leinardi.gwe-symbolic.svg',
+install_data('icons/com.leinardi.gwe-symbolic.svg',
   install_dir: join_paths(icondir, 'symbolic/apps')
 )
 
 contributors = '\n'.join([
-  'Roberto Leinardi (leinardi) &lt;TODO@populate-email.com&gt;',
+  'Roberto Leinardi (leinardi) &lt;roberto@leinardi.com&gt;',
   'Gabriele Musco (gabmus) &lt;emaildigabry@gmail.com&gt;'
 ])
 
