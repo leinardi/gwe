@@ -1,0 +1,163 @@
+{
+    "app-id": "org.leinardi.gwe",
+    "command": "gwe",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "3.28",
+    "sdk": "org.gnome.Sdk",
+    "finish-args": [
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--talk-name=org.gnome.SettingsDaemon",
+        "--talk-name=org.mate.SettingsDaemon",
+        "--filesystem=home:ro",
+        "--filesystem=xdg-run/dconf",
+        "--filesystem=~/.config/dconf:ro",
+        "--talk-name=ca.desrt.dconf",
+        "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
+    ],
+    "modules": [
+        {
+            "name": "libwnck",
+            "cleanup": ["/include", "*.la"],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://download.gnome.org/sources/libwnck/3.30/libwnck-3.30.0.tar.xz",
+                    "sha256": "ac6d0d2646aa80676d3066651e73abb7bff7ed79be238c9b21a0083e2adc3439"
+                }
+            ]
+        },
+        {
+            "name": "python-pillow",
+            "buildsystem": "simple",
+            "build-options": {
+                "arch": {
+                    "i386": {
+                        "env": {
+                            "MAX_CONCURRENCY": "1"
+                        }
+                    },
+                    "arm": {
+                        "env": {
+                            "MAX_CONCURRENCY": "1"
+                        }
+                    }
+                }
+            },
+            "ensure-writable": [
+                "/lib/python*/site-packages/easy-install.pth",
+                "/lib/python*/site-packages/setuptools.pth",
+                "/app/lib/python*/site-packages/easy-install.pth",
+                "/app/lib/python*/site-packages/setuptools.pth"
+            ],
+            "build-commands": [
+                "python3 setup.py install --prefix=/app --root=/"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/python-pillow/Pillow/archive/5.3.0.tar.gz",
+                    "sha256": "9de4853d8b640c0185665735a1c3266b6d51636b3a3d8e3ea7876c485194b6e1"
+                },
+                {
+                    "type": "shell",
+                    "commands": [
+                        "sed -i 's/if not platform_/if not dirs/' setup.py"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "python-gmconfig",
+            "buildsystem": "simple",
+            "build-options": {
+                "arch": {
+                    "i386": {
+                        "env": {
+                            "MAX_CONCURRENCY": "1"
+                        }
+                    },
+                    "arm": {
+                        "env": {
+                            "MAX_CONCURRENCY": "1"
+                        }
+                    }
+                }
+            },
+            "ensure-writable": [
+                "/lib/python*/site-packages/easy-install.pth",
+                "/lib/python*/site-packages/setuptools.pth",
+                "/app/lib/python*/site-packages/easy-install.pth",
+                "/app/lib/python*/site-packages/setuptools.pth"
+            ],
+            "build-commands": [
+                "python3 setup.py install --prefix=/app --root=/"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://gitlab.com/leinardi/python-gmconfig/-/archive/1.0.1/python-gmconfig-1.0.1.tar.gz",
+                    "sha256": "3172b45e30c8105ae70da36b57c0752007b2924d8db23339c152fe70f12575b1"
+                },
+                {
+                    "type": "shell",
+                    "commands": [
+                        "sed -i 's/if not platform_/if not dirs/' setup.py"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "python-gmgtk",
+            "buildsystem": "simple",
+            "build-options": {
+                "arch": {
+                    "i386": {
+                        "env": {
+                            "MAX_CONCURRENCY": "1"
+                        }
+                    },
+                    "arm": {
+                        "env": {
+                            "MAX_CONCURRENCY": "1"
+                        }
+                    }
+                }
+            },
+            "ensure-writable": [
+                "/lib/python*/site-packages/easy-install.pth",
+                "/lib/python*/site-packages/setuptools.pth",
+                "/app/lib/python*/site-packages/easy-install.pth",
+                "/app/lib/python*/site-packages/setuptools.pth"
+            ],
+            "build-commands": [
+                "python3 setup.py install --prefix=/app --root=/"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://gitlab.com/leinardi/python-gmgtk/-/archive/1.0/python-gmgtk-1.0.tar.gz",
+                    "sha256": "070ad9d595bd358f788d4419d780f5dbc8d25d9857c33e5826760def05e4488f"
+                },
+                {
+                    "type": "shell",
+                    "commands": [
+                        "sed -i 's/if not platform_/if not dirs/' setup.py"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "gwe",
+            "buildsystem": "meson",
+            "builddir": true,
+            "config-opts": ["--buildtype=release"],
+            "sources": [{
+                "type": "archive",
+                "url": "https://gitlab.com/leinardi/GreenWithEnvy/-/archive/1.4.1/GreenWithEnvy-1.4.1.tar.gz",
+                "sha256": "c0f2fdae156defa381dbc45c1008a09c653c0a379eed68b320fb386e3afd8023"
+            }]
+        }
+    ]
+}

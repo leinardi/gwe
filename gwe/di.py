@@ -45,7 +45,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_file(get_data_path(APP_MAIN_UI_NAME))
+        builder.add_from_resource("/org/leinardi/gwe/ui/{0}".format(APP_MAIN_UI_NAME))
         return builder
 
     @singleton
@@ -54,7 +54,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_file(get_data_path(APP_EDIT_FAN_PROFILE_UI_NAME))
+        builder.add_from_resource("/org/leinardi/gwe/ui/{0}".format(APP_EDIT_FAN_PROFILE_UI_NAME))
         return builder
 
     @singleton
@@ -73,7 +73,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_file(get_data_path(APP_PREFERENCES_UI_NAME))
+        builder.add_from_resource("/org/leinardi/gwe/ui/{0}".format(APP_PREFERENCES_UI_NAME))
         return builder
 
     @singleton

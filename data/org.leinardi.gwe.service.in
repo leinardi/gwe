@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.leinardi.gwe
+Exec=@bindir@/gwe --gapplication-service

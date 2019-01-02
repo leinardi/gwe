@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=GreenWithEnvy
+Comment=Graphical system utility that provides information and allows to control overclock and fan speed of modern Nvidia cards
+Exec=@bindir@/gwe %U
+Icon=org.leinardi.gwe
+Terminal=false
+Type=Application
+StartupNotify=true
+MimeType=
+Categories=Utility;GTK;GNOME;
+Keywords=nvidia;overclock;
