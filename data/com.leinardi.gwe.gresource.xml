@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/org/leinardi/gwe">
+  <gresource prefix="/com/leinardi/gwe">
     <file compressed="true">com.leinardi.gwe.service.desktop</file>
 
     <!-- <file preprocess="xml-stripblanks">gtk/menus.ui</file> -->
