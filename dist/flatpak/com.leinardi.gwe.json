@@ -47,7 +47,7 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/alecthomas/injector/archive/0.14.1.tar.gz",
-                    "sha256": "07ca671ebb587642c0c85646e27768d128dd74e79dc2101f92ece293a17e3aaf"
+                    "sha256": "33ac76873fb10a59cd1f042dfbbeab9987228b3bc9364964f3610d8074c070c7"
                 },
                 {
                     "type": "shell",
@@ -87,7 +87,7 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/matplotlib/matplotlib/archive/v3.0.2.tar.gz",
-                    "sha256": "0ac5305a2f0788dc243b61c288f3fc5f61c7c69ff161417db2325cf168b63c04"
+                    "sha256": "4682a2a4e66eed054d78a1eae5936d2174e8c145486db59f12a585aef991fad5"
                 },
                 {
                     "type": "shell",
@@ -127,7 +127,7 @@
                 {
                     "type": "archive",
                     "url": "https://github.com/coleifer/peewee/archive/3.8.0.tar.gz",
-                    "sha256": "d131ba2723ff12ff65fb27e90cca6433955f2f014769d38087137f83a9f4e16f"
+                    "sha256": "5b9567edd87a31ba09d6b110ed26079d875d0cb89aa8fb6e7e5cf318045152ad"
                 },
                 {
                     "type": "shell",
