@@ -175,7 +175,7 @@ class MainView(MainViewInterface):
     def _init_app_indicator(self) -> None:
         if AppIndicator3:
             self._app_indicator = AppIndicator3.Indicator \
-                .new(APP_ID, get_data_path('gwe-symbolic.svg'), AppIndicator3.IndicatorCategory.HARDWARE)
+                .new(APP_ID, 'com.leinardi.gwe-symbolic', AppIndicator3.IndicatorCategory.HARDWARE)
             if self._settings_interactor.get_bool('settings_show_app_indicator'):
                 self._app_indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
             else:
