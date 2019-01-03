@@ -143,6 +143,7 @@ class MainPresenter:
             self._fan_profile_applied = self._fan_profile_selected
             if self._fan_profile_selected.type == FanProfileType.AUTO.value:
                 self._set_fan_speed(gpu_index, manual_control=False)
+            self._refresh_fan_profile_ui(profile_id=self._fan_profile_selected.id)
         self._update_current_fan_profile(self._fan_profile_selected)
 
     def on_menu_settings_clicked(self, *_: Any) -> None:
@@ -210,7 +211,9 @@ class MainPresenter:
         fan = gpu_status.fan
         if fan.control_allowed:
             if self._fan_profile_selected is None and not fan.manual_control:
-                self._refresh_fan_profile_ui(profile_id=FanProfile.get(FanProfile.type == FanProfileType.AUTO.value).id)
+                fan_profile = FanProfile.get(FanProfile.type == FanProfileType.AUTO.value)
+                self._fan_profile_applied = fan_profile
+                self._refresh_fan_profile_ui(profile_id=fan_profile.id)
             elif self._fan_profile_applied and self._fan_profile_applied.type != FanProfileType.AUTO.value:
                 if not self._fan_profile_applied.steps:
                     self._set_fan_speed(gpu_status.index, manual_control=False)
@@ -237,15 +240,23 @@ class MainPresenter:
         return duty
 
     def _refresh_fan_profile_ui(self, init: bool = False, profile_id: Optional[int] = None) -> None:
-        data = [(p.id, p.name) for p in FanProfile.select()]
+        current: Optional[CurrentFanProfile] = None
+        if init and self._settings_interactor.get_bool('settings_load_last_profile'):
+            current = CurrentFanProfile.get_or_none()
+            if current is not None:
+                self._fan_profile_applied = current.profile
+        data: List[Tuple[int, str]] = []
+        for fan_profile in FanProfile.select():
+            if self._fan_profile_applied is not None and self._fan_profile_applied.id == fan_profile.id:
+                name = "<b>%s</b>" % fan_profile.name
+            else:
+                name = fan_profile.name
+            data.append((fan_profile.id, name))
         active = None
         if profile_id is not None:
             active = next(i for i, item in enumerate(data) if item[0] == profile_id)
-        elif init and self._settings_interactor.get_bool('settings_load_last_profile'):
-            current: CurrentFanProfile = CurrentFanProfile.get_or_none()
-            if current is not None:
-                active = next(i for i, item in enumerate(data) if item[0] == current.profile.id)
-                self._fan_profile_applied = current.profile
+        elif current is not None:
+            active = next(i for i, item in enumerate(data) if item[0] == current.profile.id)
         data.append((_ADD_NEW_PROFILE_INDEX, "<span style='italic' alpha='50%'>Add new profile...</span>"))
         self.main_view.refresh_fan_profile_combobox(data, active)
 
