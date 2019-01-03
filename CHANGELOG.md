@@ -1,4 +1,8 @@
-**[0.5.0] 2019-01-01**
+**[0.5.1] 2019-01-03**
+ - Min duty changed from 25 to 0
+ - Slightly bigger app indicator icon
+
+**[0.5.0] 2019-01-03**
  - Implemented Fan curve profile! 
  - Added GPU temperature to app indicator
  - Changed app indicator icon (again)

@@ -33,7 +33,7 @@ APP_AUTHOR_EMAIL = 'roberto@leinardi.com'
 
 MIN_TEMP = 0
 MAX_TEMP = 100
-FAN_MIN_DUTY = 25
+FAN_MIN_DUTY = 0
 FAN_MAX_DUTY = 100
 
 SETTINGS_DEFAULTS: Dict[str, Any] = {
