@@ -13,7 +13,7 @@ TBD
 - [x] Add Refresh timeout to settings 
 - [x] Add command line option to add desktop entry
 - [x] About dialog
-- [x] Publish on PIP
+- [x] Distributing with PyPI
 - [x] Show chart of selected fan profile
 - [x] Allow to select and apply a fan profile
 - [x] Add/Delete/Edit multi speed fan profiles (fan curve)
