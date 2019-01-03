@@ -1595,7 +1595,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="spacing">4</property>
+                                <property name="spacing">8</property>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">True</property>
