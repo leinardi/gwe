@@ -1854,7 +1854,7 @@ along with GreenWithEnvy.  If not, see <http://www.gnu.org/licenses/>.
     <property name="website">https://gitlab.com/leinardi</property>
     <property name="authors">Roberto Leinardi &lt;roberto@leinardi.com&gt;
 Gabriele Musco &lt;emaildigabry@gmail.com&gt;</property>
-    <property name="logo">com.leinardi.gwe</property>
+    <property name="logo_icon_name">image-missing</property>
     <property name="license_type">gpl-3-0</property>
     <child type="titlebar">
       <placeholder/>
