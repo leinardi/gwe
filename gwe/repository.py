@@ -19,7 +19,7 @@ import logging
 import re
 import subprocess
 import threading
-from typing import Optional, List, Tuple, Callable, Any
+from typing import Optional, List, Tuple, Dict
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 
@@ -75,8 +75,9 @@ def query_gpu_setting(gpu_index: int, attr: str) -> str:
 class NvidiaRepository:
     @inject
     def __init__(self) -> None:
-        self.lock = threading.RLock()
-        self.gpu_count = 0
+        self._lock = threading.RLock()
+        self._gpu_count = 0
+        self._gpu_setting_cache: List[Dict[str, str]] = []
 
     @staticmethod
     def is_nvidia_smi_available() -> bool:
@@ -86,7 +87,12 @@ class NvidiaRepository:
     def is_nvidia_settings_available() -> bool:
         return run_and_get_stdout(['which', _NVIDIA_SETTINGS_BINARY_NAME])[0] == 0
 
-    @synchronized_with_attr("lock")
+    def _get_gpu_setting_from_cache(self, gpu_index: int, name: str) -> str:
+        if name not in self._gpu_setting_cache[gpu_index]:
+            self._gpu_setting_cache[gpu_index][name] = query_gpu_setting(gpu_index, name)
+        return self._gpu_setting_cache[gpu_index][name]
+
+    @synchronized_with_attr("_lock")
     def get_status(self) -> Optional[Status]:
         output = run_and_get_stdout([_NVIDIA_SMI_BINARY_NAME, '-q', '-x'])
         if output[0]:
@@ -96,10 +102,12 @@ class NvidiaRepository:
             gpu_status_list: List[GpuStatus] = []
             gpu_index = 0
             for gpu in root.findall('gpu'):
+                if len(self._gpu_setting_cache) <= gpu_index:
+                    self._gpu_setting_cache.append({})
                 gpu.append(root.find('driver_version'))
                 info = self._get_info_from_smi_xml(gpu)
-                info.cuda_cores = query_gpu_setting(gpu_index, 'CUDACores')
-                info.memory_interface = query_gpu_setting(gpu_index, 'GPUMemoryInterface') + ' bit'
+                info.cuda_cores = self._get_gpu_setting_from_cache(gpu_index, 'CUDACores')
+                info.memory_interface = self._get_gpu_setting_from_cache(gpu_index, 'GPUMemoryInterface') + ' bit'
                 power = self._get_power_from_smi_xml(gpu)
                 temp = self._get_temp_from_smi_xml(gpu)
                 clocks = self._get_clocks_from_smi_xml(gpu)
@@ -117,7 +125,7 @@ class NvidiaRepository:
                 )
                 gpu_status_list.append(gpu_status)
                 gpu_index += 1
-            self.gpu_count = gpu_index
+            self._gpu_count = gpu_index
             return Status(gpu_status_list)
         return None
 
@@ -210,11 +218,10 @@ class NvidiaRepository:
             manual_control=False
         )
 
-    @staticmethod
-    def _get_overclock_from_settings(gpu_index: int) -> Overclock:
-        result = query_settings(gpu_index, True, True, "GPUPerfModes")
-        if result[0] == 0:
-            perf = len(result[1].split(';')) - 1  # it would be safer to parse and search
+    def _get_overclock_from_settings(self, gpu_index: int) -> Overclock:
+        result = self._get_gpu_setting_from_cache(0, "GPUPerfModes").replace('\n', ' ')
+        if result != NOT_AVAILABLE_STRING:
+            perf = len(result.split(';')) - 1  # it would be safer to parse and search
 
             result = query_settings(gpu_index, False, True,
                                     "GPUGraphicsClockOffset[%d]" % perf, "GPUMemoryTransferRateOffset[%d]" % perf)
@@ -266,7 +273,7 @@ class NvidiaRepository:
         return result[0] == 0
 
     def set_all_gpus_fan_to_auto(self) -> None:
-        for gpu_index in range(self.gpu_count):
+        for gpu_index in range(self._gpu_count):
             self.set_fan_speed(gpu_index, manual_control=False)
 
     @staticmethod
