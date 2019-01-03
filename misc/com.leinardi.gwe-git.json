@@ -8,8 +8,7 @@
         "--share=ipc",
         "--socket=x11",
         "--socket=wayland",
-        "--talk-name=org.gnome.SettingsDaemon",
-        "--talk-name=org.mate.SettingsDaemon",
+        "--talk-name=org.kde.StatusNotifierWatcher",
         "--filesystem=home:ro",
         "--filesystem=xdg-run/dconf",
         "--filesystem=~/.config/dconf:ro",
@@ -17,6 +16,7 @@
         "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
     ],
     "modules": [
+        "shared-modules/libappindicator-gtk3-introspection-12.10.json",
         {
             "name": "python-injector",
             "buildsystem": "simple",
