@@ -1,3 +1,6 @@
+**[0.6.0] 2019-01-03**
+- Highlighting currently applied profile
+
 **[0.5.1] 2019-01-03**
  - Min duty changed from 25 to 0
  - Slightly bigger app indicator icon
