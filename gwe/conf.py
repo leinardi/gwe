@@ -19,7 +19,7 @@ from typing import Dict, Any
 APP_PACKAGE_NAME = "gwe"
 APP_NAME = "GWE"
 APP_ID = "com.leinardi.gwe"
-APP_VERSION = "0.3.2"
+APP_VERSION = "0.5.0"
 APP_ICON_NAME = APP_PACKAGE_NAME + ".svg"
 APP_DB_NAME = APP_PACKAGE_NAME + ".db"
 APP_MAIN_UI_NAME = "main.glade"
