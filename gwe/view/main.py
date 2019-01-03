@@ -17,7 +17,7 @@
 
 import logging
 from collections import OrderedDict
-from typing import Optional, Dict, Any, List, Tuple
+from typing import Optional, Dict, List, Tuple
 
 from gwe.di import MainBuilder
 from gwe.repository import NOT_AVAILABLE_STRING
@@ -40,8 +40,7 @@ try:
 except (ImportError, ValueError):
     AppIndicator3 = None
 
-from gwe.conf import APP_PACKAGE_NAME, APP_ID, FAN_MIN_DUTY, FAN_MAX_DUTY, APP_NAME, \
-    APP_VERSION, APP_SOURCE_URL
+from gwe.conf import APP_PACKAGE_NAME, APP_ID, APP_NAME, APP_VERSION, APP_SOURCE_URL
 from gwe.model import Status, FanProfile
 from gwe.presenter.main import MainPresenter, MainViewInterface
 
@@ -156,10 +155,6 @@ class MainView(MainViewInterface):
         self._fan_combobox: Gtk.ComboBox = self._builder.get_object('fan_profile_combobox')
         fan_scrolled_window: Gtk.ScrolledWindow = self._builder.get_object('fan_scrolled_window')
         self._fan_edit_button: Gtk.Button = self._builder.get_object('fan_edit_button')
-        # self._cooling_fixed_speed_p\opover: Gtk.Popover = self._builder.get_object('cooling_fixed_speed_popover')
-        # self._cooling_fixed_speed_adjustment: Gtk.Adjustment = \
-        #     self._builder.get_object('cooling_fixed_speed_adjustment')
-        # self._cooling_fixed_speed_scale: Gtk.Scale = self._builder.get_object('cooling_fixed_speed_scale')
         self._init_plot_charts(fan_scrolled_window)
 
     def _init_about_dialog(self) -> None:
@@ -195,20 +190,6 @@ class MainView(MainViewInterface):
         else:
             self._window.show()
 
-    # def show_add_fan_profile_dialog(self, channel: ChannelType) -> None:
-    #     LOG.debug("view show_add_fan_profile_dialog %s", channel.name)
-
-    # def show_fixed_fan_profile_popover(self, profile: FanProfile) -> None:
-    #     if profile.channel == ChannelType.FAN.value:
-    #         self._cooling_fixed_speed_popover.set_relative_to(self._fan_edit_button)
-    #         self._cooling_fixed_speed_adjustment.set_lower(FAN_MIN_DUTY)
-    #         self._cooling_fixed_speed_adjustment.set_upper(FAN_MAX_DUTY)
-    #     else:
-    #         raise ValueError("Unknown channel: %s" % profile.channel)
-    #     self._cooling_fixed_speed_scale.set_name(profile.channel)
-    #     self._cooling_fixed_speed_adjustment.set_value(profile.steps[0].duty)
-    #     self._cooling_fixed_speed_popover.show_all()
-
     def get_power_limit(self) -> Tuple[int, int]:
         return 0, self._power_limit_adjustment.get_value()
 
@@ -219,10 +200,6 @@ class MainView(MainViewInterface):
             self._overclock_gpu_offset_adjustment.get_value(),
             self._overclock_memory_offset_adjustment.get_value()
         )
-
-    def dismiss_and_get_value_fixed_speed_popover(self) -> Tuple[int, str]:
-        self._cooling_fixed_speed_popover.hide()
-        return self._cooling_fixed_speed_scale.get_value(), self._cooling_fixed_speed_scale.get_name()
 
     def show_about_dialog(self) -> None:
         self._about_dialog.show()

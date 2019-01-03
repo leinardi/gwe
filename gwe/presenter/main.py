@@ -18,7 +18,7 @@
 
 import logging
 import multiprocessing
-from typing import Optional, Any, List, Tuple, Dict, Callable
+from typing import Optional, Any, List, Tuple, Callable
 
 from injector import inject, singleton
 from rx import Observable
@@ -26,11 +26,11 @@ from rx.concurrency import GtkScheduler, ThreadPoolScheduler
 from rx.concurrency.schedulerbase import SchedulerBase
 from rx.disposables import CompositeDisposable
 
-from gwe.conf import SETTINGS_DEFAULTS, APP_NAME, APP_SOURCE_URL
+from gwe.conf import APP_NAME, APP_SOURCE_URL
 from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject
 from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
     CheckNewVersionInteractor, SetOverclockInteractor, SetPowerLimitInteractor, SetFanSpeedInteractor
-from gwe.model import Status, FanProfile, CurrentFanProfile, SpeedStep, DbChange, FanProfileType, GpuStatus
+from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfileType, GpuStatus
 from gwe.presenter.edit_fan_profile import EditFanProfilePresenter
 from gwe.presenter.preferences import PreferencesPresenter
 from gwe.repository import NOT_AVAILABLE_STRING
@@ -70,12 +70,6 @@ class MainViewInterface:
     def get_overclock_offsets(self) -> Tuple[int, int, int, int]:
         raise NotImplementedError()
 
-    # def show_fixed_fan_profile_popover(self, profile: FanProfile) -> None:
-    #     raise NotImplementedError()
-    #
-    # def dismiss_and_get_value_fixed_speed_popover(self) -> Tuple[int, str]:
-    #     raise NotImplementedError()
-
     def show_about_dialog(self) -> None:
         raise NotImplementedError()
 
@@ -112,7 +106,6 @@ class MainPresenter:
         self._composite_disposable: CompositeDisposable = composite_disposable
         self._fan_profile_selected: Optional[FanProfile] = None
         self._fan_profile_applied: Optional[FanProfile] = None
-        # self._should_update_fan_speed: bool = False
         self.application_quit: Callable = lambda *args: None  # will be set by the Application
 
     def on_start(self) -> None:
@@ -120,12 +113,6 @@ class MainPresenter:
         self._register_db_listeners()
         self._start_refresh()
         self._check_new_version()
-
-    def _register_db_listeners(self) -> None:
-        self._fan_profile_changed_subject.subscribe(on_next=self._on_fan_profile_list_changed,
-                                                    on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
-        self._speed_step_changed_subject.subscribe(on_next=self._on_speed_step_list_changed,
-                                                   on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
 
     def on_power_limit_apply_button_clicked(self, *_: Any) -> None:
         self._composite_disposable \
@@ -142,6 +129,48 @@ class MainPresenter:
                  .observe_on(GtkScheduler())
                  .subscribe(on_error=lambda e: LOG.exception("Set overclock error: %s", str(e)))
                  )
+
+    def on_fan_edit_button_clicked(self, *_: Any) -> None:
+        profile = self._fan_profile_selected
+        if profile:
+            self._edit_fan_profile_presenter.show_edit(profile)
+        else:
+            LOG.error('Profile is None!')
+
+    def on_fan_apply_button_clicked(self, *_: Any) -> None:
+        gpu_index = 0
+        if self._fan_profile_selected:
+            self._fan_profile_applied = self._fan_profile_selected
+            if self._fan_profile_selected.type == FanProfileType.AUTO.value:
+                self._set_fan_speed(gpu_index, manual_control=False)
+        self._update_current_fan_profile(self._fan_profile_selected)
+
+    def on_menu_settings_clicked(self, *_: Any) -> None:
+        self._preferences_presenter.show()
+
+    def on_menu_about_clicked(self, *_: Any) -> None:
+        self.main_view.show_about_dialog()
+
+    def on_stack_visible_child_changed(self, *_: Any) -> None:
+        pass
+
+    def on_fan_profile_selected(self, widget: Any, *_: Any) -> None:
+        active = widget.get_active()
+        if active >= 0:
+            profile_id = widget.get_model()[active][0]
+            self._select_fan_profile(profile_id)
+
+    def on_quit_clicked(self, *_: Any) -> None:
+        self.application_quit()
+
+    def on_toggle_app_window_clicked(self, *_: Any) -> None:
+        self.main_view.toggle_window_visibility()
+
+    def _register_db_listeners(self) -> None:
+        self._fan_profile_changed_subject.subscribe(on_next=self._on_fan_profile_list_changed,
+                                                    on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
+        self._speed_step_changed_subject.subscribe(on_next=self._on_speed_step_list_changed,
+                                                   on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
 
     def _on_fan_profile_list_changed(self, db_change: DbChange) -> None:
         profile = db_change.entry
@@ -207,9 +236,6 @@ class MainPresenter:
             duty = float(p_2[1])
         return duty
 
-    # def _load_last_profile(self) -> None:
-    #     for current in CurrentFanProfile.select():
-
     def _refresh_fan_profile(self, init: bool = False, profile_id: Optional[int] = None) -> None:
         data = [(p.id, p.name) for p in FanProfile.select()]
         active = None
@@ -223,27 +249,6 @@ class MainPresenter:
         #         self._set_fan_profile(current.profile)
         data.append((_ADD_NEW_PROFILE_INDEX, "<span style='italic' alpha='50%'>Add new profile...</span>"))
         self.main_view.refresh_fan_profile_combobox(data, active)
-
-    def on_menu_settings_clicked(self, *_: Any) -> None:
-        self._preferences_presenter.show()
-
-    def on_menu_about_clicked(self, *_: Any) -> None:
-        self.main_view.show_about_dialog()
-
-    def on_stack_visible_child_changed(self, *_: Any) -> None:
-        pass
-
-    def on_fan_profile_selected(self, widget: Any, *_: Any) -> None:
-        active = widget.get_active()
-        if active >= 0:
-            profile_id = widget.get_model()[active][0]
-            self._select_fan_profile(profile_id)
-
-    def on_quit_clicked(self, *_: Any) -> None:
-        self.application_quit()
-
-    def on_toggle_app_window_clicked(self, *_: Any) -> None:
-        self.main_view.toggle_window_visibility()
 
     def _select_fan_profile(self, profile_id: int) -> None:
         if profile_id == _ADD_NEW_PROFILE_INDEX:
@@ -260,38 +265,6 @@ class MainPresenter:
                 self.main_view.set_edit_fan_profile_button_enabled(True)
             self.main_view.set_apply_fan_profile_button_enabled(True)
             self.main_view.refresh_chart(profile)
-
-    #
-    # @staticmethod
-    # def _get_profile_data(profile: FanProfile) -> List[Tuple[int, int]]:
-    #     return [(p.temperature, p.duty) for p in profile.steps]
-    #
-    def on_fan_edit_button_clicked(self, *_: Any) -> None:
-        profile = self._fan_profile_selected
-        if profile:
-            self._edit_fan_profile_presenter.show_edit(profile)
-        else:
-            LOG.error('Profile is None!')
-
-    #
-    # def on_fixed_speed_apply_button_clicked(self, *_: Any) -> None:
-    #     value, channel = self.main_view.dismiss_and_get_value_fixed_speed_popover()
-    #     profile = self._profile_selected[channel]
-    #     speed_step: SpeedStep = profile.steps[0]
-    #     speed_step.duty = value
-    #     speed_step.save()
-    #     if channel == ChannelType.FAN.value:
-    #         self._should_update_fan_speed = False
-    #     self.main_view.refresh_chart(profile)
-    #
-    def on_fan_apply_button_clicked(self, *_: Any) -> None:
-        gpu_index = 0
-        if self._fan_profile_selected:
-            self._fan_profile_applied = self._fan_profile_selected
-            if self._fan_profile_selected.type == FanProfileType.AUTO.value:
-                self._set_fan_speed(gpu_index, manual_control=False)
-        self._update_current_fan_profile(self._fan_profile_selected)
-        # self._should_update_fan_speed = True
 
     def _set_fan_speed(self, gpu_index: int, speed: int = 100, manual_control: bool = True) -> None:
         self._composite_disposable \
