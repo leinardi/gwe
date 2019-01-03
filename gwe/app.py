@@ -25,7 +25,7 @@ from gi.repository import Gtk, Gio, GLib
 from injector import inject
 from peewee import SqliteDatabase
 
-from gwe.conf import APP_NAME, APP_ID, APP_VERSION
+from gwe.conf import APP_NAME, APP_ID, APP_VERSION, APP_ICON_NAME
 from gwe.di import MainBuilder
 from gwe.model import FanProfile, SpeedStep, Setting, CurrentFanProfile, load_db_default_data
 from gwe.presenter.main import MainPresenter
@@ -71,6 +71,7 @@ class Application(Gtk.Application):
         if not self._window:
             self._builder.connect_signals(self._presenter)
             self._window: Gtk.ApplicationWindow = self._builder.get_object("application_window")
+            self._window.set_icon_name(APP_ICON_NAME)
             self._window.set_application(self)
             self._window.show_all()
             self._view.show()

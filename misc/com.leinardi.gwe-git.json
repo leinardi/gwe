@@ -183,9 +183,8 @@
             "builddir": true,
             "config-opts": ["--buildtype=release"],
             "sources": [{
-                "type": "archive",
-                "url": "https://gitlab.com/leinardi/gwe/-/archive/0.3.2/gwe-0.3.2.tar.gz",
-                "sha256": "c0f2fdae156defa381dbc45c1008a09c653c0a379eed68b320fb386e3afd8023"
+                "type": "git",
+                "url": "git://gitlab.com/gabmus/gwe"
             }]
         }
     ]
