@@ -109,7 +109,7 @@ class MainPresenter:
         self.application_quit: Callable = lambda *args: None  # will be set by the Application
 
     def on_start(self) -> None:
-        self._refresh_fan_profile(True)
+        self._refresh_fan_profile_ui(True)
         self._register_db_listeners()
         self._start_refresh()
         self._check_new_version()
@@ -119,7 +119,7 @@ class MainPresenter:
             .add(self._set_power_limit_interactor.execute(*self.main_view.get_power_limit())
                  .subscribe_on(self._scheduler)
                  .observe_on(GtkScheduler())
-                 .subscribe(on_error=lambda e: LOG.exception("Set overclock error: %s", str(e)))
+                 .subscribe(on_next=self._handle_set_power_limit_result, on_error=self._handle_set_power_limit_result)
                  )
 
     def on_overclock_apply_button_clicked(self, *_: Any) -> None:
@@ -127,7 +127,7 @@ class MainPresenter:
             .add(self._set_overclock_interactor.execute(*self.main_view.get_overclock_offsets())
                  .subscribe_on(self._scheduler)
                  .observe_on(GtkScheduler())
-                 .subscribe(on_error=lambda e: LOG.exception("Set overclock error: %s", str(e)))
+                 .subscribe(on_next=self._handle_set_overclock_result, on_error=self._handle_set_overclock_result)
                  )
 
     def on_fan_edit_button_clicked(self, *_: Any) -> None:
@@ -151,9 +151,6 @@ class MainPresenter:
     def on_menu_about_clicked(self, *_: Any) -> None:
         self.main_view.show_about_dialog()
 
-    def on_stack_visible_child_changed(self, *_: Any) -> None:
-        pass
-
     def on_fan_profile_selected(self, widget: Any, *_: Any) -> None:
         active = widget.get_active()
         if active >= 0:
@@ -175,14 +172,15 @@ class MainPresenter:
     def _on_fan_profile_list_changed(self, db_change: DbChange) -> None:
         profile = db_change.entry
         if db_change.type == DbChange.DELETE:
-            self._refresh_fan_profile()
+            self._refresh_fan_profile_ui()
             self._fan_profile_selected = None
+            self._fan_profile_applied = None
         elif db_change.type == DbChange.INSERT or db_change.type == DbChange.UPDATE:
-            self._refresh_fan_profile(profile_id=profile.id)
+            self._refresh_fan_profile_ui(profile_id=profile.id)
 
     def _on_speed_step_list_changed(self, db_change: DbChange) -> None:
         profile = db_change.entry.profile
-        if self._fan_profile_selected.id == profile.id:
+        if self._fan_profile_selected and self._fan_profile_selected.id == profile.id:
             self.main_view.refresh_chart(profile)
 
     def _start_refresh(self) -> None:
@@ -212,16 +210,18 @@ class MainPresenter:
         fan = gpu_status.fan
         if fan.control_allowed:
             if self._fan_profile_selected is None and not fan.manual_control:
-                self._refresh_fan_profile(
-                    profile_id=FanProfile.get(FanProfile.type == FanProfileType.AUTO.value).id)
+                self._refresh_fan_profile_ui(profile_id=FanProfile.get(FanProfile.type == FanProfileType.AUTO.value).id)
             elif self._fan_profile_applied and self._fan_profile_applied.type != FanProfileType.AUTO.value:
                 if not self._fan_profile_applied.steps:
                     self._set_fan_speed(gpu_status.index, manual_control=False)
                 elif NOT_AVAILABLE_STRING not in gpu_status.temp.gpu:
-                    temperature = int(gpu_status.temp.gpu.rstrip(' C'))
-                    speed = round(self._get_fan_duty(self._fan_profile_applied, temperature))
-                    if fan.fan_list and fan.fan_list[0][0] != speed:
-                        self._set_fan_speed(gpu_status.index, round(speed))
+                    try:
+                        temperature = int(gpu_status.temp.gpu.rstrip(' C'))
+                        speed = round(self._get_fan_duty(self._fan_profile_applied, temperature))
+                        if fan.fan_list and fan.fan_list[0][0] != speed:
+                            self._set_fan_speed(gpu_status.index, round(speed))
+                    except ValueError:
+                        LOG.exception('Unable to parse temperature %s', gpu_status.temp.gpu)
 
     @staticmethod
     def _get_fan_duty(profile: FanProfile, gpu_temperature: float) -> float:
@@ -236,17 +236,16 @@ class MainPresenter:
             duty = float(p_2[1])
         return duty
 
-    def _refresh_fan_profile(self, init: bool = False, profile_id: Optional[int] = None) -> None:
+    def _refresh_fan_profile_ui(self, init: bool = False, profile_id: Optional[int] = None) -> None:
         data = [(p.id, p.name) for p in FanProfile.select()]
         active = None
         if profile_id is not None:
             active = next(i for i, item in enumerate(data) if item[0] == profile_id)
-        # elif init and self._settings_interactor.get_bool('settings_load_last_profile'):
-        #     self._should_update_fan_speed = True
-        #     current: CurrentFanProfile = CurrentFanProfile.get_or_none(channel=channel.value)
-        #     if current is not None:
-        #         active = next(i for i, item in enumerate(data) if item[0] == current.profile.id)
-        #         self._set_fan_profile(current.profile)
+        elif init and self._settings_interactor.get_bool('settings_load_last_profile'):
+            current: CurrentFanProfile = CurrentFanProfile.get_or_none()
+            if current is not None:
+                active = next(i for i, item in enumerate(data) if item[0] == current.profile.id)
+                self._fan_profile_applied = current.profile
         data.append((_ADD_NEW_PROFILE_INDEX, "<span style='italic' alpha='50%'>Add new profile...</span>"))
         self.main_view.refresh_fan_profile_combobox(data, active)
 
@@ -300,6 +299,21 @@ class MainPresenter:
                  .subscribe(on_next=self._handle_new_version_response,
                             on_error=lambda e: LOG.exception("Check new version error: %s", str(e)))
                  )
+
+    def _handle_set_power_limit_result(self, result: Any) -> None:
+        self._handle_generic_set_result(result, "power limit")
+
+    def _handle_set_overclock_result(self, result: Any) -> None:
+        self._handle_generic_set_result(result, "overclock")
+
+    def _handle_generic_set_result(self, result: Any, name: str) -> None:
+        if not isinstance(result, bool):
+            LOG.exception("Set overclock error: %s", str(result))
+            self.main_view.set_statusbar_text('Error applying %s! %s' % (name, str(result)))
+        elif not result:
+            self.main_view.set_statusbar_text('Error applying %s!' % name)
+        else:
+            self.main_view.set_statusbar_text('%s applied' % name.capitalize())
 
     def _handle_new_version_response(self, version: Optional[str]) -> None:
         if version is not None:
