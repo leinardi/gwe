@@ -17,6 +17,7 @@
 
 # pylint: disable=too-many-locals,too-many-instance-attributes
 import logging
+from enum import Enum
 from typing import Optional, Any, Tuple, List
 
 from playhouse.signals import Model, post_save, post_delete
@@ -24,10 +25,10 @@ from playhouse.sqlite_ext import AutoIncrementField
 from peewee import CharField, DateTimeField, SqliteDatabase, SQL, IntegerField, Check, \
     ForeignKeyField, BooleanField, BlobField
 
-from gwe.di import INJECTOR, SpeedProfileChangedSubject, SpeedStepChangedSubject
+from gwe.di import INJECTOR, FanProfileChangedSubject, SpeedStepChangedSubject
 
 LOG = logging.getLogger(__name__)
-SPEED_PROFILE_CHANGED_SUBJECT = INJECTOR.get(SpeedProfileChangedSubject)
+FAN_PROFILE_CHANGED_SUBJECT = INJECTOR.get(FanProfileChangedSubject)
 SPEED_STEP_CHANGED_SUBJECT = INJECTOR.get(SpeedStepChangedSubject)
 
 
@@ -141,6 +142,7 @@ class Overclock:
 class GpuStatus:
     def __init__(self,
                  gpu_id: str,
+                 index: int,
                  info: Info,
                  power: Power,
                  temp: Temp,
@@ -149,6 +151,7 @@ class GpuStatus:
                  overclock: Overclock
                  ) -> None:
         self.gpu_id = gpu_id
+        self.index = index
         self.info = info
         self.power = power
         self.temp = temp
@@ -174,11 +177,18 @@ class DbChange:
         self.type: int = cahnge_type
 
 
-class SpeedProfile(Model):
+class FanProfileType(Enum):
+    AUTO = 'auto'
+    FAN_CURVE = 'fan_curve'
+
+
+class FanProfile(Model):
     id = AutoIncrementField()
+    type = CharField(
+        constraints=[Check("type='%s' OR type='%s'" % (FanProfileType.AUTO.value, FanProfileType.FAN_CURVE.value))],
+        default=FanProfileType.FAN_CURVE.value)
     name = CharField()
     read_only = BooleanField(default=False)
-    single_step = BooleanField(default=False)
     timestamp = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
 
     class Meta:
@@ -186,20 +196,20 @@ class SpeedProfile(Model):
         database = INJECTOR.get(SqliteDatabase)
 
 
-@post_save(sender=SpeedProfile)
-def on_speed_profile_added(_: Any, profile: SpeedProfile, created: bool) -> None:
+@post_save(sender=FanProfile)
+def on_fan_profile_added(_: Any, profile: FanProfile, created: bool) -> None:
     LOG.debug("Profile added")
-    SPEED_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.INSERT if created else DbChange.UPDATE))
+    FAN_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.INSERT if created else DbChange.UPDATE))
 
 
-@post_delete(sender=SpeedProfile)
-def on_speed_profile_deleted(_: Any, profile: SpeedProfile) -> None:
+@post_delete(sender=FanProfile)
+def on_fan_profile_deleted(_: Any, profile: FanProfile) -> None:
     LOG.debug("Profile deleted")
-    SPEED_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.DELETE))
+    FAN_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.DELETE))
 
 
 class SpeedStep(Model):
-    profile = ForeignKeyField(SpeedProfile, backref='steps')
+    profile = ForeignKeyField(FanProfile, backref='steps')
     temperature = IntegerField()
     duty = IntegerField()
     timestamp = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
@@ -221,8 +231,8 @@ def on_speed_step_deleted(_: Any, step: SpeedStep) -> None:
     SPEED_STEP_CHANGED_SUBJECT.on_next(DbChange(step, DbChange.DELETE))
 
 
-class CurrentSpeedProfile(Model):
-    profile = ForeignKeyField(SpeedProfile, unique=True)
+class CurrentFanProfile(Model):
+    profile = ForeignKeyField(FanProfile, unique=True)
     timestamp = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
 
     class Meta:
@@ -240,22 +250,13 @@ class Setting(Model):
 
 
 def load_db_default_data() -> None:
-    fan_silent = SpeedProfile.create(name="Silent", read_only=True)
-    fan_perf = SpeedProfile.create(name="Performance", read_only=True)
+    FanProfile.create(name="Auto (VBIOS controlled)", type=FanProfileType.AUTO.value, read_only=True)
+    fan_silent = FanProfile.create(name="Custom")
 
     # Fan Silent
     SpeedStep.create(profile=fan_silent.id, temperature=20, duty=0)
     SpeedStep.create(profile=fan_silent.id, temperature=30, duty=25)
     SpeedStep.create(profile=fan_silent.id, temperature=40, duty=45)
-    SpeedStep.create(profile=fan_silent.id, temperature=50, duty=55)
-    SpeedStep.create(profile=fan_silent.id, temperature=55, duty=60)
-    SpeedStep.create(profile=fan_silent.id, temperature=60, duty=65)
     SpeedStep.create(profile=fan_silent.id, temperature=65, duty=70)
-    SpeedStep.create(profile=fan_silent.id, temperature=68, duty=80)
     SpeedStep.create(profile=fan_silent.id, temperature=70, duty=90)
     SpeedStep.create(profile=fan_silent.id, temperature=75, duty=100)
-
-    # Fan Performance
-    SpeedStep.create(profile=fan_perf.id, temperature=20, duty=50)
-    SpeedStep.create(profile=fan_perf.id, temperature=35, duty=50)
-    SpeedStep.create(profile=fan_perf.id, temperature=60, duty=100)

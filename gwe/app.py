@@ -27,7 +27,7 @@ from peewee import SqliteDatabase
 
 from gwe.conf import APP_NAME, APP_ID, APP_VERSION
 from gwe.di import MainBuilder
-from gwe.model import SpeedProfile, SpeedStep, Setting, CurrentSpeedProfile, load_db_default_data
+from gwe.model import FanProfile, SpeedStep, Setting, CurrentFanProfile, load_db_default_data
 from gwe.presenter.main import MainPresenter
 from gwe.util.desktop_entry import set_autostart_entry, add_application_entry
 from gwe.util.log import LOG_DEBUG_FORMAT
@@ -54,9 +54,9 @@ class Application(Gtk.Application):
                          **kwargs)
 
         database.connect()
-        database.create_tables([SpeedProfile, SpeedStep, CurrentSpeedProfile, Setting])
+        database.create_tables([FanProfile, SpeedStep, CurrentFanProfile, Setting])
 
-        if SpeedProfile.select().count() == 0:
+        if FanProfile.select().count() == 0:
             load_db_default_data()
 
         self.add_main_option_entries(self._get_main_option_entries())

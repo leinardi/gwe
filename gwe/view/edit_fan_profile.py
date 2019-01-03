@@ -24,23 +24,23 @@ from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCan
 from matplotlib.figure import Figure
 
 from gwe.conf import MIN_TEMP, FAN_MIN_DUTY, MAX_TEMP, FAN_MAX_DUTY
-from gwe.di import EditSpeedProfileBuilder
-from gwe.model import SpeedProfile, SpeedStep
-from gwe.presenter.edit_speed_profile import EditSpeedProfileViewInterface, EditSpeedProfilePresenter
-from gwe.util.view import init_plot_chart, get_speed_profile_data
+from gwe.di import EditFanProfileBuilder
+from gwe.model import FanProfile, SpeedStep
+from gwe.presenter.edit_fan_profile import EditFanProfileViewInterface, EditFanProfilePresenter
+from gwe.util.view import init_plot_chart, get_fan_profile_data
 
 LOG = logging.getLogger(__name__)
 
 
 @singleton
-class EditSpeedProfileView(EditSpeedProfileViewInterface):
+class EditFanProfileView(EditFanProfileViewInterface):
     @inject
     def __init__(self,
-                 presenter: EditSpeedProfilePresenter,
-                 builder: EditSpeedProfileBuilder,
+                 presenter: EditFanProfilePresenter,
+                 builder: EditFanProfileBuilder,
                  ) -> None:
-        LOG.debug('init EditSpeedProfileView')
-        self._presenter: EditSpeedProfilePresenter = presenter
+        LOG.debug('init EditFanProfileView')
+        self._presenter: EditFanProfilePresenter = presenter
         self._presenter.view = self
         self._builder: Gtk.Builder = builder
         self._builder.connect_signals(self._presenter)
@@ -95,7 +95,7 @@ class EditSpeedProfileView(EditSpeedProfileViewInterface):
         self._chart_canvas.draw()
         self._chart_canvas.flush_events()
 
-    def show(self, profile: SpeedProfile) -> None:
+    def show(self, profile: FanProfile) -> None:
         self._treeselection.unselect_all()
         self._profile_name_entry.set_text(profile.name)
         self.refresh_liststore(profile)
@@ -117,7 +117,7 @@ class EditSpeedProfileView(EditSpeedProfileViewInterface):
     def has_a_step_selected(self) -> bool:
         return self._treeselection.get_selected()[1] is not None
 
-    def refresh_liststore(self, profile: SpeedProfile) -> None:
+    def refresh_liststore(self, profile: FanProfile) -> None:
         self._liststore.clear()
         for step in profile.steps:
             self._liststore.append([step.id, step.temperature, step.duty])
@@ -129,7 +129,7 @@ class EditSpeedProfileView(EditSpeedProfileViewInterface):
         else:
             self._add_step_button.set_sensitive(True)
 
-        self._plot_chart(get_speed_profile_data(profile))
+        self._plot_chart(get_fan_profile_data(profile))
 
     def refresh_controls(self, step: Optional[SpeedStep] = None, unselect_list: bool = False) -> None:
         if unselect_list:

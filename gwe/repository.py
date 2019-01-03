@@ -76,6 +76,7 @@ class NvidiaRepository:
     @inject
     def __init__(self) -> None:
         self.lock = threading.RLock()
+        self.gpu_count = 0
 
     @staticmethod
     def is_nvidia_smi_available() -> bool:
@@ -106,6 +107,7 @@ class NvidiaRepository:
                 overclock = self._get_overclock_from_settings(gpu_index)
                 gpu_status = GpuStatus(
                     gpu_id=gpu.get('id'),
+                    index=gpu_index,
                     info=info,
                     power=power,
                     temp=temp,
@@ -115,6 +117,7 @@ class NvidiaRepository:
                 )
                 gpu_status_list.append(gpu_status)
                 gpu_index += 1
+            self.gpu_count = gpu_index
             return Status(gpu_status_list)
         return None
 
@@ -240,7 +243,7 @@ class NvidiaRepository:
         )
 
     @staticmethod
-    def _set_overclock(gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> bool:
+    def set_overclock(gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> bool:
         cmd = [_NVIDIA_SETTINGS_BINARY_NAME,
                '-a',
                "[gpu:%d]/GPUGraphicsClockOffset[%d]=%d" % (gpu_index, perf, gpu_offset),
@@ -251,7 +254,7 @@ class NvidiaRepository:
         return result[0] == 0
 
     @staticmethod
-    def _set_power_limit(gpu_index: int, limit: int) -> bool:
+    def set_power_limit(gpu_index: int, limit: int) -> bool:
         cmd = ['pkexec',
                _NVIDIA_SMI_BINARY_NAME,
                '-i',
@@ -260,6 +263,21 @@ class NvidiaRepository:
                str(limit)]
         result = run_and_get_stdout(cmd, ['xargs'])
         LOG.info("Exit code: %d. %s", result[0], result[1])
+        return result[0] == 0
+
+    def set_all_gpus_fan_to_auto(self) -> None:
+        for gpu_index in range(self.gpu_count):
+            self.set_fan_speed(gpu_index, manual_control=False)
+
+    @staticmethod
+    def set_fan_speed(gpu_index: int, speed: int = 100, manual_control: bool = False) -> bool:
+        cmd = [_NVIDIA_SETTINGS_BINARY_NAME,
+               '-a',
+               "[gpu:%d]/GPUFanControlState=%d" % (gpu_index, 1 if manual_control else 0)]
+        if manual_control:
+            cmd.append('-a')
+            cmd.append("GPUTargetFanSpeed=%d" % speed)
+        result = run_and_get_stdout(cmd)
         return result[0] == 0
 
 # @staticmethod

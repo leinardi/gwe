@@ -1,6 +1,31 @@
-# gwe
+# GWE
 TBD
 
+## TODO
+
+- [x] Show general GPU info
+- [x] Show power info
+- [x] Show clocks info
+- [x] Show GPU temp in both app and app indicator
+- [x] Show fan info
+- [x] Allow to hide main app window
+- [x] Add command line option to start the app hidden
+- [x] Add Refresh timeout to settings 
+- [x] Add command line option to add desktop entry
+- [x] About dialog
+- [x] Publish on PIP
+- [x] Show chart of selected fan profile
+- [x] Allow to select and apply a fan profile
+- [x] Add/Delete/Edit multi speed fan profiles (fan curve)
+- [x] Add option to restore last applied profile on startup
+- [x] Find better icons for app indicator
+- [ ] Try to lower resource consumption (mostly caused by `nvidia-settings` invocations)
+- [ ] Show historical data of most important values in a separate dialog
+- [ ] Disable unsupported preferences
+- [ ] Distributing with Flatpack
+- [ ] Distributing with Snap
+- [ ] Allow to select profiles from app indicator
+- [ ] Add support for i18n (internationalization and localization)
 
 ## Distribution dependencies
 ### (K/X)Ubuntu 18.04 or newer

@@ -1,3 +1,6 @@
+**[0.5.0] 2019-01-01**
+ - Added GPU temperature to app indicator
+
 **[0.3.2] 2019-01-01**
  - Fixed overclock slider value not correctly restored on startup
 
