@@ -24,6 +24,10 @@ along with GreenWithEnvy.  If not, see <http://www.gnu.org/licenses/>.
   <!-- interface-license-type gplv3 -->
   <!-- interface-name GSI -->
   <object class="GtkImage" id="fan_edit_image">
+      <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-edit</property>
+  </object>
   <!-- interface-name GreenWithEnvy -->
   <object class="GtkListStore" id="cooling_fan_profile_liststore">
     <columns>
@@ -88,11 +92,6 @@ along with GreenWithEnvy.  If not, see <http://www.gnu.org/licenses/>.
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkImage" id="cooling_pump_edit_image">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-edit</property>
   </object>
   <object class="GtkListStore" id="fan_profile_liststore">
     <columns>
