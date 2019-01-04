@@ -5,3 +5,4 @@ pygobject
 pyxdg
 requests
 rx
+timeago
