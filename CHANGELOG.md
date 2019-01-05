@@ -8,7 +8,7 @@
  - Slightly bigger app indicator icon
 
 **[0.5.0] 2019-01-03**
- - Implemented Fan curve profile! 
+ - Implemented Fan curve profile!
  - Added GPU temperature to app indicator
  - Changed app indicator icon (again)
  - Other minor UI improvements

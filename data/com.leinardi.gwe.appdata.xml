@@ -19,6 +19,31 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+        <release version="0.6.0" timestamp="1546473600">
+            <description>
+                <ul>
+                    <li>Highlighting currently applied profile</li>
+                </ul>
+            </description>
+        </release>
+        <release version="0.5.1" timestamp="1546473600">
+            <description>
+                <ul>
+                    <li>Min duty changed from 25 to 0</li>
+                    <li>Slightly bigger app indicator icon</li>
+                </ul>
+            </description>
+        </release>
+        <release version="0.5.0" timestamp="1546473600">
+            <description>
+                <ul>
+                    <li>Implemented Fan curve profile!</li>
+                    <li>Added GPU temperature to app indicator</li>
+                    <li>Changed app indicator icon (again)</li>
+                    <li>Other minor UI improvements</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.3.2" timestamp="1546300802">
             <description>
                 <ul>
