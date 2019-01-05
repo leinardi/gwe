@@ -80,16 +80,17 @@ If you don't want to create this custom rule you can run gwe as root
 ```
 sudo apt install python3-pip
 git clone https://gitlab.com/leinardi/gwe.git
-pip3 install injector
-pip3 install matplotlib
-pip3 install peewee
-pip3 install pygobject
-pip3 install pyxdg
-pip3 install requests
-pip3 install rx
-ca gwe
+cd gwe
+pip3 install -r requirements.txt
 ./run
 ```
+
+## FAQ
+### Why the memory overclock offsets effectively applied do not match the one set in the Nvidia Settings app?
+Because Memory Transfer Rate, what Nvidia Settings reports and changes, 
+is different from the effective Memory Clock, what is actually being 
+displayed by GWE. It is also what other Windows applications like MSI Afterburner show.
+The Memory Transfer Rate is simply double the Memory Clock.
 
 ## How can I support this project?
 
@@ -97,7 +98,7 @@ The best way to support this plugin is to star it on both [GitLab](https://gitla
 Feedback is always welcome: if you found a bug or would like to suggest a feature,
 feel free to open an issue on the [issue tracker](https://gitlab.com/leinardi/gwe/issues).
 
-## Lincense
+## License
 ```
 This file is part of gwe.
 
