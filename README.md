@@ -30,7 +30,7 @@ TBD
 ## Distribution dependencies
 ### (K/X)Ubuntu 18.04 or newer
 ```bash
-sudo apt install gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo python3-pip
+sudo apt install libcairo2-dev libgirepository1.0-dev libglib2.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo python3-pip
 ```
 ### Fedora 28+
 Install [(K)StatusNotifierItem/AppIndicator Support](https://extensions.gnome.org/extension/615/appindicator-support/)
