@@ -14,11 +14,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with gsi.  If not, see <http://www.gnu.org/licenses/>.
-import math
+import time
 from _datetime import datetime, timedelta, timezone
 import logging
-from collections import OrderedDict
-from enum import Enum, auto
 from typing import Dict, Tuple, List, Any, Optional
 
 import timeago
@@ -163,6 +161,7 @@ class HistoricalDataView(HistoricalDataViewInterface):
     def refresh_charts(self, data_dict: Dict[ChartType, Tuple[List[datetime], List[float], str, int, int]]) -> None:
         self._latest_data_dict = data_dict
         if self._dialog.props.visible:
+            time1 = time.time()
             for chart_type, data_tuple in data_dict.items():
                 chart_data = self._charts[chart_type]
                 chart_data['line'].set_xdata(data_tuple[0])
@@ -176,6 +175,8 @@ class HistoricalDataView(HistoricalDataViewInterface):
                 chart_data['axis'].set_ybound(lower=min(data_tuple[3], int(data_low)) - 10, upper=high + high * 0.1)
                 chart_data['canvas'].draw()
                 chart_data['canvas'].flush_events()
+            time2 = time.time()
+            LOG.debug('Refresh chart took {%.3f} ms' % ((time2 - time1) * 1000.0))
 
     def show(self) -> None:
         self._dialog.show_all()
