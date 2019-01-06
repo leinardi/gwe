@@ -22,7 +22,7 @@ from matplotlib.axes import Axes
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 from matplotlib.figure import Figure
 
-from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY
+from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY, GRAPH_COLOR_HEX
 from gwe.model import FanProfile
 
 
@@ -62,7 +62,7 @@ def init_plot_chart(scrolled_window: Gtk.ScrolledWindow,
     canvas.set_size_request(400, 300)
     scrolled_window.add_with_viewport(canvas)
     # Returns a tuple of line objects, thus the comma
-    lines = axis.plot([], [], 'o-', linewidth=3.0, markersize=10, antialiased=True)
+    lines = axis.plot([], [], 'o-', linewidth=3.0, markersize=10, antialiased=True, color=GRAPH_COLOR_HEX)
     axis.set_ybound(lower=-5, upper=105)
     axis.set_xbound(MIN_TEMP, MAX_TEMP)
     figure.canvas.draw()

@@ -32,6 +32,8 @@ APP_SOURCE_URL = 'https://gitlab.com/leinardi/gwe'
 APP_AUTHOR = 'Roberto Leinardi'
 APP_AUTHOR_EMAIL = 'roberto@leinardi.com'
 
+GRAPH_COLOR_HEX = '#76B900'
+
 MIN_TEMP = 0
 MAX_TEMP = 100
 FAN_MIN_DUTY = 0

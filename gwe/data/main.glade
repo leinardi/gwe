@@ -117,7 +117,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
             <property name="show_close_button">True</property>
             <child>
               <object class="GtkButton" id="historical_data_button">
-                <property name="label" translatable="yes">Historical Data</property>
+                <property name="label" translatable="yes">Historical data</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -147,6 +147,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
               </object>
               <packing>
                 <property name="pack_type">end</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
