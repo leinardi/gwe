@@ -55,10 +55,13 @@ class HistoricalDataView(HistoricalDataViewInterface):
 
     # pylint: disable=attribute-defined-outside-init
     def _init_plot_charts(self) -> None:
-        self._graph_views: Dict[ChartType, Dazzle.GraphView] = {}
+        self._graph_views: Dict[ChartType, Tuple[Gtk.Label, Gtk.Label, Gtk.Label]] = {}
         self._graph_models: Dict[ChartType, Dazzle.GraphModel] = {}
         for graph_type in ChartType:
             self._graph_container: Gtk.Frame = self._builder.get_object('graph_container_%d' % graph_type.value)
+            self._graph_views[graph_type] = (self._builder.get_object('graph_min_value_%d' % graph_type.value),
+                                             self._builder.get_object('graph_max_value_%d' % graph_type.value),
+                                             self._builder.get_object('graph_max_axis_%d' % graph_type.value))
             graph_views = Dazzle.GraphView()
             graph_model = Dazzle.GraphModel()
             graph_renderer = GraphStackedRenderer()
@@ -96,13 +99,13 @@ class HistoricalDataView(HistoricalDataViewInterface):
             graph_model.iter_set(graph_model_iter, 0, 0.0)
 
             self._graph_models[graph_type] = graph_model
-            self._graph_views[graph_type] = graph_views
 
     def refresh_charts(self, data_dict: Dict[ChartType, Tuple[int, float, str, float, float]]) -> None:
         for graph_type, data_tuple in data_dict.items():
             self._graph_models[graph_type].props.value_max = float(data_tuple[4])
             graph_model_iter = self._graph_models[graph_type].push(GLib.get_monotonic_time())
             self._graph_models[graph_type].iter_set(graph_model_iter, 0, data_tuple[1])
+            self._graph_views[graph_type][2].set_text("%.0f %s" % (data_tuple[1], data_tuple[2]))
         # if self._dialog.props.visible:
         #     time1 = time.time()
         #
