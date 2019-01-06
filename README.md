@@ -24,6 +24,7 @@ TBD
 - [ ] Disable unsupported preferences
 - [ ] Distributing with Flatpack
 - [ ] Distributing with Snap
+- [ ] Add support for multi-GPU
 - [ ] Allow to select profiles from app indicator
 - [ ] Add support for i18n (internationalization and localization)
 
