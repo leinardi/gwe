@@ -28,10 +28,19 @@ class GraphStackedRenderer(GObject.Object, Dazzle.GraphRenderer):
 
     def __init__(self) -> None:
         GObject.Object.__init__(self)
-        self.column = 0
-        self.line_width = 1.0
-        self.stroke_color_rgba: Gdk.RGBA = Gdk.RGBA(0.5, 0.5, 0.5, 1)
-        self.stacked_color_rgba: Gdk.RGBA = Gdk.RGBA(0.5, 0.5, 0.5, 0.5)
+        self._column = 0
+        self._line_width = 1.0
+        self._stroke_color_rgba: Gdk.RGBA = Gdk.RGBA(0.5, 0.5, 0.5, 1)
+        self._stacked_color_rgba: Gdk.RGBA = Gdk.RGBA(0.5, 0.5, 0.5, 0.5)
+
+    def set_stroke_color_rgba(self, color: Gdk.RGBA) -> None:
+        self._stroke_color_rgba = color
+
+    def set_stacked_color_rgba(self, color: Gdk.RGBA) -> None:
+        self._stacked_color_rgba = color
+
+    def set_line_width(self, width: float) -> None:
+        self._line_width = width
 
     def do_render(self,
                   model: Dazzle.GraphModel,
@@ -53,18 +62,18 @@ class GraphStackedRenderer(GObject.Object, Dazzle.GraphRenderer):
 
             while Dazzle.GraphModel.iter_next(model_iter):
                 x = self._calc_x(model_iter, x_begin, x_end, area.width)
-                y = self._calc_y(model_iter, y_begin, y_end, area.height, self.column)
+                y = self._calc_y(model_iter, y_begin, y_end, area.height, self._column)
 
                 cr.curve_to(last_x + chunk, last_y, last_x + chunk, y, x, y)
 
                 last_x = x
                 last_y = y
 
-        cr.set_line_width(self.line_width)
-        cr.set_source_rgba(self.stacked_color_rgba.red,
-                           self.stacked_color_rgba.green,
-                           self.stacked_color_rgba.blue,
-                           self.stacked_color_rgba.alpha)
+        cr.set_line_width(self._line_width)
+        cr.set_source_rgba(self._stacked_color_rgba.red,
+                           self._stacked_color_rgba.green,
+                           self._stacked_color_rgba.blue,
+                           self._stacked_color_rgba.alpha)
         cr.rel_line_to(0, area.height)
         cr.stroke_preserve()
         cr.close_path()
@@ -79,17 +88,17 @@ class GraphStackedRenderer(GObject.Object, Dazzle.GraphRenderer):
 
             while Dazzle.GraphModel.iter_next(model_iter):
                 x = self._calc_x(model_iter, x_begin, x_end, area.width)
-                y = self._calc_y(model_iter, y_begin, y_end, area.height, self.column)
+                y = self._calc_y(model_iter, y_begin, y_end, area.height, self._column)
 
                 cr.curve_to(last_x + chunk, last_y, last_x + chunk, y, x, y)
 
                 last_x = x
                 last_y = y
 
-        cr.set_source_rgba(self.stroke_color_rgba.red,
-                           self.stroke_color_rgba.green,
-                           self.stroke_color_rgba.blue,
-                           self.stacked_color_rgba.alpha)
+        cr.set_source_rgba(self._stroke_color_rgba.red,
+                           self._stroke_color_rgba.green,
+                           self._stroke_color_rgba.blue,
+                           self._stacked_color_rgba.alpha)
         cr.stroke()
         cr.restore()
 

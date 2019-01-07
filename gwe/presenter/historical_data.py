@@ -87,7 +87,7 @@ class HistoricalDataPresenter:
             data[ChartType.MEMORY_LOAD] = (time, mem_load, '%', 0.0, 100.0)
         mem_usage = self._get_mem_usage_data(new_status.gpu_status_list[gpu_index])
         if mem_usage is not None:
-            data[ChartType.MEMORY_USAGE] = (time, mem_usage, '%', 0.0, 100.0)
+            data[ChartType.MEMORY_USAGE] = (time, mem_usage, 'MiB', 0.0, 1000.0)
         power_draw = self._get_power_draw_data(new_status.gpu_status_list[gpu_index])
         if power_draw is not None:
             data[ChartType.POWER_DRAW] = (time, power_draw, 'W', 0.0, 400.0)
@@ -137,8 +137,8 @@ class HistoricalDataPresenter:
 
     @staticmethod
     def _get_mem_usage_data(gpu_status: GpuStatus) -> Optional[float]:
-        if NOT_AVAILABLE_STRING not in gpu_status.info.memory_usage:
-            return float(gpu_status.info.memory_usage.rstrip(' %'))
+        if NOT_AVAILABLE_STRING not in gpu_status.info.memory_size:
+            return float(gpu_status.info.memory_size.split(' / ')[0].rstrip(' MiB'))
         return None
 
     @staticmethod

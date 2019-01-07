@@ -1,4 +1,5 @@
 **[0.6.0] 2019-01-03**
+- Historical data dialog! (new dependency required, check the Distribution dependencies section of the readme)
 - Highlighting currently applied profile
 
 **[0.5.1] 2019-01-03**
