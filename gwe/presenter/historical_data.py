@@ -113,13 +113,13 @@ class HistoricalDataPresenter:
 
     @staticmethod
     def _get_fan_duty_data(gpu_status: GpuStatus) -> Optional[float]:
-        if NOT_AVAILABLE_STRING not in gpu_status.fan.fan_list:
+        if gpu_status.fan.fan_list:
             return float(gpu_status.fan.fan_list[0][0])
         return None
 
     @staticmethod
     def _get_fan_rpm_data(gpu_status: GpuStatus) -> Optional[float]:
-        if NOT_AVAILABLE_STRING not in gpu_status.fan.fan_list:
+        if gpu_status.fan.fan_list:
             return float(gpu_status.fan.fan_list[0][1])
         return None
 
