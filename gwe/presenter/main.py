@@ -32,6 +32,7 @@ from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
     CheckNewVersionInteractor, SetOverclockInteractor, SetPowerLimitInteractor, SetFanSpeedInteractor
 from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfileType, GpuStatus
 from gwe.presenter.edit_fan_profile import EditFanProfilePresenter
+from gwe.presenter.historical_data import HistoricalDataPresenter
 from gwe.presenter.preferences import PreferencesPresenter
 from gwe.repository import NOT_AVAILABLE_STRING
 
@@ -79,6 +80,7 @@ class MainPresenter:
     @inject
     def __init__(self,
                  edit_fan_profile_presenter: EditFanProfilePresenter,
+                 historical_data_presenter: HistoricalDataPresenter,
                  preferences_presenter: PreferencesPresenter,
                  get_status_interactor: GetStatusInteractor,
                  set_power_limit_interactor: SetPowerLimitInteractor,
@@ -93,6 +95,7 @@ class MainPresenter:
         LOG.debug("init MainPresenter ")
         self.main_view: MainViewInterface = MainViewInterface()
         self._edit_fan_profile_presenter = edit_fan_profile_presenter
+        self._historical_data_presenter = historical_data_presenter
         self._preferences_presenter = preferences_presenter
         self._scheduler: SchedulerBase = ThreadPoolScheduler(multiprocessing.cpu_count())
         self._get_status_interactor: GetStatusInteractor = get_status_interactor
@@ -113,6 +116,9 @@ class MainPresenter:
         self._register_db_listeners()
         self._start_refresh()
         self._check_new_version()
+
+    def on_historical_data_button_clicked(self, *_: Any) -> None:
+        self._historical_data_presenter.show()
 
     def on_power_limit_apply_button_clicked(self, *_: Any) -> None:
         self._composite_disposable \
@@ -194,15 +200,16 @@ class MainPresenter:
                  .subscribe_on(self._scheduler)
                  .flat_map(lambda _: self._get_status())
                  .observe_on(GtkScheduler())
-                 .subscribe(on_next=self._update_status,
+                 .subscribe(on_next=self._on_status_updated,
                             on_error=lambda e: LOG.exception("Refresh error: %s", str(e)))
                  )
 
-    def _update_status(self, status: Optional[Status]) -> None:
+    def _on_status_updated(self, status: Optional[Status]) -> None:
         if status is not None:
             gpu_status = status.gpu_status_list[0]
             self._update_fan(gpu_status)
             self.main_view.refresh_status(status)
+            self._historical_data_presenter.add_status(status)
         else:
             gpu_index = 0
             self._set_fan_speed(gpu_index, manual_control=False)

@@ -32,6 +32,7 @@ from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCan
 
 # AppIndicator3 may not be installed
 from gwe.interactor import SettingsInteractor
+from gwe.view.historical_data import HistoricalDataView
 from gwe.view.preferences import PreferencesView
 
 try:
@@ -56,6 +57,7 @@ class MainView(MainViewInterface):
     def __init__(self,
                  presenter: MainPresenter,
                  edit_fan_profile_view: EditFanProfileView,
+                 historical_data_view: HistoricalDataView,
                  preferences_view: PreferencesView,
                  builder: MainBuilder,
                  settings_interactor: SettingsInteractor,
@@ -63,6 +65,7 @@ class MainView(MainViewInterface):
         LOG.debug('init MainView')
         self._presenter: MainPresenter = presenter
         self._edit_fan_profile_view = edit_fan_profile_view
+        self._historical_data_view = historical_data_view
         self._preferences_view = preferences_view
         self._presenter.main_view = self
         self._builder: Gtk.Builder = builder
@@ -75,6 +78,7 @@ class MainView(MainViewInterface):
         self._app_indicator: Optional[AppIndicator3.Indicator] = None
         self._window = self._builder.get_object("application_window")
         self._edit_fan_profile_view.set_transient_for(self._window)
+        self._historical_data_view.set_transient_for(self._window)
         self._preferences_view.set_transient_for(self._window)
         self._main_menu: Gtk.Menu = self._builder.get_object("main_menu")
         self._main_infobar: Gtk.InfoBar = self._builder.get_object("main_infobar")

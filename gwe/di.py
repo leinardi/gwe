@@ -24,7 +24,7 @@ from rx.disposables import CompositeDisposable
 from rx.subjects import Subject
 
 from gwe.conf import APP_PACKAGE_NAME, APP_MAIN_UI_NAME, APP_DB_NAME, APP_EDIT_FAN_PROFILE_UI_NAME, \
-    APP_PREFERENCES_UI_NAME
+    APP_PREFERENCES_UI_NAME, APP_HISTORICAL_DATA_UI_NAME
 from gwe.util.path import get_data_path, get_config_path
 
 LOG = logging.getLogger(__name__)
@@ -33,6 +33,7 @@ FanProfileChangedSubject = Key("FanProfileChangedSubject")
 SpeedStepChangedSubject = Key("SpeedStepChangedSubject")
 MainBuilder = Key(APP_MAIN_UI_NAME)
 EditFanProfileBuilder = Key(APP_EDIT_FAN_PROFILE_UI_NAME)
+HistoricalDataBuilder = Key(APP_HISTORICAL_DATA_UI_NAME)
 PreferencesBuilder = Key(APP_PREFERENCES_UI_NAME)
 
 
@@ -55,6 +56,16 @@ class ProviderModule(Module):
         builder.set_translation_domain(APP_PACKAGE_NAME)
         builder.add_from_file(get_data_path(APP_EDIT_FAN_PROFILE_UI_NAME))
         return builder
+
+    @singleton
+    @provider
+    def provide_historical_data_builder(self) -> HistoricalDataBuilder:
+        LOG.debug("provide Gtk.Builder")
+        builder = Gtk.Builder()
+        builder.set_translation_domain(APP_PACKAGE_NAME)
+        builder.add_from_file(get_data_path(APP_HISTORICAL_DATA_UI_NAME))
+        return builder
+
 
     @singleton
     @provider

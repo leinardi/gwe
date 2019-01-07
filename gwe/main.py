@@ -31,6 +31,7 @@ from rx.disposables import CompositeDisposable
 from gwe.conf import APP_PACKAGE_NAME
 
 gi.require_version('Gtk', '3.0')
+gi.require_version('Dazzle', '1.0')
 from gi.repository import GLib
 from gwe.util.log import set_log_level
 from gwe.repository import NvidiaRepository
