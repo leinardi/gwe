@@ -34,68 +34,74 @@ SPEED_STEP_CHANGED_SUBJECT = INJECTOR.get(SpeedStepChangedSubject)
 
 class Info:
     def __init__(self,
-                 name: str,
-                 vbios: str,
-                 driver: str,
-                 pcie: str,
-                 cuda_cores: str,
-                 uuid: str,
-                 memory_size: str,
-                 memory_interface: str,
-                 memory_usage: str,
-                 gpu_usage: str,
-                 encoder_usage: str,
-                 decoder_usage: str
+                 name: Optional[str] = None,
+                 vbios: Optional[str] = None,
+                 driver: Optional[str] = None,
+                 pcie_generation: Optional[int] = None,
+                 pcie_current_link: Optional[int] = None,
+                 pcie_max_link: Optional[int] = None,
+                 cuda_cores: Optional[int] = None,
+                 uuid: Optional[str] = None,
+                 memory_total: Optional[int] = None,
+                 memory_used: Optional[int] = None,
+                 memory_interface: Optional[int] = None,
+                 memory_usage: Optional[int] = None,
+                 gpu_usage: Optional[int] = None,
+                 encoder_usage: Optional[int] = None,
+                 decoder_usage: Optional[int] = None
                  ) -> None:
-        self.name: str = name
-        self.vbios: str = vbios
-        self.driver: str = driver
-        self.pcie: str = pcie
-        self.cuda_cores: str = cuda_cores
-        self.uuid: str = uuid
-        self.memory_size: str = memory_size
-        self.memory_interface: str = memory_interface
-        self.memory_usage: str = memory_usage
-        self.gpu_usage: str = gpu_usage
-        self.encoder_usage: str = encoder_usage
-        self.decoder_usage: str = decoder_usage
+        self.name: Optional[str] = name
+        self.vbios: Optional[str] = vbios
+        self.driver: Optional[str] = driver
+        self.pcie_generation: Optional[int] = pcie_generation
+        self.pcie_current_link: Optional[int] = pcie_current_link
+        self.pcie_max_link: Optional[int] = pcie_max_link
+        self.cuda_cores: Optional[int] = cuda_cores
+        self.uuid: Optional[str] = uuid
+        self.memory_total: Optional[int] = memory_total
+        self.memory_used: Optional[int] = memory_used
+        self.memory_interface: Optional[int] = memory_interface
+        self.memory_usage: Optional[int] = memory_usage
+        self.gpu_usage: Optional[int] = gpu_usage
+        self.encoder_usage: Optional[int] = encoder_usage
+        self.decoder_usage: Optional[int] = decoder_usage
 
 
 class Power:
     def __init__(self,
-                 draw: str,
-                 limit: str,
-                 default: str,
-                 minimum: str,
-                 enforced: str,
-                 maximum: str
+                 draw: Optional[float] = None,
+                 limit: Optional[float] = None,
+                 default: Optional[float] = None,
+                 minimum: Optional[float] = None,
+                 enforced: Optional[float] = None,
+                 maximum: Optional[float] = None
                  ) -> None:
-        self.draw: str = draw
-        self.limit: str = limit
-        self.default: str = default
-        self.minimum: str = minimum
-        self.enforced: str = enforced
-        self.maximum: str = maximum
+        self.draw: Optional[float] = draw
+        self.limit: Optional[float] = limit
+        self.default: Optional[float] = default
+        self.minimum: Optional[float] = minimum
+        self.enforced: Optional[float] = enforced
+        self.maximum: Optional[float] = maximum
 
 
 class Temp:
     def __init__(self,
-                 gpu: str,
-                 maximum: str,
-                 slowdown: str,
-                 shutdown: str
+                 gpu: Optional[int] = None,
+                 maximum: Optional[int] = None,
+                 slowdown: Optional[int] = None,
+                 shutdown: Optional[int] = None
                  ) -> None:
-        self.gpu: str = gpu
-        self.maximum: str = maximum
-        self.slowdown: str = slowdown
-        self.shutdown: str = shutdown
+        self.gpu: Optional[int] = gpu
+        self.maximum: Optional[int] = maximum
+        self.slowdown: Optional[int] = slowdown
+        self.shutdown: Optional[int] = shutdown
 
 
 class Fan:
     def __init__(self,
-                 fan_list: List[Tuple[int, int]],
-                 control_allowed: bool,
-                 manual_control: bool
+                 fan_list: List[Tuple[int, int]] = None,
+                 control_allowed: bool = False,
+                 manual_control: bool = False
                  ) -> None:
         self.fan_list = fan_list
         self.control_allowed = control_allowed
@@ -104,44 +110,44 @@ class Fan:
 
 class Clocks:
     def __init__(self,
-                 graphic_current: str,
-                 graphic_max: str,
-                 sm_current: str,
-                 sm_max: str,
-                 memory_current: str,
-                 memory_max: str,
-                 video_current: str,
-                 video_max: str
+                 graphic_current: Optional[int] = None,
+                 graphic_max: Optional[int] = None,
+                 sm_current: Optional[int] = None,
+                 sm_max: Optional[int] = None,
+                 memory_current: Optional[int] = None,
+                 memory_max: Optional[int] = None,
+                 video_current: Optional[int] = None,
+                 video_max: Optional[int] = None
                  ) -> None:
-        self.graphic_current: str = graphic_current
-        self.graphic_max: str = graphic_max
-        self.sm_current: str = sm_current
-        self.sm_max: str = sm_max
-        self.memory_current: str = memory_current
-        self.memory_max: str = memory_max
-        self.video_current: str = video_current
-        self.video_max: str = video_max
+        self.graphic_current: Optional[int] = graphic_current
+        self.graphic_max: Optional[int] = graphic_max
+        self.sm_current: Optional[int] = sm_current
+        self.sm_max: Optional[int] = sm_max
+        self.memory_current: Optional[int] = memory_current
+        self.memory_max: Optional[int] = memory_max
+        self.video_current: Optional[int] = video_current
+        self.video_max: Optional[int] = video_max
 
 
 class Overclock:
     def __init__(self,
-                 available: bool,
-                 gpu_range: Tuple[int, int],
-                 gpu_offset: int,
-                 memory_range: Tuple[int, int],
-                 memory_offset: int,
-                 perf: int) -> None:
-        self.available = available
-        self.gpu_range = gpu_range
-        self.gpu_offset = gpu_offset
-        self.memory_range = memory_range
-        self.memory_offset = memory_offset
-        self.perf = perf
+                 perf_level: Optional[int] = None,
+                 available: bool = False,
+                 gpu_range: Optional[Tuple[int, int]] = None,
+                 gpu_offset: Optional[int] = None,
+                 memory_range: Optional[Tuple[int, int]] = None,
+                 memory_offset: Optional[int] = None
+                 ) -> None:
+        self.perf_level: Optional[int] = perf_level
+        self.available: bool = available
+        self.gpu_range: Optional[Tuple[int, int]] = gpu_range
+        self.gpu_offset: Optional[int] = gpu_offset
+        self.memory_range: Optional[Tuple[int, int]] = memory_range
+        self.memory_offset: Optional[int] = memory_offset
 
 
 class GpuStatus:
     def __init__(self,
-                 gpu_id: str,
                  index: int,
                  info: Info,
                  power: Power,
@@ -150,7 +156,6 @@ class GpuStatus:
                  clocks: Clocks,
                  overclock: Overclock
                  ) -> None:
-        self.gpu_id = gpu_id
         self.index = index
         self.info = info
         self.power = power

@@ -224,12 +224,12 @@ class MainPresenter:
             elif self._fan_profile_applied and self._fan_profile_applied.type != FanProfileType.AUTO.value:
                 if not self._fan_profile_applied.steps:
                     self._set_fan_speed(gpu_status.index, manual_control=False)
-                elif NOT_AVAILABLE_STRING not in gpu_status.temp.gpu:
+                elif gpu_status.temp.gpu:
                     try:
-                        temperature = int(gpu_status.temp.gpu.rstrip(' C'))
-                        speed = round(self._get_fan_duty(self._fan_profile_applied, temperature))
+                        speed = round(self._get_fan_duty(self._fan_profile_applied, gpu_status.temp.gpu))
                         if fan.fan_list and fan.fan_list[0][0] != speed:
-                            self._set_fan_speed(gpu_status.index, round(speed))
+                            for index in range(len(fan.fan_list)):
+                                self._set_fan_speed(index, round(speed))
                     except ValueError:
                         LOG.exception('Unable to parse temperature %s', gpu_status.temp.gpu)
 
