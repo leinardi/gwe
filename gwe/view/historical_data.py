@@ -25,7 +25,7 @@ from injector import singleton, inject
 from gwe.conf import GRAPH_COLOR_HEX
 from gwe.di import HistoricalDataBuilder
 from gwe.presenter.historical_data import HistoricalDataViewInterface, HistoricalDataPresenter, MONITORING_INTERVAL, \
-    ChartType
+    GraphType
 from gwe.view.graph_stacked_renderer import GraphStackedRenderer
 
 LOG = logging.getLogger(__name__)
@@ -43,21 +43,21 @@ class HistoricalDataView(HistoricalDataViewInterface):
         self._presenter.view = self
         self._builder: Gtk.Builder = builder
         self._builder.connect_signals(self._presenter)
-        self._charts: Dict[ChartType, Dict[str, Any]] = {}
+        self._graphs: Dict[GraphType, Dict[str, Any]] = {}
         self._init_widgets()
 
     def _init_widgets(self) -> None:
         self._dialog: Gtk.Dialog = self._builder.get_object('dialog')
-        self._init_plot_charts()
+        self._init_plot_graphs()
 
     def set_transient_for(self, window: Gtk.Window) -> None:
         self._dialog.set_transient_for(window)
 
     # pylint: disable=attribute-defined-outside-init
-    def _init_plot_charts(self) -> None:
-        self._graph_views: Dict[ChartType, Tuple[Gtk.Label, Gtk.Label, Gtk.Label]] = {}
-        self._graph_models: Dict[ChartType, Dazzle.GraphModel] = {}
-        for graph_type in ChartType:
+    def _init_plot_graphs(self) -> None:
+        self._graph_views: Dict[GraphType, Tuple[Gtk.Label, Gtk.Label, Gtk.Label]] = {}
+        self._graph_models: Dict[GraphType, Dazzle.GraphModel] = {}
+        for graph_type in GraphType:
             self._graph_container: Gtk.Frame = self._builder.get_object('graph_container_%d' % graph_type.value)
             self._graph_views[graph_type] = (self._builder.get_object('graph_min_value_%d' % graph_type.value),
                                              self._builder.get_object('graph_max_value_%d' % graph_type.value),
@@ -93,7 +93,7 @@ class HistoricalDataView(HistoricalDataViewInterface):
 
             self._graph_models[graph_type] = graph_model
 
-    def refresh_charts(self, data_dict: Dict[ChartType, Tuple[int, float, str, float, float]]) -> None:
+    def refresh_graphs(self, data_dict: Dict[GraphType, Tuple[int, float, str, float, float]]) -> None:
         time1 = time.time()
         for graph_type, data_tuple in data_dict.items():
             max_value = self._graph_models[graph_type].props.value_max
@@ -116,7 +116,7 @@ class HistoricalDataView(HistoricalDataViewInterface):
                 self._graph_views[graph_type][1].set_text("%.0f" % max_value)
                 self._graph_models[graph_type].props.value_max = max(data_tuple[4], max_value)
         time2 = time.time()
-        LOG.debug('Refresh chart took {%.3f} ms' % ((time2 - time1) * 1000.0))
+        LOG.debug('Refresh graph took {%.3f} ms' % ((time2 - time1) * 1000.0))
 
     def show(self) -> None:
         self._dialog.show_all()

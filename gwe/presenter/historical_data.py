@@ -30,7 +30,7 @@ LOG = logging.getLogger(__name__)
 MONITORING_INTERVAL = 300
 
 
-class ChartType(Enum):
+class GraphType(Enum):
     GPU_CLOCK = 1
     MEMORY_CLOCK = 2
     GPU_TEMP = 3
@@ -49,7 +49,7 @@ class HistoricalDataViewInterface:
     def hide(self) -> None:
         raise NotImplementedError()
 
-    def refresh_charts(self, data: Dict[ChartType, Tuple[int, float, str, float, float]]) -> None:
+    def refresh_graphs(self, data: Dict[GraphType, Tuple[int, float, str, float, float]]) -> None:
         raise NotImplementedError()
 
 
@@ -62,36 +62,36 @@ class HistoricalDataPresenter:
 
     def add_status(self, new_status: Status) -> None:
         gpu_index = 0
-        data: Dict[ChartType, Tuple[int, float, str, float, float]] = {}
+        data: Dict[GraphType, Tuple[int, float, str, float, float]] = {}
         time = GLib.get_monotonic_time()
         gpu_clock = self._get_gpu_clock_data(new_status.gpu_status_list[gpu_index])
         if gpu_clock is not None:
-            data[ChartType.GPU_CLOCK] = (time, gpu_clock, 'MHz', 0.0, 2000.0)
+            data[GraphType.GPU_CLOCK] = (time, gpu_clock, 'MHz', 0.0, 2000.0)
         mem_clock = self._get_mem_clock_data(new_status.gpu_status_list[gpu_index])
         if mem_clock is not None:
-            data[ChartType.MEMORY_CLOCK] = (time, mem_clock, 'MHz', 0.0, 7000.0)
+            data[GraphType.MEMORY_CLOCK] = (time, mem_clock, 'MHz', 0.0, 7000.0)
         gpu_temp = self._get_gpu_temp_data(new_status.gpu_status_list[gpu_index])
         if gpu_temp is not None:
-            data[ChartType.GPU_TEMP] = (time, gpu_temp, '°C', 0.0, 100.0)
+            data[GraphType.GPU_TEMP] = (time, gpu_temp, '°C', 0.0, 100.0)
         fan_duty = self._get_fan_duty_data(new_status.gpu_status_list[gpu_index])
         if fan_duty is not None:
-            data[ChartType.FAN_DUTY] = (time, fan_duty, '%', 0.0, 100.0)
+            data[GraphType.FAN_DUTY] = (time, fan_duty, '%', 0.0, 100.0)
         fan_rpm = self._get_fan_rpm_data(new_status.gpu_status_list[gpu_index])
         if fan_rpm is not None:
-            data[ChartType.FAN_RPM] = (time, fan_rpm, 'rpm', 0.0, 2200.0)
+            data[GraphType.FAN_RPM] = (time, fan_rpm, 'rpm', 0.0, 2200.0)
         gpu_load = self._get_gpu_load_data(new_status.gpu_status_list[gpu_index])
         if gpu_load is not None:
-            data[ChartType.GPU_LOAD] = (time, gpu_load, '%', 0.0, 100.0)
+            data[GraphType.GPU_LOAD] = (time, gpu_load, '%', 0.0, 100.0)
         mem_load = self._get_mem_load_data(new_status.gpu_status_list[gpu_index])
         if mem_load is not None:
-            data[ChartType.MEMORY_LOAD] = (time, mem_load, '%', 0.0, 100.0)
+            data[GraphType.MEMORY_LOAD] = (time, mem_load, '%', 0.0, 100.0)
         mem_usage = self._get_mem_usage_data(new_status.gpu_status_list[gpu_index])
         if mem_usage is not None:
-            data[ChartType.MEMORY_USAGE] = (time, mem_usage, 'MiB', 0.0, 1000.0)
+            data[GraphType.MEMORY_USAGE] = (time, mem_usage, 'MiB', 0.0, 1000.0)
         power_draw = self._get_power_draw_data(new_status.gpu_status_list[gpu_index])
         if power_draw is not None:
-            data[ChartType.POWER_DRAW] = (time, power_draw, 'W', 0.0, 400.0)
-        self.view.refresh_charts(data)
+            data[GraphType.POWER_DRAW] = (time, power_draw, 'W', 0.0, 400.0)
+        self.view.refresh_graphs(data)
 
     @staticmethod
     def _get_gpu_clock_data(gpu_status: GpuStatus) -> Optional[float]:
