@@ -79,3 +79,9 @@ def get_fan_profile_data(profile: FanProfile) -> Dict[int, int]:
             data[MIN_TEMP] = data[min(data.keys())]
         data.update({MAX_TEMP: FAN_MAX_DUTY})
     return data
+
+
+def is_dazzle_version_supported() -> bool:
+    if Gtk.MAJOR_VERSION >= 3 and Gtk.MINOR_VERSION >= 24:  # Mypy says that this check returns Any, not sure why...
+        return True
+    return False

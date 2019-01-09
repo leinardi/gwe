@@ -26,6 +26,7 @@ from gwe.conf import GRAPH_COLOR_HEX
 from gwe.di import HistoricalDataBuilder
 from gwe.presenter.historical_data import HistoricalDataViewInterface, HistoricalDataPresenter, MONITORING_INTERVAL, \
     GraphType
+from gwe.util.view import is_dazzle_version_supported
 from gwe.view.graph_stacked_renderer import GraphStackedRenderer
 
 LOG = logging.getLogger(__name__)
@@ -48,13 +49,14 @@ class HistoricalDataView(HistoricalDataViewInterface):
 
     def _init_widgets(self) -> None:
         self._dialog: Gtk.Dialog = self._builder.get_object('dialog')
-        self._init_plot_graphs()
+        if is_dazzle_version_supported():
+            self._init_graphs()
 
     def set_transient_for(self, window: Gtk.Window) -> None:
         self._dialog.set_transient_for(window)
 
     # pylint: disable=attribute-defined-outside-init
-    def _init_plot_graphs(self) -> None:
+    def _init_graphs(self) -> None:
         self._graph_views: Dict[GraphType, Tuple[Gtk.Label, Gtk.Label, Gtk.Label]] = {}
         self._graph_models: Dict[GraphType, Dazzle.GraphModel] = {}
         for graph_type in GraphType:

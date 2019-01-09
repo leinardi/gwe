@@ -24,7 +24,7 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
   <!-- interface-license-type gplv3 -->
   <!-- interface-name GSI -->
   <object class="GtkAdjustment" id="settings_refresh_interval_adjustment">
-    <property name="lower">3</property>
+    <property name="lower">1</property>
     <property name="upper">10</property>
     <property name="value">3</property>
     <property name="step_increment">1</property>

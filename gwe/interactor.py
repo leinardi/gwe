@@ -37,7 +37,7 @@ class GetStatusInteractor:
         self._nvidia_repository = nvidia_repository
 
     def execute(self) -> Observable:
-        LOG.debug("GetStatusInteractor.execute()")
+        # LOG.debug("GetStatusInteractor.execute()")
         return Observable.defer(lambda: Observable.just(self._nvidia_repository.get_status()))
 
 

@@ -1,5 +1,6 @@
-**[0.6.0] 2019-01-03**
-- Historical data dialog! (new dependency required, check the Distribution dependencies section of the readme)
+**[0.7.0] 2019-01-03**
+- **Huge** improvement in resource utilization thanks to the switch from CLI tools to libs to read the data 
+- Historical data dialog! (Requires GNOME 3.30+. New dependency necessary, check the Distribution dependencies section of the readme)
 - Highlighting currently applied profile
 
 **[0.5.1] 2019-01-03**
