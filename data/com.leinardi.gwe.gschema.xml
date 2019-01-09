@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema path="/com/leinardi/gwe/" id="com.leinardi.gwe" gettext-domain="gwe">
+    <schema path="/com/leinardi/gwe/" id="com.leinardi.gwe" gettext-domain="gwe">
 
-    <!-- <key type="s" name="username">
-      <default>""</default>
-      <summary>Email address</summary>
-  </key> -->
+        <!-- <key type="s" name="username">
+          <default>""</default>
+          <summary>Email address</summary>
+      </key> -->
 
-  </schema>
+    </schema>
 
 </schemalist>
