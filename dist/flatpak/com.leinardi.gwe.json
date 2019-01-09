@@ -19,6 +19,43 @@
     "modules": [
         "shared-modules/libappindicator-gtk3-introspection-12.10.json",
         {
+            "name" : "nvidia-ml",
+            "build-options": {
+                "env": {
+                    "PREFIX": "/app",
+                    "LIBDIR": "/app/lib"
+                }
+            },
+            "buildsystem" : "simple",
+            "build-commands": [
+                "sh NVIDIA-Linux-x86_64-415.25.run --extract-only",
+                "mkdir -p /app/lib",
+                "cp NVIDIA-Linux-x86_64-415.25/libnvidia-ml.so.415.25 /app/lib/libnvidia-ml.so.1"
+            ],
+            "sources" : [
+                {
+                    "type" : "file",
+                    "url" : "https://download.nvidia.com/XFree86/Linux-x86_64/415.25/NVIDIA-Linux-x86_64-415.25.run",
+                    "sha256": "64b65b8923d15e2566ed2ab6a4a65b21c45445bdd028ec0091c9b509a51e9349"
+                }
+            ]
+        },
+        {
+            "name" : "libdazzle",
+            "config-opts" : [
+                "--libdir=/app/lib",
+                "--buildtype=debugoptimized"
+            ],
+            "buildsystem" : "meson",
+            "builddir" : true,
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://gitlab.gnome.org/GNOME/libdazzle.git"
+                }
+            ]
+        },
+        {
             "name": "python-injector",
             "buildsystem": "simple",
             "build-options": {
@@ -54,6 +91,47 @@
                     "type": "shell",
                     "commands": [
                         "sed -i 's/if not platform_/if not dirs/' setup.py"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "python-py3nvml",
+            "buildsystem": "simple",
+            "build-options": {
+                "arch": {
+                    "i386": {
+                        "env": {
+                            "MAX_CONCURRENCY": "1"
+                        }
+                    },
+                    "arm": {
+                        "env": {
+                            "MAX_CONCURRENCY": "1"
+                        }
+                    }
+                }
+            },
+            "ensure-writable": [
+                "/lib/python*/site-packages/easy-install.pth",
+                "/lib/python*/site-packages/setuptools.pth",
+                "/app/lib/python*/site-packages/easy-install.pth",
+                "/app/lib/python*/site-packages/setuptools.pth"
+            ],
+            "build-commands": [
+                "python3 setup.py install --prefix=/app --root=/"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/fbcotter/py3nvml/archive/0.2.2.tar.gz",
+                    "sha256": "df21511091c7dc5e60088d8d76ca4ab4fa0e9d53ba273bb7d4e5433c45a098fd"
+                },
+                {
+                    "type": "shell",
+                    "commands": [
+                        "sed -i 's/if not platform_/if not dirs/' setup.py",
+                        "sed -i 's/CDLL(\"libnvidia-ml.so.1\")/CDLL(\"\\/app\\/lib\\/libnvidia-ml.so.1\")/g' py3nvml/py3nvml.py"
                     ]
                 }
             ]
