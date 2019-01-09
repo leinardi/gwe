@@ -3,6 +3,7 @@
 which python
 
 [ -d build ] && rm -rfv build
+find . -regex '^.*\(__pycache__\|\.py[co]\)$' -delete
 mkdir -v build
 meson . build --prefix=$PWD/build/testdir
 ninja -C build
