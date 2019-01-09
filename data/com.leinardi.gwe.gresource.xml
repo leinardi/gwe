@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/com/leinardi/gwe">
-    <file compressed="true">com.leinardi.gwe.service.desktop</file>
+    <gresource prefix="/com/leinardi/gwe">
+        <file compressed="true">com.leinardi.gwe.service.desktop</file>
 
-    <!-- <file preprocess="xml-stripblanks">gtk/menus.ui</file> -->
-    <!--file preprocess="xml-stripblanks">gtk/help-overlay.ui</file-->
+        <file preprocess="xml-stripblanks">ui/main.glade</file>
+        <file preprocess="xml-stripblanks">ui/edit_fan_profile.glade</file>
+        <file preprocess="xml-stripblanks">ui/historical_data.glade</file>
+        <file preprocess="xml-stripblanks">ui/preferences.glade</file>
 
-    <file preprocess="xml-stripblanks">ui/main.glade</file>
-    <file preprocess="xml-stripblanks">ui/edit_fan_profile.glade</file>
-    <file preprocess="xml-stripblanks">ui/preferences.glade</file>
+        <file preprocess="xml-stripblanks">icons/com.leinardi.gwe.svg</file>
+        <file preprocess="xml-stripblanks">icons/com.leinardi.gwe-symbolic.svg</file>
 
-    <file preprocess="xml-stripblanks">icons/com.leinardi.gwe.svg</file>
-    <file preprocess="xml-stripblanks">icons/com.leinardi.gwe-symbolic.svg</file>
-
-  </gresource>
+    </gresource>
 </gresources>

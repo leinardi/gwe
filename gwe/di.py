@@ -63,9 +63,8 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_file(get_data_path(APP_HISTORICAL_DATA_UI_NAME))
+        builder.add_from_resource("/com/leinardi/gwe/ui/{0}".format(APP_HISTORICAL_DATA_UI_NAME))
         return builder
-
 
     @singleton
     @provider
