@@ -743,7 +743,8 @@
             "config-opts": ["--buildtype=release"],
             "sources": [{
                 "type": "git",
-                "url": "https://gitlab.com/gabmus/gwe.git"
+                "url": "https://gitlab.com/leinardi/gwe.git",
+                "branch": "feature/meson"
             }]
         }
     ]
