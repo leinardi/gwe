@@ -19,8 +19,8 @@ TBD
 - [x] Add/Delete/Edit multi speed fan profiles (fan curve)
 - [x] Add option to restore last applied profile on startup
 - [x] Find better icons for app indicator
-- [ ] Try to lower resource consumption (mostly caused by `nvidia-settings` invocations)
-- [ ] Show historical data of most important values in a separate dialog
+- [x] Try to lower resource consumption (mostly caused by `nvidia-settings` invocations)
+- [x] Show historical data of most important values in a separate dialog (requires GTK 3.24/GNOME 3.30)
 - [ ] Disable unsupported preferences
 - [ ] Distributing with Flatpack
 - [ ] Distributing with Snap
