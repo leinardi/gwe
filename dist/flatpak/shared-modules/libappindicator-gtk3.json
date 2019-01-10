@@ -39,7 +39,9 @@
     },
     {
       "type": "script",
-      "commands": ["autoreconf -sfi"],
+      "commands": [
+        "autoreconf -sfi"
+      ],
       "dest-filename": "autogen.sh"
     }
   ],
@@ -113,7 +115,9 @@
         },
         {
           "type": "script",
-          "commands": ["autoreconf -sfi"],
+          "commands": [
+            "autoreconf -sfi"
+          ],
           "dest-filename": "autogen.sh"
         }
       ]

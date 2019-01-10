@@ -1,752 +1,756 @@
 {
-    "app-id": "com.leinardi.gwe",
-    "command": "gwe",
-    "runtime": "org.gnome.Platform",
-    "runtime-version": "3.30",
-    "sdk": "org.gnome.Sdk",
-    "finish-args": [
-        "--share=ipc",
-        "--socket=x11",
-        "--device=all",
-        "--socket=wayland",
-        "--talk-name=org.kde.StatusNotifierWatcher",
-        "--filesystem=home:ro",
-        "--filesystem=xdg-run/dconf",
-        "--filesystem=~/.config/dconf:ro",
-        "--talk-name=ca.desrt.dconf",
-        "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
-    ],
-    "modules": [
-        "shared-modules/libappindicator-gtk3-introspection-12.10.json",
+  "app-id": "com.leinardi.gwe",
+  "command": "gwe",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "3.30",
+  "sdk": "org.gnome.Sdk",
+  "finish-args": [
+    "--share=ipc",
+    "--socket=x11",
+    "--device=all",
+    "--socket=wayland",
+    "--talk-name=org.kde.StatusNotifierWatcher",
+    "--filesystem=home:ro",
+    "--filesystem=xdg-run/dconf",
+    "--filesystem=~/.config/dconf:ro",
+    "--talk-name=ca.desrt.dconf",
+    "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
+  ],
+  "modules": [
+    {
+      "name": "gwe",
+      "buildsystem": "meson",
+      "builddir": true,
+      "config-opts": [
+        "--buildtype=release"
+      ],
+      "sources": [
         {
-            "name" : "nvidia-ml",
-            "build-options": {
-                "env": {
-                    "PREFIX": "/app",
-                    "LIBDIR": "/app/lib"
-                }
-            },
-            "buildsystem" : "simple",
-            "build-commands": [
-                "sh NVIDIA-Linux-x86_64-415.25.run --extract-only",
-                "mkdir -p /app/lib",
-                "cp NVIDIA-Linux-x86_64-415.25/libnvidia-ml.so.415.25 /app/lib/libnvidia-ml.so.1"
-            ],
-            "sources" : [
-                {
-                    "type" : "file",
-                    "url" : "https://download.nvidia.com/XFree86/Linux-x86_64/415.25/NVIDIA-Linux-x86_64-415.25.run",
-                    "sha256": "64b65b8923d15e2566ed2ab6a4a65b21c45445bdd028ec0091c9b509a51e9349"
-                }
-            ]
-        },
-        {
-            "name" : "libdazzle",
-            "config-opts" : [
-                "--libdir=/app/lib",
-                "--buildtype=debugoptimized"
-            ],
-            "buildsystem" : "meson",
-            "builddir" : true,
-            "sources" : [
-                {
-                    "type" : "archive",
-                    "url" : "https://gitlab.gnome.org/GNOME/libdazzle/-/archive/3.31.4/libdazzle-3.31.4.tar.gz",
-                    "sha256": "f3abae603ff19234d9315edb15db21837897f9d499eead38035bf6f668bc29d7"
-                }
-            ]
-        },
-        {
-            "name": "python-injector",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/alecthomas/injector/archive/0.14.1.tar.gz",
-                    "sha256": "33ac76873fb10a59cd1f042dfbbeab9987228b3bc9364964f3610d8074c070c7"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-py3nvml",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/fbcotter/py3nvml/archive/0.2.2.tar.gz",
-                    "sha256": "df21511091c7dc5e60088d8d76ca4ab4fa0e9d53ba273bb7d4e5433c45a098fd"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py",
-                        "sed -i 's/CDLL(\"libnvidia-ml.so.1\")/CDLL(\"\\/app\\/lib\\/libnvidia-ml.so.1\")/g' py3nvml/py3nvml.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-kiwisolver",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/nucleic/kiwi/archive/1.0.1.tar.gz",
-                    "sha256": "8e7fc64fea6d3af96aed63391d35bbbd292a429c8e463277dac839b735503a28"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-setuptools_scm",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://files.pythonhosted.org/packages/09/b4/d148a70543b42ff3d81d57381f33104f32b91f970ad7873f463e75bf7453/setuptools_scm-3.1.0.tar.gz",
-                    "sha256": "1191f2a136b5e86f7ca8ab00a97ef7aef997131f1f6d4971be69a1ef387d8b40"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-dateutil",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://files.pythonhosted.org/packages/0e/01/68747933e8d12263d41ce08119620d9a7e5eb72c876a3442257f74490da0/python-dateutil-2.7.5.tar.gz",
-                    "sha256": "88f9287c0174266bb0d8cedd395cfba9c58e87e5ad86b2ce58859bc11be3cf02"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-cycler",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://files.pythonhosted.org/packages/c2/4b/137dea450d6e1e3d474e1d873cd1d4f7d3beed7e0dc973b06e8e10d32488/cycler-0.10.0.tar.gz",
-                    "sha256": "cd7b2d1018258d7247a71425e9f26463dfb444d411c39569972f4ce586b0c9d8"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-pyparsing",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://files.pythonhosted.org/packages/d0/09/3e6a5eeb6e04467b737d55f8bba15247ac0876f98fae659e58cd744430c6/pyparsing-2.3.0.tar.gz",
-                    "sha256": "f353aab21fd474459d97b709e527b5571314ee5f067441dc9f88e33eecd96592"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-idna",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://files.pythonhosted.org/packages/ad/13/eb56951b6f7950cadb579ca166e448ba77f9d24efc03edd7e55fa57d04b7/idna-2.8.tar.gz",
-                    "sha256": "c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-certifi",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://files.pythonhosted.org/packages/55/54/3ce77783acba5979ce16674fc98b1920d00b01d337cfaaf5db22543505ed/certifi-2018.11.29.tar.gz",
-                    "sha256": "47f9c83ef4c0c621eaef743f133f09fa8a74a9b75f037e8624f83bd1b6626cb7"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-chardet",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://files.pythonhosted.org/packages/fc/bb/a5768c230f9ddb03acc9ef3f0d4a3cf93462473795d18e9535498c8f929d/chardet-3.0.4.tar.gz",
-                    "sha256": "84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-urllib3",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://files.pythonhosted.org/packages/b1/53/37d82ab391393565f2f831b8eedbffd57db5a718216f82f1a8b4d381a1c1/urllib3-1.24.1.tar.gz",
-                    "sha256": "de9529817c93f27c8ccbfead6985011db27bd0ddfcdb2d86f3f663385c6a9c22"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-requests",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/requests/requests/archive/v2.21.0.tar.gz",
-                    "sha256": "9f9a50b5f64f4569704b9c5e618b957109e3486256453c9016c6dbfa10570761"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-pyxdg",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://files.pythonhosted.org/packages/47/6e/311d5f22e2b76381719b5d0c6e9dc39cd33999adae67db71d7279a6d70f4/pyxdg-0.26.tar.gz",
-                    "sha256": "fe2928d3f532ed32b39c32a482b54136fe766d19936afc96c8f00645f9da1a06"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-numpy",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/numpy/numpy/releases/download/v1.15.4/numpy-1.15.4.tar.gz",
-                    "sha256": "766e09248298e3ad4ae4a805159f358610bbe7dcc7b4a14e5df2128c05655b80"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-matplotlib",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/matplotlib/matplotlib/archive/v3.0.2.tar.gz",
-                    "sha256": "4682a2a4e66eed054d78a1eae5936d2174e8c145486db59f12a585aef991fad5"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-peewee",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/coleifer/peewee/archive/3.8.0.tar.gz",
-                    "sha256": "5b9567edd87a31ba09d6b110ed26079d875d0cb89aa8fb6e7e5cf318045152ad"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "python-rx",
-            "buildsystem": "simple",
-            "build-options": {
-                "arch": {
-                    "i386": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    },
-                    "arm": {
-                        "env": {
-                            "MAX_CONCURRENCY": "1"
-                        }
-                    }
-                }
-            },
-            "ensure-writable": [
-                "/lib/python*/site-packages/easy-install.pth",
-                "/lib/python*/site-packages/setuptools.pth",
-                "/app/lib/python*/site-packages/easy-install.pth",
-                "/app/lib/python*/site-packages/setuptools.pth"
-            ],
-            "build-commands": [
-                "python3 setup.py install --prefix=/app --root=/"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://files.pythonhosted.org/packages/25/d7/9bc30242d9af6a9e9bf65b007c56e17b7dc9c13f86e440b885969b3bbdcf/Rx-1.6.1.tar.gz",
-                    "sha256": "13a1d8d9e252625c173dc795471e614eadfe1cf40ffc684e08b8fff0d9748c23"
-                },
-                {
-                    "type": "shell",
-                    "commands": [
-                        "sed -i 's/if not platform_/if not dirs/' setup.py"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "gwe",
-            "buildsystem": "meson",
-            "builddir": true,
-            "config-opts": ["--buildtype=release"],
-            "sources": [{
-                "type": "archive",
-                "url": "https://gitlab.com/leinardi/gwe/-/archive/0.3.2/gwe-0.3.2.tar.gz",
-                "sha256": "c0f2fdae156defa381dbc45c1008a09c653c0a379eed68b320fb386e3afd8023"
-            }]
+          "type": "git",
+          "url": "https://gitlab.com/leinardi/gwe.git",
+          "branch": "feature/meson"
         }
-    ]
+      ]
+    },
+    "shared-modules/libappindicator-gtk3-introspection-12.10.json",
+    {
+      "name": "nvidia-ml",
+      "build-options": {
+        "env": {
+          "PREFIX": "/app",
+          "LIBDIR": "/app/lib"
+        }
+      },
+      "buildsystem": "simple",
+      "build-commands": [
+        "sh NVIDIA-Linux-x86_64-415.25.run --extract-only",
+        "mkdir -p /app/lib",
+        "cp NVIDIA-Linux-x86_64-415.25/libnvidia-ml.so.415.25 /app/lib/libnvidia-ml.so.1"
+      ],
+      "sources": [
+        {
+          "type": "file",
+          "url": "https://download.nvidia.com/XFree86/Linux-x86_64/415.25/NVIDIA-Linux-x86_64-415.25.run",
+          "sha256": "64b65b8923d15e2566ed2ab6a4a65b21c45445bdd028ec0091c9b509a51e9349"
+        }
+      ]
+    },
+    {
+      "name": "libdazzle",
+      "config-opts": [
+        "--libdir=/app/lib",
+        "--buildtype=debugoptimized"
+      ],
+      "buildsystem": "meson",
+      "builddir": true,
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://gitlab.gnome.org/GNOME/libdazzle/-/archive/3.31.4/libdazzle-3.31.4.tar.gz",
+          "sha256": "f3abae603ff19234d9315edb15db21837897f9d499eead38035bf6f668bc29d7"
+        }
+      ]
+    },
+    {
+      "name": "python-injector",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/alecthomas/injector/archive/0.14.1.tar.gz",
+          "sha256": "33ac76873fb10a59cd1f042dfbbeab9987228b3bc9364964f3610d8074c070c7"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-py3nvml",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/fbcotter/py3nvml/archive/0.2.2.tar.gz",
+          "sha256": "df21511091c7dc5e60088d8d76ca4ab4fa0e9d53ba273bb7d4e5433c45a098fd"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py",
+            "sed -i 's/CDLL(\"libnvidia-ml.so.1\")/CDLL(\"\\/app\\/lib\\/libnvidia-ml.so.1\")/g' py3nvml/py3nvml.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-kiwisolver",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/nucleic/kiwi/archive/1.0.1.tar.gz",
+          "sha256": "8e7fc64fea6d3af96aed63391d35bbbd292a429c8e463277dac839b735503a28"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-setuptools_scm",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://files.pythonhosted.org/packages/09/b4/d148a70543b42ff3d81d57381f33104f32b91f970ad7873f463e75bf7453/setuptools_scm-3.1.0.tar.gz",
+          "sha256": "1191f2a136b5e86f7ca8ab00a97ef7aef997131f1f6d4971be69a1ef387d8b40"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-dateutil",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://files.pythonhosted.org/packages/0e/01/68747933e8d12263d41ce08119620d9a7e5eb72c876a3442257f74490da0/python-dateutil-2.7.5.tar.gz",
+          "sha256": "88f9287c0174266bb0d8cedd395cfba9c58e87e5ad86b2ce58859bc11be3cf02"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-cycler",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://files.pythonhosted.org/packages/c2/4b/137dea450d6e1e3d474e1d873cd1d4f7d3beed7e0dc973b06e8e10d32488/cycler-0.10.0.tar.gz",
+          "sha256": "cd7b2d1018258d7247a71425e9f26463dfb444d411c39569972f4ce586b0c9d8"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-pyparsing",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://files.pythonhosted.org/packages/d0/09/3e6a5eeb6e04467b737d55f8bba15247ac0876f98fae659e58cd744430c6/pyparsing-2.3.0.tar.gz",
+          "sha256": "f353aab21fd474459d97b709e527b5571314ee5f067441dc9f88e33eecd96592"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-idna",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://files.pythonhosted.org/packages/ad/13/eb56951b6f7950cadb579ca166e448ba77f9d24efc03edd7e55fa57d04b7/idna-2.8.tar.gz",
+          "sha256": "c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-certifi",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://files.pythonhosted.org/packages/55/54/3ce77783acba5979ce16674fc98b1920d00b01d337cfaaf5db22543505ed/certifi-2018.11.29.tar.gz",
+          "sha256": "47f9c83ef4c0c621eaef743f133f09fa8a74a9b75f037e8624f83bd1b6626cb7"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-chardet",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://files.pythonhosted.org/packages/fc/bb/a5768c230f9ddb03acc9ef3f0d4a3cf93462473795d18e9535498c8f929d/chardet-3.0.4.tar.gz",
+          "sha256": "84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-urllib3",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://files.pythonhosted.org/packages/b1/53/37d82ab391393565f2f831b8eedbffd57db5a718216f82f1a8b4d381a1c1/urllib3-1.24.1.tar.gz",
+          "sha256": "de9529817c93f27c8ccbfead6985011db27bd0ddfcdb2d86f3f663385c6a9c22"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-requests",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/requests/requests/archive/v2.21.0.tar.gz",
+          "sha256": "9f9a50b5f64f4569704b9c5e618b957109e3486256453c9016c6dbfa10570761"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-pyxdg",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://files.pythonhosted.org/packages/47/6e/311d5f22e2b76381719b5d0c6e9dc39cd33999adae67db71d7279a6d70f4/pyxdg-0.26.tar.gz",
+          "sha256": "fe2928d3f532ed32b39c32a482b54136fe766d19936afc96c8f00645f9da1a06"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-numpy",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/numpy/numpy/releases/download/v1.15.4/numpy-1.15.4.tar.gz",
+          "sha256": "766e09248298e3ad4ae4a805159f358610bbe7dcc7b4a14e5df2128c05655b80"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-matplotlib",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/matplotlib/matplotlib/archive/v3.0.2.tar.gz",
+          "sha256": "4682a2a4e66eed054d78a1eae5936d2174e8c145486db59f12a585aef991fad5"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-peewee",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/coleifer/peewee/archive/3.8.0.tar.gz",
+          "sha256": "5b9567edd87a31ba09d6b110ed26079d875d0cb89aa8fb6e7e5cf318045152ad"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "python-rx",
+      "buildsystem": "simple",
+      "build-options": {
+        "arch": {
+          "i386": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          },
+          "arm": {
+            "env": {
+              "MAX_CONCURRENCY": "1"
+            }
+          }
+        }
+      },
+      "ensure-writable": [
+        "/lib/python*/site-packages/easy-install.pth",
+        "/lib/python*/site-packages/setuptools.pth",
+        "/app/lib/python*/site-packages/easy-install.pth",
+        "/app/lib/python*/site-packages/setuptools.pth"
+      ],
+      "build-commands": [
+        "python3 setup.py install --prefix=/app --root=/"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://files.pythonhosted.org/packages/25/d7/9bc30242d9af6a9e9bf65b007c56e17b7dc9c13f86e440b885969b3bbdcf/Rx-1.6.1.tar.gz",
+          "sha256": "13a1d8d9e252625c173dc795471e614eadfe1cf40ffc684e08b8fff0d9748c23"
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
+          ]
+        }
+      ]
+    }
+  ]
 }

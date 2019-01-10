@@ -3,13 +3,28 @@
 import sys
 import subprocess
 from os import path
-from tempfile import TemporaryDirectory
+from pathlib import Path
 
+flatpak_build_path = Path(__file__).parent.parent / 'build' / 'flatpak'
 manifest = sys.argv[1]
 output = sys.argv[2]
 app_id = path.basename(manifest).rpartition('.')[0]
 
-with TemporaryDirectory(prefix='gwe-flatpak-repo') as temprepo:
-    with TemporaryDirectory(prefix='gwe-flatpak-build') as tempbuild:
-        subprocess.call(['flatpak-builder', ' --install-deps-from=flathub', tempbuild, manifest, '--repo=' + temprepo])
-    subprocess.call(['flatpak', 'build-bundle', temprepo, output, app_id])
+repo_path = flatpak_build_path / 'repo'
+build_path = flatpak_build_path / 'build'
+
+repo_path.mkdir(parents=True, exist_ok=True)
+build_path.mkdir(parents=True, exist_ok=True)
+
+print(str(build_path))
+print(str(manifest))
+print(str(repo_path))
+
+subprocess.call(
+    ['flatpak-builder',
+     '--force-clean',
+     '--install-deps-from=flathub',
+     str(build_path), str(manifest),
+     '--repo=' + str(repo_path)
+     ])
+subprocess.call(['flatpak', 'build-bundle', str(repo_path), output, app_id])

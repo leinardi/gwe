@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-which python
+MESON_BUILD_DIR="build/meson"
+OUTPUT_DIR="build/output"
+INSTALL_DIR="${OUTPUT_DIR}/install"
 
-[ -d build ] && rm -rfv build
+[[ -d ${MESON_BUILD_DIR} ]] && rm -rfv ${MESON_BUILD_DIR}
 find . -regex '^.*\(__pycache__\|\.py[co]\)$' -delete
-mkdir -v build
-meson . build --prefix=$PWD/build/testdir
-ninja -C build
-ninja -C build install
+mkdir -pv ${MESON_BUILD_DIR} ${INSTALL_DIR}
+meson . ${MESON_BUILD_DIR} --prefix=$PWD/${INSTALL_DIR} $@
+ninja -v -C ${MESON_BUILD_DIR}
+ninja -v -C ${MESON_BUILD_DIR} install

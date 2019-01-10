@@ -10,4 +10,4 @@ __pycache__/
 /.mypy_cache/
 .dmypy.json
 /venv/
-/gwe/data/gwe.db
+.flatpak-builder/
