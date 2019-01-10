@@ -50,8 +50,9 @@
             "builddir" : true,
             "sources" : [
                 {
-                    "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/libdazzle.git"
+                    "type" : "archive",
+                    "url" : "https://gitlab.gnome.org/GNOME/libdazzle/-/archive/3.31.4/libdazzle-3.31.4.tar.gz",
+                    "sha256": "f3abae603ff19234d9315edb15db21837897f9d499eead38035bf6f668bc29d7"
                 }
             ]
         },
