@@ -1,1 +1,2 @@
-option('with-flatpak', type: 'boolean', value: false)
+option('flatpak-local', type: 'boolean', value: false)
+option('flatpak-remote', type: 'boolean', value: false)
