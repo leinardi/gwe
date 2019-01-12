@@ -1,5 +1,8 @@
 # GWE
-TBD
+GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video card 
+and graphics processor.
+
+<img src="/art/screenshot-1.png" width="800"/>
 
 ## TODO
 
@@ -27,6 +30,40 @@ TBD
 - [ ] Add support for multi-GPU
 - [ ] Allow to select profiles from app indicator
 - [ ] Add support for i18n (internationalization and localization)
+
+## How to help the project
+### We need people with experience in at least one of these topics:
+ - X-Protocol (see [#15](https://gitlab.com/leinardi/gwe/issues/15) and [#16](https://gitlab.com/leinardi/gwe/issues/16))
+ - Flatpak (see [#17](https://gitlab.com/leinardi/gwe/issues/17))
+ - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
+ - Meson (see [#2](https://gitlab.com/leinardi/gwe/issues/2))
+
+Knowing Python will be also very helpful but not strictly necessary.
+ 
+### Why do we need it?
+Currently there are some roadblocks that are preventing GWE to move to stable and have an official launch.  
+The biggest issues right now are related to the X-Protocol implementation and the distribution of the application.
+
+#### X-Protocol
+To make the app as lightweight as possible, GWE uses the X-Protocol to communicate directly with [NV-CONTROL](https://github.com/NVIDIA/nvidia-settings/blob/master/doc/NV-CONTROL-API.txt).  
+The code that implements the X-Protocol was taken form [disper](https://github.com/phatina/disperd/blob/master/src/nvidia/minx.py),
+a Python 2 software, and ported to Python 3. The current implementation is only able to read data ([#16](https://gitlab.com/leinardi/gwe/issues/16)) and has to relay
+on the `nvidia-settings` binary to set values (e.g. fan speed or overclock). Also the reading is not 100% reliable due to [#15](https://gitlab.com/leinardi/gwe/issues/15).  
+It would be really helpful if someone with more knowledge of the X-Protocol or Python could help fixing these two issues.
+
+#### Moving from PyPI to Flatpak
+Development builds are currently distributed using PyPI. This way of distributing the software is quite simple
+but requires the user to manually install all the non Python dependencies like cairo, glib, appindicator3, etc.  
+The current implementation of the historical data uses a new library, Dazzle, that requires Gnome 3.30 which is only
+available, for example, with Ubuntu 18.10 making the latest Ubuntu LTS unsupported.  
+A possible solution for all this problems could be distributing the app via Flatpak, since with it all the dependencies
+will be bundled and provided automatically. Currently there is a development branch where the migration to Flatpak is taking place:
+[feature/meson](https://gitlab.com/leinardi/gwe/tree/feature/meson)  
+On this branch it is already possible to build the app with meson and generate a Flatpak, but the sandbox is breaking `py3nvml`, making impossible to read all the needed informations,
+and not allowing to call `nvidia-settings` binary to control fans and OC (but that should not be a problem once #16 is fixed).  
+More information available on [#17](https://gitlab.com/leinardi/gwe/issues/17).
+
+
 
 ## Distribution dependencies
 ### (K/X)Ubuntu 18.04 or newer
