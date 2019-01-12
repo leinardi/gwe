@@ -32,6 +32,10 @@ and graphics processor.
 - [ ] Add support for i18n (internationalization and localization)
 
 ## How to help the project
+### Discord server
+If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/xHzmTQ2  
+Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
+
 ### We need people with experience in at least one of these topics:
  - X-Protocol (see [#15](https://gitlab.com/leinardi/gwe/issues/15) and [#16](https://gitlab.com/leinardi/gwe/issues/16))
  - Flatpak (see [#17](https://gitlab.com/leinardi/gwe/issues/17))
