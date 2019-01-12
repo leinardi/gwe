@@ -156,7 +156,7 @@ class NvidiaRepository:
                     clocks = Clocks()
 
                 mem_transfer_rate_offset_range = nv.get_mem_transfer_rate_offset_range(gpu)
-                perf_level = nv.get_current_performance_level(gpu)
+                # perf_level = nv.get_current_performance_level(gpu)
                 if mem_transfer_rate_offset_range is not None:
                     mem_clock_offset_range = (mem_transfer_rate_offset_range[0] // 2,
                                               mem_transfer_rate_offset_range[1] // 2)
@@ -170,10 +170,10 @@ class NvidiaRepository:
                         gpu_offset=nv.get_gpu_nvclock_offset(gpu),
                         memory_range=mem_clock_offset_range,
                         memory_offset=mem_clock_offset,
-                        perf_level=perf_level
+                        perf_level_max=perf_mode.get('perf') if perf_mode else None
                     )
                 else:
-                    overclock = Overclock(perf_level=perf_level)
+                    overclock = Overclock(perf_level_max=perf_mode.get('perf') if perf_mode else None)
 
                 manual_control = nv.get_cooler_manual_control_enabled(gpu)
                 fan_list: Optional[List[Tuple[int, int]]] = None

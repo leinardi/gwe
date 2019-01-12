@@ -201,7 +201,7 @@ class MainView(MainViewInterface):
     def get_overclock_offsets(self) -> Tuple[int, int, int, int]:
         return (
             0,
-            self._latest_status.gpu_status_list[0].overclock.perf,
+            self._latest_status.gpu_status_list[0].overclock.perf_level_max,
             self._overclock_gpu_offset_adjustment.get_value(),
             self._overclock_memory_offset_adjustment.get_value()
         )

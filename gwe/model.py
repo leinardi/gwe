@@ -131,14 +131,14 @@ class Clocks:
 
 class Overclock:
     def __init__(self,
-                 perf_level: Optional[int] = None,
+                 perf_level_max: Optional[int] = None,
                  available: bool = False,
                  gpu_range: Optional[Tuple[int, int]] = None,
                  gpu_offset: Optional[int] = None,
                  memory_range: Optional[Tuple[int, int]] = None,
                  memory_offset: Optional[int] = None
                  ) -> None:
-        self.perf_level: Optional[int] = perf_level
+        self.perf_level_max: Optional[int] = perf_level_max
         self.available: bool = available
         self.gpu_range: Optional[Tuple[int, int]] = gpu_range
         self.gpu_offset: Optional[int] = gpu_offset
