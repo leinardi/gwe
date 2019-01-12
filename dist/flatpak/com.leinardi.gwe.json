@@ -5,16 +5,14 @@
   "runtime-version": "3.30",
   "sdk": "org.gnome.Sdk",
   "finish-args": [
+    "--allow=devel",
     "--share=ipc",
     "--socket=x11",
     "--device=all",
-    "--socket=wayland",
     "--talk-name=org.kde.StatusNotifierWatcher",
-    "--filesystem=home:ro",
-    "--filesystem=xdg-run/dconf",
-    "--filesystem=~/.config/dconf:ro",
-    "--talk-name=ca.desrt.dconf",
-    "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
+    "--talk-name=org.freedesktop.Flatpak",
+    "--system-talk-name=org.freedesktop.PolicyKit1",
+    "--filesystem=home:ro"
   ],
   "modules": [
     {
@@ -33,28 +31,6 @@
       ]
     },
     "shared-modules/libappindicator-gtk3-introspection-12.10.json",
-    {
-      "name": "nvidia-ml",
-      "build-options": {
-        "env": {
-          "PREFIX": "/app",
-          "LIBDIR": "/app/lib"
-        }
-      },
-      "buildsystem": "simple",
-      "build-commands": [
-        "sh NVIDIA-Linux-x86_64-415.25.run --extract-only",
-        "mkdir -p /app/lib",
-        "cp NVIDIA-Linux-x86_64-415.25/libnvidia-ml.so.415.25 /app/lib/libnvidia-ml.so.1"
-      ],
-      "sources": [
-        {
-          "type": "file",
-          "url": "https://download.nvidia.com/XFree86/Linux-x86_64/415.25/NVIDIA-Linux-x86_64-415.25.run",
-          "sha256": "64b65b8923d15e2566ed2ab6a4a65b21c45445bdd028ec0091c9b509a51e9349"
-        }
-      ]
-    },
     {
       "name": "libdazzle",
       "config-opts": [
@@ -146,8 +122,7 @@
         {
           "type": "shell",
           "commands": [
-            "sed -i 's/if not platform_/if not dirs/' setup.py",
-            "sed -i 's/CDLL(\"libnvidia-ml.so.1\")/CDLL(\"\\/app\\/lib\\/libnvidia-ml.so.1\")/g' py3nvml/py3nvml.py"
+            "sed -i 's/if not platform_/if not dirs/' setup.py"
           ]
         }
       ]
