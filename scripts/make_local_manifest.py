@@ -5,14 +5,15 @@ import json
 from distutils.dir_util import copy_tree
 from pathlib import Path
 
-in_file = sys.argv[1]
-git_repo = Path(__file__).parent.parent / '.git'
-output = sys.argv[2]
+IN_FILE = sys.argv[1]
+GIT_REPO = Path(__file__).parent.parent / '.git'
+OUTPUT = sys.argv[2]
 
-copy_tree(str(Path(in_file).parent.absolute()), str(Path(output).parent.absolute()))
-manifest = json.load(open(in_file, encoding='utf-8'))
-manifest['modules'][0]['sources'][0]['url'] = str(git_repo)
-manifest['modules'][0]['sources'][0]['commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
-manifest['modules'][0]['sources'][0].pop('branch', None)
-manifest['modules'][0]['sources'][0].pop('tag', None)
-json.dump(manifest, open(output, 'w', encoding='utf-8'))
+copy_tree(str(Path(IN_FILE).parent.absolute()), str(Path(OUTPUT).parent.absolute()))
+MANIFEST = json.load(open(IN_FILE, encoding='utf-8'))
+MODULE = MANIFEST['modules'][-1]['sources'][0]
+MODULE['url'] = str(GIT_REPO)
+MODULE['commit'] = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
+MODULE.pop('branch', None)
+MODULE.pop('tag', None)
+json.dump(MANIFEST, open(OUTPUT, 'w', encoding='utf-8'))

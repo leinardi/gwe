@@ -5,40 +5,20 @@
   "runtime-version": "3.30",
   "sdk": "org.gnome.Sdk",
   "finish-args": [
-    "--allow=devel",
     "--share=ipc",
     "--socket=x11",
     "--device=all",
     "--talk-name=org.kde.StatusNotifierWatcher",
-    "--talk-name=org.freedesktop.Flatpak",
-    "--system-talk-name=org.freedesktop.PolicyKit1",
-    "--filesystem=home:ro"
+    "--talk-name=org.freedesktop.Flatpak"
   ],
   "modules": [
-    {
-      "name": "gwe",
-      "buildsystem": "meson",
-      "builddir": true,
-      "config-opts": [
-        "--buildtype=release"
-      ],
-      "sources": [
-        {
-          "type": "git",
-          "url": "https://gitlab.com/leinardi/gwe.git",
-          "branch": "feature/meson"
-        }
-      ]
-    },
     "shared-modules/libappindicator-gtk3-introspection-12.10.json",
     {
       "name": "libdazzle",
       "config-opts": [
-        "--libdir=/app/lib",
         "--buildtype=debugoptimized"
       ],
       "buildsystem": "meson",
-      "builddir": true,
       "sources": [
         {
           "type": "archive",
@@ -724,6 +704,20 @@
           "commands": [
             "sed -i 's/if not platform_/if not dirs/' setup.py"
           ]
+        }
+      ]
+    },
+    {
+      "name": "gwe",
+      "buildsystem": "meson",
+      "config-opts": [
+        "--buildtype=release"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://gitlab.com/leinardi/gwe.git",
+          "branch": "feature/meson"
         }
       ]
     }
