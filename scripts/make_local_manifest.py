@@ -6,7 +6,7 @@ from distutils.dir_util import copy_tree
 from pathlib import Path
 
 IN_FILE = sys.argv[1]
-GIT_REPO = Path(__file__).parent.parent / '.git'
+GIT_REPO = Path().cwd() / '.git'
 OUTPUT = sys.argv[2]
 
 copy_tree(str(Path(IN_FILE).parent.absolute()), str(Path(OUTPUT).parent.absolute()))
