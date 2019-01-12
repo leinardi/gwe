@@ -157,15 +157,15 @@ class NvidiaRepository:
 
                 mem_transfer_rate_offset_range = nv.get_mem_transfer_rate_offset_range(gpu)
                 perf_level = nv.get_current_performance_level(gpu)
-                if mem_transfer_rate_offset_range:
+                if mem_transfer_rate_offset_range is not None:
                     mem_clock_offset_range = (mem_transfer_rate_offset_range[0] // 2,
                                               mem_transfer_rate_offset_range[1] // 2)
-                    mem_transfer_rate_offset = nv.get_mem_transfer_rate_offset(gpu) // 2
+                    mem_transfer_rate_offset = nv.get_mem_transfer_rate_offset(gpu)
                     mem_clock_offset = None
-                    if mem_transfer_rate_offset:
+                    if mem_transfer_rate_offset is not None:
                         mem_clock_offset = mem_transfer_rate_offset // 2
                     overclock = Overclock(
-                        available=False,
+                        available=mem_transfer_rate_offset is not None,
                         gpu_range=nv.get_gpu_nvclock_offset_range(gpu),
                         gpu_offset=nv.get_gpu_nvclock_offset(gpu),
                         memory_range=mem_clock_offset_range,
