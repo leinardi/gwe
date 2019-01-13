@@ -1,7 +1,9 @@
-**[0.7.0] 2019-01-03**
+**[0.7.0] 2019-01-13**
 - **Huge** improvement in resource utilization thanks to the switch from CLI tools to libs to read the data 
 - Historical data dialog! (Requires GNOME 3.30+. New dependency necessary, check the Distribution dependencies section of the readme)
 - Highlighting currently applied profile
+- Distributing the app via Flatpak (not published on Flathub yet)
+- Dropped support for PyPI
 
 **[0.5.1] 2019-01-03**
  - Min duty changed from 25 to 0
