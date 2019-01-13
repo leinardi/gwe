@@ -25,7 +25,8 @@ and graphics processor.
 - [x] Try to lower resource consumption (mostly caused by `nvidia-settings` invocations)
 - [x] Show historical data of most important values in a separate dialog (requires GTK 3.24/GNOME 3.30)
 - [ ] Disable unsupported preferences
-- [ ] Distributing with Flatpack
+- [x] Distributing with Flatpack
+- [ ] Publishing on Flathub
 - [ ] Distributing with Snap
 - [ ] Add support for multi-GPU
 - [ ] Allow to select profiles from app indicator
@@ -55,49 +56,25 @@ a Python 2 software, and ported to Python 3. The current implementation is only 
 on the `nvidia-settings` binary to set values (e.g. fan speed or overclock). Also the reading is not 100% reliable due to [#15](https://gitlab.com/leinardi/gwe/issues/15).  
 It would be really helpful if someone with more knowledge of the X-Protocol or Python could help fixing these two issues.
 
-#### Moving from PyPI to Flatpak
-Development builds are currently distributed using PyPI. This way of distributing the software is quite simple
+## Dropped PyPI support
+Development builds were distributed using PyPI. This way of distributing the software is quite simple
 but requires the user to manually install all the non Python dependencies like cairo, glib, appindicator3, etc.  
 The current implementation of the historical data uses a new library, Dazzle, that requires Gnome 3.30 which is only
 available, for example, with Ubuntu 18.10 making the latest Ubuntu LTS unsupported.  
 A possible solution for all this problems could be distributing the app via Flatpak, since with it all the dependencies
-will be bundled and provided automatically. Currently there is a development branch where the migration to Flatpak is taking place:
-[feature/meson](https://gitlab.com/leinardi/gwe/tree/feature/meson)  
-On this branch it is already possible to build the app with meson and generate a Flatpak, but the sandbox is breaking `py3nvml`, making impossible to read all the needed informations,
-and not allowing to call `nvidia-settings` binary to control fans and OC (but that should not be a problem once #16 is fixed).  
-More information available on [#17](https://gitlab.com/leinardi/gwe/issues/17).
+will be bundled and provided automatically.
+**No new build will be published on PyPI**.
 
-
-
-## Distribution dependencies
-### (K/X)Ubuntu 18.04 or newer
+## Installing the app via Flatpak
+Until the app will be published on Flathub, to install it you have do manually download the latest `.flatpak` file
+and install it with command:
 ```bash
-sudo apt install libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo python3-pip
+flatpak --user install <path to the file .flatpak>
 ```
-### Fedora 28+
-Install [(K)StatusNotifierItem/AppIndicator Support](https://extensions.gnome.org/extension/615/appindicator-support/)
+If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
 
-### Arch Linux (Gnome)
-```bash
-sudo pacman -Syu python-pip libdazzle libappindicator-gtk3
-```
-
-## Install using PIP
-```bash
-pip3 install gwe
-```
-Add the the executable path `~/.local/bin` to your PATH variable if missing.
-
-## Update using PIP
-```bash
-pip3 install -U gwe
-```
-
-## Running the app
-To start the app you have to run the command `gwe` in a terminal. 
-
-### Application entry
-To add a desktop entry for the application run the following command:
+## Application entry
+To add a desktop entry for the application run the following command (not supported by Flatpak):
 ```bash
 gwe --application-entry 
 ```
@@ -106,25 +83,38 @@ If you don't want to create this custom rule you can run gwe as root
 
 ## Command line options
 
-  | Parameter                 | Description|
-  |---------------------------|------------|
-  |-v, --version              |Show the app version|
-  |--debug                    |Show debug messages|
-  |--hide-window              |Start with the main window hidden|
-  |--application-entry        |Add a desktop entry for the application|
-  |--autostart-on             |Enable automatic start of the app on login|
-  |--autostart-off            |Disable automatic start of the app on login|
+  | Parameter                 | Description|                              | Flatpak | 
+  |---------------------------|-------------------------------------------|---------|
+  |-v, --version              |Show the app version                       |    x    |
+  |--debug                    |Show debug messages                        |    x    |
+  |--hide-window              |Start with the main window hidden          |    x    |
+  |--application-entry        |Add a desktop entry for the application    |         |
+  |--autostart-on             |Enable automatic start of the app on login |         |
+  |--autostart-off            |Disable automatic start of the app on login|         |
 
 
-## Python dependencies
 ## How to run the repository sources
-
+If you wnat to clone the project and run directly from the source you need to manually install all the needed
+dependencies.
+ 
+### (K/X)Ubuntu 18.04 or newer
+```bash
+sudo apt install python3-pip libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo python3-pip
 ```
-sudo apt install python3-pip
+### Fedora 28+ (outdated, please let me know if new dependencies are needed)
+Install [(K)StatusNotifierItem/AppIndicator Support](https://extensions.gnome.org/extension/615/appindicator-support/)
+
+### Arch Linux (Gnome)
+```bash
+sudo pacman -Syu python-pip libdazzle libappindicator-gtk3
+```
+
+### Python dependencies
+```
 git clone https://gitlab.com/leinardi/gwe.git
 cd gwe
 pip3 install -r requirements.txt
-./run
+./run.sh
 ```
 
 ## FAQ
