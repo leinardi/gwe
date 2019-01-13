@@ -33,7 +33,7 @@ and graphics processor.
 
 ## How to help the project
 ### Discord server
-If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/xHzmTQ2  
+If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/YjPdNff  
 Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
 
 ### We need people with experience in at least one of these topics:
