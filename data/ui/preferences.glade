@@ -136,7 +136,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <child>
-                                          <object class="GtkGrid">
+                                          <object class="GtkGrid" id="settings_launch_on_login_grid">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="valign">center</property>
@@ -161,7 +161,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkLabel">
+                                              <object class="GtkLabel" id="settings_launch_on_login_description_label">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">Automatically start the app hidden on login</property>

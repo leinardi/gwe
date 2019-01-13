@@ -29,9 +29,9 @@ from gwe.conf import APP_NAME, APP_ID, APP_VERSION, APP_ICON_NAME
 from gwe.di import MainBuilder
 from gwe.model import FanProfile, SpeedStep, Setting, CurrentFanProfile, load_db_default_data
 from gwe.presenter.main import MainPresenter
+from gwe.util.deployment import is_flatpak
 from gwe.util.desktop_entry import set_autostart_entry, add_application_entry
 from gwe.util.log import LOG_DEBUG_FORMAT
-from gwe.util.udev import add_udev_rule, remove_udev_rule
 from gwe.util.view import build_glib_option
 from gwe.view.main import MainView
 
@@ -136,18 +136,13 @@ class Application(Gtk.Application):
             build_glib_option(_Options.HIDE_WINDOW.value,
                               description="Start with the main window hidden"),
         ]
-        linux_options = [
-            build_glib_option(_Options.APPLICATION_ENTRY.value,
-                              description="Add a desktop entry for the application"),
-            build_glib_option(_Options.AUTOSTART_ON.value,
-                              description="Enable automatic start of the app on login"),
-            build_glib_option(_Options.AUTOSTART_OFF.value,
-                              description="Disable automatic start of the app on login"),
-        ]
-
-        if sys.platform.startswith('linux'):
-            options += linux_options
-
+        if not is_flatpak():
+            options.append(build_glib_option(_Options.APPLICATION_ENTRY.value,
+                                             description="Add a desktop entry for the application"))
+            options.append(build_glib_option(_Options.AUTOSTART_ON.value,
+                                             description="Enable automatic start of the app on login"))
+            options.append(build_glib_option(_Options.AUTOSTART_OFF.value,
+                                             description="Disable automatic start of the app on login"))
         return options
 
 
