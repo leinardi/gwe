@@ -88,4 +88,3 @@ else
 	ninja -v -C ${MESON_BUILD_DIR}
 	ninja -v -C ${MESON_BUILD_DIR} install
 fi
-exit 0
