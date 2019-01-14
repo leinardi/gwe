@@ -47,6 +47,7 @@ function build_flatpak {
 	mkdir -p ${FLATPAK_BUILD_DIR}
 
 	time flatpak-builder --force-clean $2 --install-deps-from=flathub --repo=${FLATPAK_REPO_DIR} ${FLATPAK_BUILD_DIR} $1
+	desktop-file-validate build/flatpak/build/files/share/applications/com.leinardi.gwe.desktop || exit $?
 }
 
 function build_flatpak_bundle {
@@ -54,6 +55,8 @@ function build_flatpak_bundle {
 	time flatpak build-bundle ${FLATPAK_REPO_DIR} ${FLATPAK_OUTPUT_FILE} ${APP_ID}
 }
 
+appstream-util validate-relax data/com.leinardi.gwe.appdata.xml || exit $?
+appstream-util appdata-to-news data/com.leinardi.gwe.appdata.xml | sed '/^~*$/s/~/=/g' > CHANGELOG.md
 [[ -d ${OUTPUT_DIR} ]] && rm -rfv ${OUTPUT_DIR}
 find . -regex '^.*\(__pycache__\|\.py[co]\)$' -delete
 
@@ -86,5 +89,6 @@ else
 	mkdir -pv ${MESON_BUILD_DIR} ${INSTALL_DIR}
 	meson . ${MESON_BUILD_DIR} --prefix=$PWD/${INSTALL_DIR}
 	ninja -v -C ${MESON_BUILD_DIR}
+	desktop-file-validate build/meson/data/com.leinardi.gwe.desktop || exit $?
 	ninja -v -C ${MESON_BUILD_DIR} install
 fi
