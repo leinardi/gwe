@@ -7,7 +7,7 @@
   "finish-args": [
     "--share=ipc",
     "--socket=x11",
-    "--device=all",
+    "--device=dri",
     "--talk-name=org.kde.StatusNotifierWatcher",
     "--talk-name=org.freedesktop.Flatpak"
   ],
