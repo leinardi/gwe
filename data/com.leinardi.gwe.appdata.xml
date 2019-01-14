@@ -4,33 +4,40 @@
     <!-- <translation type="gettext">trg</translation> -->
     <name>GreenWithEnvy</name>
     <developer_name>Roberto Leinardi</developer_name>
-    <summary>Graphical system utility that provides information and allows to control overclock and fan speed of modern
-        Nvidia cards
+    <summary>System utility designed to provide information, control the fans and overclock your NVIDIA card
     </summary>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0+</project_license>
     <description>
-        <p>Graphical system utility that provides information and allows to control overclock and fan speed of modern
-            Nvidia cards.
+        <p>GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video
+            card and graphics processor.
         </p>
     </description>
     <screenshots>
         <screenshot type="default">
-            <image>https://gitlab.com/leinardi/gwe/raw/master/screenshot.png</image>
+            <image>https://gitlab.com/leinardi/gwe/raw/master/art/screenshot-1.png</image>
         </screenshot>
     </screenshots>
     <url type="homepage">https://gitlab.com/leinardi/gwe</url>
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
-        <release version="0.6.0" timestamp="1546473600">
+        <release version="0.7.0" date="2019-01-13">
             <description>
                 <ul>
+                    <li>**Huge** improvement in resource utilization thanks to the switch from CLI tools to libs to read
+                        the data
+                    </li>
+                    <li>Historical data dialog! (Requires GNOME 3.30+. New dependency necessary, check the Distribution
+                        dependencies section of the readme)
+                    </li>
                     <li>Highlighting currently applied profile</li>
+                    <li>Distributing the app via Flatpak (not published on Flathub yet)</li>
+                    <li>Dropped support for PyPI</li>
                 </ul>
             </description>
         </release>
-        <release version="0.5.1" timestamp="1546473600">
+        <release version="0.5.1" date="2019-01-03">
             <description>
                 <ul>
                     <li>Min duty changed from 25 to 0</li>
@@ -38,7 +45,7 @@
                 </ul>
             </description>
         </release>
-        <release version="0.5.0" timestamp="1546473600">
+        <release version="0.5.0" date="2019-01-03">
             <description>
                 <ul>
                     <li>Implemented Fan curve profile!</li>
@@ -48,21 +55,21 @@
                 </ul>
             </description>
         </release>
-        <release version="0.3.2" timestamp="1546300802">
+        <release version="0.3.2" date="2019-01-01">
             <description>
                 <ul>
                     <li>Fixed overclock slider value not correctly restored on startup</li>
                 </ul>
             </description>
         </release>
-        <release version="0.3.1" timestamp="1546300801">
+        <release version="0.3.1" date="2019-01-01">
             <description>
                 <ul>
                     <li>Removed unnecessary dependency from py3nvml</li>
                 </ul>
             </description>
         </release>
-        <release version="0.3.0" timestamp="1546300800">
+        <release version="0.3.0" date="2019-01-01">
             <description>
                 <ul>
                     <li>Enabled version check on startup</li>
@@ -73,7 +80,7 @@
                 </ul>
             </description>
         </release>
-        <release version="0.1.0" timestamp="1546214400">
+        <release version="0.1.0" date="2018-12-31">
             <description>
                 <ul>
                     <li>Initial release</li>
