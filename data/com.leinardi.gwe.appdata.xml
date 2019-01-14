@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop">
+<!-- Copyright 2019 Roberto Leianrdi -->
+<component type="desktop-application">
     <id>com.leinardi.gwe.desktop</id>
+
     <!-- <translation type="gettext">trg</translation> -->
     <name>GreenWithEnvy</name>
     <developer_name>Roberto Leinardi</developer_name>
@@ -13,6 +15,7 @@
             card and graphics processor.
         </p>
     </description>
+    <launchable type="desktop-id">com.leinardi.gwe.desktop</launchable>
     <screenshots>
         <screenshot type="default">
             <image>https://gitlab.com/leinardi/gwe/raw/master/art/screenshot-1.png</image>
@@ -22,7 +25,7 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
-        <release version="0.7.0" date="2019-01-13">
+        <release date="2019-01-13" version="0.7.0">
             <description>
                 <ul>
                     <li>**Huge** improvement in resource utilization thanks to the switch from CLI tools to libs to read
@@ -37,7 +40,7 @@
                 </ul>
             </description>
         </release>
-        <release version="0.5.1" date="2019-01-03">
+        <release date="2019-01-03" version="0.5.1">
             <description>
                 <ul>
                     <li>Min duty changed from 25 to 0</li>
@@ -45,7 +48,7 @@
                 </ul>
             </description>
         </release>
-        <release version="0.5.0" date="2019-01-03">
+        <release date="2019-01-03" version="0.5.0">
             <description>
                 <ul>
                     <li>Implemented Fan curve profile!</li>
@@ -55,21 +58,21 @@
                 </ul>
             </description>
         </release>
-        <release version="0.3.2" date="2019-01-01">
+        <release date="2019-01-01" version="0.3.2">
             <description>
                 <ul>
                     <li>Fixed overclock slider value not correctly restored on startup</li>
                 </ul>
             </description>
         </release>
-        <release version="0.3.1" date="2019-01-01">
+        <release date="2019-01-01" version="0.3.1">
             <description>
                 <ul>
                     <li>Removed unnecessary dependency from py3nvml</li>
                 </ul>
             </description>
         </release>
-        <release version="0.3.0" date="2019-01-01">
+        <release date="2019-01-01" version="0.3.0">
             <description>
                 <ul>
                     <li>Enabled version check on startup</li>
@@ -80,7 +83,7 @@
                 </ul>
             </description>
         </release>
-        <release version="0.1.0" date="2018-12-31">
+        <release date="2018-12-31" version="0.1.0">
             <description>
                 <ul>
                     <li>Initial release</li>
