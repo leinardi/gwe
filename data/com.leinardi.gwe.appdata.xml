@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2019 Roberto Leianrdi -->
+<component type="desktop-application">
+    <id>com.leinardi.gwe.desktop</id>
+
+    <!-- <translation type="gettext">trg</translation> -->
+    <name>GreenWithEnvy</name>
+    <developer_name>Roberto Leinardi</developer_name>
+    <summary>System utility designed to provide information, control the fans and overclock your NVIDIA card
+    </summary>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>GPL-3.0+</project_license>
+    <description>
+        <p>GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video
+            card and graphics processor.
+        </p>
+    </description>
+    <launchable type="desktop-id">com.leinardi.gwe.desktop</launchable>
+    <screenshots>
+        <screenshot type="default">
+            <image>https://gitlab.com/leinardi/gwe/raw/master/art/screenshot-1.png</image>
+        </screenshot>
+    </screenshots>
+    <url type="homepage">https://gitlab.com/leinardi/gwe</url>
+    <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
+    <update_contact>roberto@leinardi.com</update_contact>
+    <releases>
+        <release date="2019-01-13" version="0.7.0">
+            <description>
+                <ul>
+                    <li>**Huge** improvement in resource utilization thanks to the switch from CLI tools to libs to read
+                        the data
+                    </li>
+                    <li>Historical data dialog! (Requires GNOME 3.30+. New dependency necessary, check the Distribution
+                        dependencies section of the readme)
+                    </li>
+                    <li>Highlighting currently applied profile</li>
+                    <li>Distributing the app via Flatpak (not published on Flathub yet)</li>
+                    <li>Dropped support for PyPI</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2019-01-03" version="0.5.1">
+            <description>
+                <ul>
+                    <li>Min duty changed from 25 to 0</li>
+                    <li>Slightly bigger app indicator icon</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2019-01-03" version="0.5.0">
+            <description>
+                <ul>
+                    <li>Implemented Fan curve profile!</li>
+                    <li>Added GPU temperature to app indicator</li>
+                    <li>Changed app indicator icon (again)</li>
+                    <li>Other minor UI improvements</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2019-01-01" version="0.3.2">
+            <description>
+                <ul>
+                    <li>Fixed overclock slider value not correctly restored on startup</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2019-01-01" version="0.3.1">
+            <description>
+                <ul>
+                    <li>Removed unnecessary dependency from py3nvml</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2019-01-01" version="0.3.0">
+            <description>
+                <ul>
+                    <li>Enabled version check on startup</li>
+                    <li>Added ability to overclock GPU and Memory (requires coolbits to be set!)</li>
+                    <li>Added ability to change Power Limit</li>
+                    <li>Changed app indicator icon</li>
+                    <li>Other minor UI improvements</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2018-12-31" version="0.1.0">
+            <description>
+                <ul>
+                    <li>Initial release</li>
+                </ul>
+            </description>
+        </release>
+    </releases>
+    <content_rating type="oars-1.1">
+        <content_attribute id="violence-cartoon">none</content_attribute>
+        <content_attribute id="violence-fantasy">none</content_attribute>
+        <content_attribute id="violence-realistic">none</content_attribute>
+        <content_attribute id="violence-bloodshed">none</content_attribute>
+        <content_attribute id="violence-sexual">none</content_attribute>
+        <content_attribute id="violence-desecration">none</content_attribute>
+        <content_attribute id="violence-slavery">none</content_attribute>
+        <content_attribute id="violence-worship">none</content_attribute>
+        <content_attribute id="drugs-alcohol">none</content_attribute>
+        <content_attribute id="drugs-narcotics">none</content_attribute>
+        <content_attribute id="drugs-tobacco">none</content_attribute>
+        <content_attribute id="sex-nudity">none</content_attribute>
+        <content_attribute id="sex-themes">none</content_attribute>
+        <content_attribute id="sex-homosexuality">none</content_attribute>
+        <content_attribute id="sex-prostitution">none</content_attribute>
+        <content_attribute id="sex-adultery">none</content_attribute>
+        <content_attribute id="sex-appearance">none</content_attribute>
+        <content_attribute id="language-profanity">none</content_attribute>
+        <content_attribute id="language-humor">none</content_attribute>
+        <content_attribute id="language-discrimination">none</content_attribute>
+        <content_attribute id="social-chat">none</content_attribute>
+        <content_attribute id="social-info">none</content_attribute>
+        <content_attribute id="social-audio">none</content_attribute>
+        <content_attribute id="social-location">none</content_attribute>
+        <content_attribute id="social-contacts">none</content_attribute>
+        <content_attribute id="money-purchasing">none</content_attribute>
+        <content_attribute id="money-gambling">none</content_attribute>
+    </content_rating>
+
+</component>

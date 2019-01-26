@@ -19,17 +19,21 @@ from typing import Dict, Any
 APP_PACKAGE_NAME = "gwe"
 APP_NAME = "GWE"
 APP_ID = "com.leinardi.gwe"
-APP_VERSION = "0.5.1"
-APP_ICON_NAME = APP_PACKAGE_NAME + ".svg"
+APP_VERSION = "0.7.0"
+APP_ICON_NAME = APP_ID
+APP_ICON_NAME_SYMBOLIC = APP_ID + "-symbolic"
 APP_DB_NAME = APP_PACKAGE_NAME + ".db"
 APP_MAIN_UI_NAME = "main.glade"
 APP_EDIT_FAN_PROFILE_UI_NAME = "edit_fan_profile.glade"
+APP_HISTORICAL_DATA_UI_NAME = "historical_data.glade"
 APP_PREFERENCES_UI_NAME = "preferences.glade"
 APP_DESKTOP_ENTRY_NAME = APP_PACKAGE_NAME + ".desktop"
 APP_DESCRIPTION = 'GUI to control cooling and overclock of nVidia cards'
 APP_SOURCE_URL = 'https://gitlab.com/leinardi/gwe'
 APP_AUTHOR = 'Roberto Leinardi'
 APP_AUTHOR_EMAIL = 'roberto@leinardi.com'
+
+GRAPH_COLOR_HEX = '#76B900'
 
 MIN_TEMP = 0
 MAX_TEMP = 100

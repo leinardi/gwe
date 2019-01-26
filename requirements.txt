@@ -1,0 +1,8 @@
+injector
+matplotlib
+peewee
+py3nvml
+pygobject
+pyxdg
+requests
+rx

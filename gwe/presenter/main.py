@@ -32,6 +32,7 @@ from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
     CheckNewVersionInteractor, SetOverclockInteractor, SetPowerLimitInteractor, SetFanSpeedInteractor
 from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfileType, GpuStatus
 from gwe.presenter.edit_fan_profile import EditFanProfilePresenter
+from gwe.presenter.historical_data import HistoricalDataPresenter
 from gwe.presenter.preferences import PreferencesPresenter
 from gwe.repository import NOT_AVAILABLE_STRING
 
@@ -79,6 +80,7 @@ class MainPresenter:
     @inject
     def __init__(self,
                  edit_fan_profile_presenter: EditFanProfilePresenter,
+                 historical_data_presenter: HistoricalDataPresenter,
                  preferences_presenter: PreferencesPresenter,
                  get_status_interactor: GetStatusInteractor,
                  set_power_limit_interactor: SetPowerLimitInteractor,
@@ -93,6 +95,7 @@ class MainPresenter:
         LOG.debug("init MainPresenter ")
         self.main_view: MainViewInterface = MainViewInterface()
         self._edit_fan_profile_presenter = edit_fan_profile_presenter
+        self._historical_data_presenter = historical_data_presenter
         self._preferences_presenter = preferences_presenter
         self._scheduler: SchedulerBase = ThreadPoolScheduler(multiprocessing.cpu_count())
         self._get_status_interactor: GetStatusInteractor = get_status_interactor
@@ -113,6 +116,9 @@ class MainPresenter:
         self._register_db_listeners()
         self._start_refresh()
         self._check_new_version()
+
+    def on_historical_data_button_clicked(self, *_: Any) -> None:
+        self._historical_data_presenter.show()
 
     def on_power_limit_apply_button_clicked(self, *_: Any) -> None:
         self._composite_disposable \
@@ -143,6 +149,7 @@ class MainPresenter:
             self._fan_profile_applied = self._fan_profile_selected
             if self._fan_profile_selected.type == FanProfileType.AUTO.value:
                 self._set_fan_speed(gpu_index, manual_control=False)
+            self._refresh_fan_profile_ui(profile_id=self._fan_profile_selected.id)
         self._update_current_fan_profile(self._fan_profile_selected)
 
     def on_menu_settings_clicked(self, *_: Any) -> None:
@@ -193,15 +200,16 @@ class MainPresenter:
                  .subscribe_on(self._scheduler)
                  .flat_map(lambda _: self._get_status())
                  .observe_on(GtkScheduler())
-                 .subscribe(on_next=self._update_status,
+                 .subscribe(on_next=self._on_status_updated,
                             on_error=lambda e: LOG.exception("Refresh error: %s", str(e)))
                  )
 
-    def _update_status(self, status: Optional[Status]) -> None:
+    def _on_status_updated(self, status: Optional[Status]) -> None:
         if status is not None:
             gpu_status = status.gpu_status_list[0]
             self._update_fan(gpu_status)
             self.main_view.refresh_status(status)
+            self._historical_data_presenter.add_status(status)
         else:
             gpu_index = 0
             self._set_fan_speed(gpu_index, manual_control=False)
@@ -210,16 +218,18 @@ class MainPresenter:
         fan = gpu_status.fan
         if fan.control_allowed:
             if self._fan_profile_selected is None and not fan.manual_control:
-                self._refresh_fan_profile_ui(profile_id=FanProfile.get(FanProfile.type == FanProfileType.AUTO.value).id)
+                fan_profile = FanProfile.get(FanProfile.type == FanProfileType.AUTO.value)
+                self._fan_profile_applied = fan_profile
+                self._refresh_fan_profile_ui(profile_id=fan_profile.id)
             elif self._fan_profile_applied and self._fan_profile_applied.type != FanProfileType.AUTO.value:
                 if not self._fan_profile_applied.steps:
                     self._set_fan_speed(gpu_status.index, manual_control=False)
-                elif NOT_AVAILABLE_STRING not in gpu_status.temp.gpu:
+                elif gpu_status.temp.gpu:
                     try:
-                        temperature = int(gpu_status.temp.gpu.rstrip(' C'))
-                        speed = round(self._get_fan_duty(self._fan_profile_applied, temperature))
+                        speed = round(self._get_fan_duty(self._fan_profile_applied, gpu_status.temp.gpu))
                         if fan.fan_list and fan.fan_list[0][0] != speed:
-                            self._set_fan_speed(gpu_status.index, round(speed))
+                            for index in range(len(fan.fan_list)):
+                                self._set_fan_speed(index, round(speed))
                     except ValueError:
                         LOG.exception('Unable to parse temperature %s', gpu_status.temp.gpu)
 
@@ -237,15 +247,23 @@ class MainPresenter:
         return duty
 
     def _refresh_fan_profile_ui(self, init: bool = False, profile_id: Optional[int] = None) -> None:
-        data = [(p.id, p.name) for p in FanProfile.select()]
+        current: Optional[CurrentFanProfile] = None
+        if init and self._settings_interactor.get_bool('settings_load_last_profile'):
+            current = CurrentFanProfile.get_or_none()
+            if current is not None:
+                self._fan_profile_applied = current.profile
+        data: List[Tuple[int, str]] = []
+        for fan_profile in FanProfile.select():
+            if self._fan_profile_applied is not None and self._fan_profile_applied.id == fan_profile.id:
+                name = "<b>%s</b>" % fan_profile.name
+            else:
+                name = fan_profile.name
+            data.append((fan_profile.id, name))
         active = None
         if profile_id is not None:
             active = next(i for i, item in enumerate(data) if item[0] == profile_id)
-        elif init and self._settings_interactor.get_bool('settings_load_last_profile'):
-            current: CurrentFanProfile = CurrentFanProfile.get_or_none()
-            if current is not None:
-                active = next(i for i, item in enumerate(data) if item[0] == current.profile.id)
-                self._fan_profile_applied = current.profile
+        elif current is not None:
+            active = next(i for i, item in enumerate(data) if item[0] == current.profile.id)
         data.append((_ADD_NEW_PROFILE_INDEX, "<span style='italic' alpha='50%'>Add new profile...</span>"))
         self.main_view.refresh_fan_profile_combobox(data, active)
 

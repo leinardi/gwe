@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=GWE
+Comment=Graphical system utility that provides information and allows to control overclock and fan speed of modern Nvidia cards
+Exec=@bindir@/gwe %U
+Icon=com.leinardi.gwe
+Terminal=false
+Type=Application
+StartupNotify=true
+MimeType=
+Categories=Utility;GTK;GNOME;
+Keywords=GreenWithEnvy;nvidia;overclock;

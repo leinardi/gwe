@@ -2,18 +2,18 @@
 #
 # Copyright (c) 2018 Roberto Leinardi
 #
-# gsi is free software: you can redistribute it and/or modify
+# gwe is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# gsi is distributed in the hope that it will be useful,
+# gwe is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with gsi.  If not, see <http://www.gnu.org/licenses/>.
+# along with gwe.  If not, see <http://www.gnu.org/licenses/>.
 
 from typing import Optional, Any, Dict
 
@@ -22,7 +22,7 @@ from matplotlib.axes import Axes
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 from matplotlib.figure import Figure
 
-from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY
+from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY, GRAPH_COLOR_HEX
 from gwe.model import FanProfile
 
 
@@ -62,7 +62,7 @@ def init_plot_chart(scrolled_window: Gtk.ScrolledWindow,
     canvas.set_size_request(400, 300)
     scrolled_window.add_with_viewport(canvas)
     # Returns a tuple of line objects, thus the comma
-    lines = axis.plot([], [], 'o-', linewidth=3.0, markersize=10, antialiased=True)
+    lines = axis.plot([], [], 'o-', linewidth=3.0, markersize=10, antialiased=True, color=GRAPH_COLOR_HEX)
     axis.set_ybound(lower=-5, upper=105)
     axis.set_xbound(MIN_TEMP, MAX_TEMP)
     figure.canvas.draw()
@@ -79,3 +79,9 @@ def get_fan_profile_data(profile: FanProfile) -> Dict[int, int]:
             data[MIN_TEMP] = data[min(data.keys())]
         data.update({MAX_TEMP: FAN_MAX_DUTY})
     return data
+
+
+def is_dazzle_version_supported() -> bool:
+    if Gtk.MAJOR_VERSION >= 3 and Gtk.MINOR_VERSION >= 24:  # Mypy says that this check returns Any, not sure why...
+        return True
+    return False
