@@ -54,14 +54,17 @@ gettext.textdomain(APP_PACKAGE_NAME)
 
 
 def _cleanup() -> None:
-    LOG.debug("cleanup")
-    nvidia_repository = INJECTOR.get(NvidiaRepository)
-    nvidia_repository.set_all_gpus_fan_to_auto()
-    composite_disposable: CompositeDisposable = INJECTOR.get(CompositeDisposable)
-    composite_disposable.dispose()
-    database = INJECTOR.get(SqliteDatabase)
-    database.close()
-    # futures.thread._threads_queues.clear()
+    try:
+        LOG.debug("cleanup")
+        composite_disposable: CompositeDisposable = INJECTOR.get(CompositeDisposable)
+        composite_disposable.dispose()
+        nvidia_repository = INJECTOR.get(NvidiaRepository)
+        nvidia_repository.set_all_gpus_fan_to_auto()
+        database = INJECTOR.get(SqliteDatabase)
+        database.close()
+        # futures.thread._threads_queues.clear()
+    except:
+        LOG.exception("Error during cleanup!")
 
 
 def handle_exception(exc_type: Type[BaseException], exc_value: BaseException, exc_traceback: Any) -> None:

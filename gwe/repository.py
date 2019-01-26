@@ -25,26 +25,33 @@ from injector import singleton, inject
 from py3nvml import py3nvml
 from py3nvml.py3nvml import NVMLError, NVML_ERROR_NOT_SUPPORTED, NVML_TEMPERATURE_GPU, \
     NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, NVML_CLOCK_SM, NVML_CLOCK_GRAPHICS, \
-    NVML_CLOCK_GRAPHICS, NVML_CLOCK_MEM, NVML_ERROR_UNKNOWN
+    NVML_CLOCK_MEM, NVML_ERROR_UNKNOWN
 
 from gwe.model import Status, Info, Power, Temp, Clocks, GpuStatus, Fan, Overclock
 from gwe.nvidia import nvcmd
 from gwe.nvidia.nvtarget import GPU, Cooler
 from gwe.util.concurrency import synchronized_with_attr
+from gwe.util.deployment import is_flatpak
 
 LOG = logging.getLogger(__name__)
 
 NOT_AVAILABLE_STRING = 'N/A'
 _NVIDIA_SMI_BINARY_NAME = 'nvidia-smi'
 _NVIDIA_SETTINGS_BINARY_NAME = 'nvidia-settings'
+_FLATPAK_COMMAND_PREFIX = ['flatpak-spawn', '--host']
 
 
 def run_and_get_stdout(command: List[str], pipe_command: List[str] = None) -> Tuple[int, str]:
-    if not pipe_command:
+    if pipe_command is None:
+        if is_flatpak():
+            command = _FLATPAK_COMMAND_PREFIX + command
         process1 = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
         output = process1.communicate()[0]
         output = output.decode(encoding='UTF-8')
         return process1.returncode, output
+    if is_flatpak():
+        command = _FLATPAK_COMMAND_PREFIX + command
+        pipe_command = _FLATPAK_COMMAND_PREFIX + pipe_command
     process1 = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     process2 = subprocess.Popen(pipe_command, stdin=process1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     process1.stdout.close()

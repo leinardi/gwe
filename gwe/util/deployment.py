@@ -14,3 +14,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with gwe.  If not, see <http://www.gnu.org/licenses/>.
+
+from pathlib import Path
+
+
+def is_flatpak() -> bool:
+    return Path('/.flatpak-info').exists()

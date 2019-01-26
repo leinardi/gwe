@@ -3,26 +3,26 @@
 
 Copyright (C) 
 
-This file is part of GSI.
+This file is part of GWE.
 
-GSI is free software: you can redistribute it and/or modify
+GWE is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-GSI is distributed in the hope that it will be useful,
+GWE is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with GSI.  If not, see <http://www.gnu.org/licenses/>.
+along with GWE.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <!-- interface-license-type gplv3 -->
-  <!-- interface-name GSI -->
+  <!-- interface-name GWE -->
   <object class="GtkDialog" id="dialog">
     <property name="can_focus">False</property>
     <property name="default_width">450</property>
