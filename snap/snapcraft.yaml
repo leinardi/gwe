@@ -4,6 +4,7 @@ summary: GreenWithEnvy
 description: |
   GTK system utility designed to provide information, control the fans and overclock your NVIDIA video card
   and graphics processor.
+base: core18
 
 grade: devel # must be 'stable' to release into candidate/stable channels
 confinement: devmode # use 'strict' once you have the right plugs and slots
@@ -35,11 +36,11 @@ slots:
   gwe:
     interface: dbus
     bus: session
-    name: org.gnome.Calculator
+    name: com.leinardi.gwe
 
 apps:
   gwe:
-    command: desktop-launch gwe
+    command: desktop-launch $SNAP/gwe
     plugs:
       - desktop
       - desktop-legacy
@@ -52,15 +53,14 @@ apps:
 
 parts:
   gwe:
-    build-attributes: [no-system-libraries]
+    #build-attributes: [no-system-libraries]
     after: [desktop-gnome-platform]
     source: https://gitlab.com/leinardi/gwe.git
     source-branch: feature/snap
     source-depth: 1
     plugin: meson
-    meson-parameters: [--prefix=/snap/gwe/current/usr]
-    organize:
-      snap/gwe/current/usr: usr
+    meson-parameters:
+      - --prefix=/usr
     build-packages:
       - desktop-file-utils
       - gettext
@@ -77,7 +77,26 @@ parts:
       - libmpfr-dev
       - python3
       - yelp-tools
+      - gobject-introspection
+      - cmake
+      - python3-pip
+      - libcairo2-dev
+      - libgirepository1.0-dev
+      - libdazzle-1.0-dev
+      - gir1.2-gtksource-3.0
+      - gir1.2-appindicator3-0.1
+      - python3-gi-cairo
       #prime:
       #- "-usr/lib/gnome-calculator/libcalculator.a"
       #- "-usr/share/appdata"
-
+  desktop-gnome-platform:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: gtk
+    plugin: make
+    make-parameters: ["FLAVOR=gtk3"]
+    build-packages:
+      - build-essential
+      - libgtk-3-dev
+    override-build: |
+      snapcraftctl build
+      mkdir -pv $SNAPCRAFT_PART_INSTALL/gnome-platform
