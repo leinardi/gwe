@@ -21,9 +21,6 @@ if not python_bin.found()
 else
     message('Found python3 binary')
 endif
-dependency('glib-2.0')
-dependency('gobject-introspection-1.0', version: '>=1.35.9')
-dependency('gtk+-3.0', version :'>=3.24')
 
 
 # TODO: Requires GLib 2.52 because of Meson issue
@@ -32,7 +29,7 @@ dependency('gtk+-3.0', version :'>=3.24')
 #  output: app_id + '.service.desktop',
 #  configuration: desktop_conf,
 #  install: true,
-#  install_dir: pkgdatadir,
+#  install_dir: PKGDATA_DIR,
 #)
 
 # i18n.merge_file(
@@ -102,7 +99,7 @@ glade_conf.set('PACKAGE_URL', 'https://gitlab.com/leinardi/gwe')
 glade_conf.set('DATA_DIR', DATA_DIR)
 glade_conf.set('EXTENSION_DIR', EXTENSION_DIR)
 glade_conf.set('LOCALE_DIR', join_paths(get_option('prefix'), get_option('datadir'), 'locale'))
-glade_conf.set('PYTHON_DIR', python_dir)
+glade_conf.set('PYTHON_DIR', PYTHON_DIR)
 glade_conf.set('PYTHON_EXEC_DIR', join_paths(get_option('prefix'), python.sysconfig_path('stdlib')))
 glade_conf.set('PYTHON', python_bin.path())
 glade_conf.set('APPID', app_id)
@@ -115,7 +112,7 @@ gwe_resources = gnome.compile_resources(app_id,
   app_id + '.gresource.xml',
   gresource_bundle: true,
   install: true,
-  install_dir: pkgdatadir
+  install_dir: PKGDATA_DIR
 )
 
 #gwe_resources = gnome.compile_resources(app_id,
@@ -127,7 +124,7 @@ gwe_resources = gnome.compile_resources(app_id,
 #    configuration: glade_conf
 #  ),
 #  install: true,
-#  install_dir: pkgdatadir
+#  install_dir: PKGDATA_DIR
 #)
 
 gwe_settings = gnome.compile_schemas()
