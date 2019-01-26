@@ -66,13 +66,21 @@ will be bundled and provided automatically.
 **No new build will be published on PyPI**.
 
 ## Installing the app via Flatpak
+If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
+
+Make sure to have the Flathub remote added to the current user:
+
+```bash
+flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+```
+
 Until the app will be published on Flathub, to install it you have do manually download the latest `.flatpak` file
 and install it with command:
 ```bash
 flatpak --user install <path to the file .flatpak>
 ```
-If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
 
+<!--
 ## Application entry
 To add a desktop entry for the application run the following command (not supported by Flatpak):
 ```bash
@@ -80,31 +88,31 @@ gwe --application-entry
 ```
 If you don't want to create this custom rule you can run gwe as root 
 (using sudo) but we advise against this solution.
-
+-->
 ## Command line options
 
-  | Parameter                 | Description|                              | Flatpak | 
-  |---------------------------|-------------------------------------------|---------|
-  |-v, --version              |Show the app version                       |    x    |
-  |--debug                    |Show debug messages                        |    x    |
-  |--hide-window              |Start with the main window hidden          |    x    |
-  |--application-entry        |Add a desktop entry for the application    |         |
-  |--autostart-on             |Enable automatic start of the app on login |         |
-  |--autostart-off            |Disable automatic start of the app on login|         |
+  | Parameter                 | Description                               | Source | Flatpak |
+  |---------------------------|-------------------------------------------|:------:|:-------:|
+  |-v, --version              |Show the app version                       |    x   |    x    |
+  |--debug                    |Show debug messages                        |    x   |    x    |
+  |--hide-window              |Start with the main window hidden          |    x   |    x    |
+  |--application-entry        |Add a desktop entry for the application    |    x   |         |
+  |--autostart-on             |Enable automatic start of the app on login |    x   |         |
+  |--autostart-off            |Disable automatic start of the app on login|    x   |         |
 
 
-## How to run the repository sources
-If you wnat to clone the project and run directly from the source you need to manually install all the needed
+## How to build and run the source code
+If you want to clone the project and run directly from the source you need to manually install all the needed
 dependencies.
  
 ### (K/X)Ubuntu 18.04 or newer
 ```bash
-sudo apt install python3-pip libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo python3-pip
+sudo apt install python3-pip libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo python3-pip appstream-util
 ```
 ### Fedora 28+ (outdated, please let me know if new dependencies are needed)
 Install [(K)StatusNotifierItem/AppIndicator Support](https://extensions.gnome.org/extension/615/appindicator-support/)
 
-### Arch Linux (Gnome)
+### Arch Linux (outdated, please let me know if new dependencies are needed)
 ```bash
 sudo pacman -Syu python-pip libdazzle libappindicator-gtk3
 ```
@@ -114,11 +122,33 @@ sudo pacman -Syu python-pip libdazzle libappindicator-gtk3
 git clone https://gitlab.com/leinardi/gwe.git
 cd gwe
 pip3 install -r requirements.txt
+```
+
+### Build and Run
+```bash
 ./run.sh
 ```
 
+### Build and install with Flatpak
+If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
+
+Make sure to have the Flathub remote added to the current user:
+
+```bash
+flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+```
+
+#### Local repository
+```bash
+./build.sh --flatpak-local --flatpak-install
+```
+#### Remote repository
+```bash
+./build.sh --flatpak-remote --flatpak-install
+```
+
 ## FAQ
-### Why the memory overclock offsets effectively applied do not match the one set in the Nvidia Settings app?
+### Why the memory overclock offsets effectively applied does not match the one set in the Nvidia Settings app?
 Because Memory Transfer Rate, what Nvidia Settings reports and changes, 
 is different from the effective Memory Clock, what is actually being 
 displayed by GWE. It is also what other Windows applications like MSI Afterburner show.
