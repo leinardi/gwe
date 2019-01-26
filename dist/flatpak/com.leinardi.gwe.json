@@ -34,7 +34,7 @@
         {
           "type": "git",
           "url": "https://gitlab.com/leinardi/gwe.git",
-          "branch": "feature/meson"
+          "branch": "release"
         }
       ]
     }
