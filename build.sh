@@ -55,15 +55,17 @@ function build_flatpak_bundle {
 	time flatpak build-bundle ${FLATPAK_REPO_DIR} ${FLATPAK_OUTPUT_FILE} ${APP_ID}
 }
 
+if [[ ${#POSITIONAL[@]} -ne 0 ]]; then
+	echo "Unknown option ${POSITIONAL}"
+	exit 1
+fi
+
 appstream-util validate-relax data/com.leinardi.gwe.appdata.xml || exit $?
 appstream-util appdata-to-news data/com.leinardi.gwe.appdata.xml | sed '/^~*$/s/~/=/g' > CHANGELOG.md
 [[ -d ${OUTPUT_DIR} ]] && rm -rfv ${OUTPUT_DIR}
 find . -regex '^.*\(__pycache__\|\.py[co]\)$' -delete
 
-if [[ ${#POSITIONAL[@]} -ne 0 ]]; then
-	echo "Unknown option ${POSITIONAL}"
-	exit 1
-elif [[ ${FLATPAK_REMOTE} -eq 1 ]]; then
+if [[ ${FLATPAK_REMOTE} -eq 1 ]]; then
 	if [[ ${FLATPAK_INSTALL} -eq 1 ]]; then
 		build_flatpak "${FLATPAK_REMOTE_MANIFEST}" "${FLATPAK_INSTALL_PARAMETERS}"
 	else
