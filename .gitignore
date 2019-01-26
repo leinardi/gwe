@@ -11,3 +11,8 @@ __pycache__/
 .dmypy.json
 /venv/
 .flatpak-builder/
+/stage/
+/prime/
+/parts/
+/snap/.snapcraft/
+*.snap
