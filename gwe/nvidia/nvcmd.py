@@ -103,7 +103,7 @@ class NVidiaControl(NVidiaControlLowLevel):
             return None
         return self.mask2displays(reply.value)
 
-    def supports_framelock(self, target: Target) -> Optional[int]:
+    def supports_framelock(self, target: Target) -> Optional[bool]:
         """returns whether the underlying GPU supports Frame Lock. All of the
         other frame lock attributes are only applicable if this returns True."""
         reply = self.query_int_attribute(target, [], NV_CTRL_FRAMELOCK)
