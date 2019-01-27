@@ -20,7 +20,7 @@
 import signal
 from pathlib import Path
 
-pkgdatadir = Path(__file__).parent.parent / './build/output/install/share/gwe'
+PKGDATA_DIR = Path(__file__).parent.parent / './build/output/install/share/gwe'
 localedir = Path(__file__).parent.parent / './build/output/install/share/locale'
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     from gi.repository import Gio
 
-    resource = Gio.Resource.load(str(pkgdatadir / 'com.leinardi.gwe.gresource'))
+    resource = Gio.Resource.load(str(PKGDATA_DIR / 'com.leinardi.gwe.gresource'))
     resource._register()
 
     from gwe import __main__

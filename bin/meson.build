@@ -1,9 +1,9 @@
 conf = configuration_data()
 conf.set('VERSION', meson.project_version())
 conf.set('localedir', join_paths(prefix, get_option('localedir')))
-conf.set('pkgdatadir', pkgdatadir)
+conf.set('PKGDATA_DIR', PKGDATA_DIR)
 conf.set('PYTHON', python.find_python().path())
-conf.set('pythondir', join_paths(prefix, pythondir))
+conf.set('PYTHON_DIR', join_paths(prefix, PYTHON_DIR))
 
 configure_file(
   input: 'gwe.in',

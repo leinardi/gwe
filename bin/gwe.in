@@ -22,15 +22,15 @@ import sys
 import signal
 import gettext
 
-sys.path.insert(1, '@pythondir@')
+sys.path.insert(1, '@PYTHON_DIR@')
 
 VERSION = '@VERSION@'
-pkgdatadir = '@pkgdatadir@'
+PKGDATA_DIR = '@PKGDATA_DIR@'
 localedir = '@localedir@'
 builddir = os.environ.get('MESON_BUILD_ROOT')
 if builddir:
-    pkgdatadir = os.path.join(builddir, 'data')
-    os.environ['GSETTINGS_SCHEMA_DIR'] = pkgdatadir
+    PKGDATA_DIR = os.path.join(builddir, 'data')
+    os.environ['GSETTINGS_SCHEMA_DIR'] = PKGDATA_DIR
     sys.dont_write_bytecode = True
     sys.path.insert(1, os.environ['MESON_SOURCE_ROOT'])
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     gi.require_version('Gdk', '3.0')
 
     from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'com.leinardi.gwe.gresource'))
+    resource = Gio.Resource.load(os.path.join(PKGDATA_DIR, 'com.leinardi.gwe.gresource'))
     resource._register()
 
     from gwe import __main__
