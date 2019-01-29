@@ -33,6 +33,7 @@ dependency('gtk+-3.0', version: '>= 3.22.30')
 
 
 install_subdir('gwe', install_dir: PYTHON_DIR)
+install_subdir('python-xlib/Xlib', install_dir: join_paths(PYTHON_DIR, 'gwe'))
 subdir('data')
 subdir('bin')
 
