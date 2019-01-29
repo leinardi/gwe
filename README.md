@@ -28,6 +28,7 @@ and graphics processor.
 - [x] Distributing with Flatpack
 - [ ] Publishing on Flathub
 - [ ] Distributing with Snap
+- [ ] Check if NV-CONTROL is available and tell the user if is not
 - [ ] Add support for multi-GPU
 - [ ] Allow to select profiles from app indicator
 - [ ] Add support for i18n (internationalization and localization)
