@@ -1,3 +1,9 @@
+Version 0.8.0
+=============
+Released: 2019-01-29
+
+ * Fixed crash when power data is not available
+
 Version 0.7.0
 =============
 Released: 2019-01-13

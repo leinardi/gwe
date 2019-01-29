@@ -493,13 +493,20 @@ class NvidiaRepository:
     def _get_power_from_py3nvml(self, handle: Any) -> Power:
         power_con = self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementLimitConstraints, handle)
         return Power(
-            draw=self._nvml_get_val(py3nvml.nvmlDeviceGetPowerUsage, handle) / 1000,
-            limit=self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementLimit, handle) / 1000,
-            default=self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementDefaultLimit, handle) / 1000,
-            minimum=power_con[0] / 1000,
-            enforced=self._nvml_get_val(py3nvml.nvmlDeviceGetEnforcedPowerLimit, handle) / 1000,
-            maximum=power_con[1] / 1000
+            draw=self._convert_milliwatt_to_watt(self._nvml_get_val(py3nvml.nvmlDeviceGetPowerUsage, handle)),
+            limit=self._convert_milliwatt_to_watt(
+                self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementLimit, handle)),
+            default=self._convert_milliwatt_to_watt(
+                self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementDefaultLimit, handle)),
+            minimum=self._convert_milliwatt_to_watt(power_con[0]),
+            enforced=self._convert_milliwatt_to_watt(
+                self._nvml_get_val(py3nvml.nvmlDeviceGetEnforcedPowerLimit, handle)),
+            maximum=self._convert_milliwatt_to_watt(power_con[1])
         )
+
+    @staticmethod
+    def _convert_milliwatt_to_watt(milliwatt: Optional[int]) -> float:
+        return None if milliwatt is None else milliwatt / 1000
 
     def _get_temp_from_py3nvml(self, handle: Any) -> Temp:
         return Temp(
