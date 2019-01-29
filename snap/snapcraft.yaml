@@ -48,19 +48,21 @@ apps:
       - network
       - wayland
     desktop: usr/share/applications/com.leinardi.gwe.desktop
-    #environment:
-    #  LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/lib/gnome-calculator
+    environment:
+      PYTHONPATH: $SNAP/lib/python3.6/site-packages:$SNAP/usr/lib/python3/dist-packages
+      LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/lapack:$LD_LIBRARY_PATH
 
 parts:
   gwe:
-    #build-attributes: [no-system-libraries]
-    after: [desktop-gnome-platform]
-    source: https://gitlab.com/leinardi/gwe.git
+    after: [ desktop-gnome-platform ]
+    source: . #https://gitlab.com/leinardi/gwe.git
     source-branch: feature/snap
     source-depth: 1
     plugin: meson
     meson-parameters:
-      - --prefix=/usr
+      - --prefix=/snap/gwe/current/usr
+    organize:
+      snap/gwe/current/usr: usr
     build-packages:
       - desktop-file-utils
       - gettext
@@ -70,7 +72,7 @@ parts:
       - intltool
       - libglib2.0-dev
       - libgtk-3-dev
-      #- libgtksourceview-4-dev
+      - libdazzle-1.0-dev
       - libxml2-dev
       - libsoup2.4-dev
       - libmpc-dev
@@ -82,13 +84,24 @@ parts:
       - python3-pip
       - libcairo2-dev
       - libgirepository1.0-dev
-      - libdazzle-1.0-dev
-      - gir1.2-gtksource-3.0
-      - gir1.2-appindicator3-0.1
+      #- gir1.2-gtksource-3.0
+      #- gir1.2-appindicator3-0.1
       - python3-gi-cairo
-      #prime:
-      #- "-usr/lib/gnome-calculator/libcalculator.a"
-      #- "-usr/share/appdata"
+    stage-packages:
+      - gir1.2-gtk-3.0
+      - python3-gi
+      - libgirepository-1.0-1
+      - gir1.2-dazzle-1.0
+      - libpango-1.0-0
+      - python3-xdg
+      - python3-matplotlib
+      - libblas3
+      - liblapack3
+
+  pydeps:
+    plugin: python
+    python-packages: [ rx, injector, py3nvml, peewee ]
+
   desktop-gnome-platform:
     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
     source-subdir: gtk
