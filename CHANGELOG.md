@@ -1,6 +1,6 @@
 Version 0.8.0
 =============
-Released: 2019-01-29
+Released: 2019-01-30
 
  * App available on Flathub! https://flathub.org/apps/details/com.leinardi.gwe
  * Fixed crash when power data is not available
