@@ -26,47 +26,24 @@ and graphics processor.
 - [x] Show historical data of most important values in a separate dialog (requires GTK 3.24/GNOME 3.30)
 - [ ] Disable unsupported preferences
 - [x] Distributing with Flatpack
-- [ ] Publishing on Flathub
+- [x] Publishing on Flathub
 - [ ] Distributing with Snap
 - [ ] Check if NV-CONTROL is available and tell the user if is not
 - [ ] Add support for multi-GPU
 - [ ] Allow to select profiles from app indicator
 - [ ] Add support for i18n (internationalization and localization)
 
-## How to help the project
-### Discord server
-If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/YjPdNff  
-Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
-
-### We need people with experience in at least one of these topics:
- - X-Protocol (see [#15](https://gitlab.com/leinardi/gwe/issues/15) and [#16](https://gitlab.com/leinardi/gwe/issues/16))
- - Flatpak (see [#17](https://gitlab.com/leinardi/gwe/issues/17))
- - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
- - Meson (see [#2](https://gitlab.com/leinardi/gwe/issues/2))
-
-Knowing Python will be also very helpful but not strictly necessary.
- 
-### Why do we need it?
-Currently there are some roadblocks that are preventing GWE to move to stable and have an official launch.  
-The biggest issues right now are related to the X-Protocol implementation and the distribution of the application.
-
-#### X-Protocol
-To make the app as lightweight as possible, GWE uses the X-Protocol to communicate directly with [NV-CONTROL](https://github.com/NVIDIA/nvidia-settings/blob/master/doc/NV-CONTROL-API.txt).  
-The code that implements the X-Protocol was taken form [disper](https://github.com/phatina/disperd/blob/master/src/nvidia/minx.py),
-a Python 2 software, and ported to Python 3. The current implementation is only able to read data ([#16](https://gitlab.com/leinardi/gwe/issues/16)) and has to relay
-on the `nvidia-settings` binary to set values (e.g. fan speed or overclock). Also the reading is not 100% reliable due to [#15](https://gitlab.com/leinardi/gwe/issues/15).  
-It would be really helpful if someone with more knowledge of the X-Protocol or Python could help fixing these two issues.
-
 ## Dropped PyPI support
-Development builds were distributed using PyPI. This way of distributing the software is quite simple
+Development builds were previously distributed using PyPI. This way of distributing the software is quite simple
 but requires the user to manually install all the non Python dependencies like cairo, glib, appindicator3, etc.  
-The current implementation of the historical data uses a new library, Dazzle, that requires Gnome 3.30 which is only
-available, for example, with Ubuntu 18.10 making the latest Ubuntu LTS unsupported.  
+The current implementation of the historical data uses a new library, Dazzle, that requires Gnome 3.30 which is
+available, using Python Object introspection, only starting from Ubuntu 18.10 making the latest Ubuntu LTS, 18.04,
+unsupported.    
 A possible solution for all this problems could be distributing the app via Flatpak, since with it all the dependencies
 will be bundled and provided automatically.
 **No new build will be published on PyPI**.
 
-## Installing the app via Flatpak
+## Installing the app from Flathub
 If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
 
 Make sure to have the Flathub remote added to the current user:
@@ -75,10 +52,14 @@ Make sure to have the Flathub remote added to the current user:
 flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
-Until the app will be published on Flathub, to install it you have do manually download the latest `.flatpak` file
-and install it with command:
+### Install
 ```bash
-flatpak --user install <path to the file .flatpak>
+flatpak --user install flathub com.leinardi.gwe
+```
+
+### Run
+```bash
+flatpak run com.leinardi.gwe
 ```
 
 <!--
@@ -101,6 +82,32 @@ If you don't want to create this custom rule you can run gwe as root
   |--autostart-on             |Enable automatic start of the app on login |    x   |         |
   |--autostart-off            |Disable automatic start of the app on login|    x   |         |
 
+## Build, install and run with Flatpak
+If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
+
+Make sure to have the Flathub remote added to the current user:
+
+```bash
+flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+```
+
+### Clone the repo
+```bash
+git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
+```
+It is possible to build the local source or the remote one (the same that Flathub uses)
+### Local repository
+```bash
+./build.sh --flatpak-local --flatpak-install
+```
+### Remote repository
+```bash
+./build.sh --flatpak-remote --flatpak-install
+```
+### Run
+```bash
+flatpak run com.leinardi.gwe
+```
 
 ## How to build and run the source code
 If you want to clone the project and run directly from the source you need to manually install all the needed
@@ -120,7 +127,7 @@ sudo pacman -Syu python-pip libdazzle libappindicator-gtk3
 
 ### Python dependencies
 ```
-git clone https://gitlab.com/leinardi/gwe.git
+git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
 cd gwe
 pip3 install -r requirements.txt
 ```
@@ -130,24 +137,6 @@ pip3 install -r requirements.txt
 ./run.sh
 ```
 
-### Build and install with Flatpak
-If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
-
-Make sure to have the Flathub remote added to the current user:
-
-```bash
-flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-```
-
-#### Local repository
-```bash
-./build.sh --flatpak-local --flatpak-install
-```
-#### Remote repository
-```bash
-./build.sh --flatpak-remote --flatpak-install
-```
-
 ## FAQ
 ### Why the memory overclock offsets effectively applied does not match the one set in the Nvidia Settings app?
 Because Memory Transfer Rate, what Nvidia Settings reports and changes, 
@@ -155,9 +144,32 @@ is different from the effective Memory Clock, what is actually being
 displayed by GWE. It is also what other Windows applications like MSI Afterburner show.
 The Memory Transfer Rate is simply double the Memory Clock.
 
-## How can I support this project?
+## How to help the project
+### Discord server
+If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/YjPdNff  
+Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
 
-The best way to support this plugin is to star it on both [GitLab](https://gitlab.com/leinardi/gwe) and [GitHub](https://github.com/leinardi/gwe).
+### We need people with experience in at least one of these topics:
+ - X-Protocol (see [#15](https://gitlab.com/leinardi/gwe/issues/15) and [#16](https://gitlab.com/leinardi/gwe/issues/16))
+ - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
+
+Knowing Python will be also very helpful but not strictly necessary.
+ 
+### Why do we need it?
+Currently there are some roadblocks that are preventing GWE to move to stable and have an official launch.  
+The biggest issues right now are related to the X-Protocol implementation and the distribution of the application.
+
+#### X-Protocol
+To make the app as lightweight as possible, GWE uses the X-Protocol to communicate directly with [NV-CONTROL](https://github.com/NVIDIA/nvidia-settings/blob/master/doc/NV-CONTROL-API.txt).  
+The code that implements the X-Protocol was taken form [disper](https://github.com/phatina/disperd/blob/master/src/nvidia/minx.py),
+a Python 2 software, and ported to Python 3. The current implementation is only able to read data ([#16](https://gitlab.com/leinardi/gwe/issues/16)) and has to relay
+on the `nvidia-settings` binary to set values (e.g. fan speed or overclock). Also the reading is not 100% reliable due to [#15](https://gitlab.com/leinardi/gwe/issues/15).  
+It would be really helpful if someone with more knowledge of the X-Protocol or Python could help fixing these two issues.
+
+
+### Can I support this project some other way?
+
+Something simple that everyone can do is to star it on both [GitLab](https://gitlab.com/leinardi/gwe) and [GitHub](https://github.com/leinardi/gwe).
 Feedback is always welcome: if you found a bug or would like to suggest a feature,
 feel free to open an issue on the [issue tracker](https://gitlab.com/leinardi/gwe/issues).
 
