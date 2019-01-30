@@ -95,7 +95,7 @@ flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flath
 ```bash
 git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
 ```
-
+It is possible to build the local source or the remote one (the same that Flathub uses)
 ### Local repository
 ```bash
 ./build.sh --flatpak-local --flatpak-install
@@ -127,7 +127,7 @@ sudo pacman -Syu python-pip libdazzle libappindicator-gtk3
 
 ### Python dependencies
 ```
-git clone https://gitlab.com/leinardi/gwe.git
+git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
 cd gwe
 pip3 install -r requirements.txt
 ```
@@ -151,9 +151,7 @@ Just write a message on the general channel saying how you want to help (test, d
 
 ### We need people with experience in at least one of these topics:
  - X-Protocol (see [#15](https://gitlab.com/leinardi/gwe/issues/15) and [#16](https://gitlab.com/leinardi/gwe/issues/16))
- - Flatpak (see [#17](https://gitlab.com/leinardi/gwe/issues/17))
  - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
- - Meson (see [#2](https://gitlab.com/leinardi/gwe/issues/2))
 
 Knowing Python will be also very helpful but not strictly necessary.
  
