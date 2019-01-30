@@ -28,6 +28,7 @@
         <release date="2019-01-29" version="0.8.0">
             <description>
                 <ul>
+                    <li>App available on Flathub! https://flathub.org/apps/details/com.leinardi.gwe</li>
                     <li>Fixed crash when power data is not available</li>
                 </ul>
             </description>

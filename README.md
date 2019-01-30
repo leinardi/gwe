@@ -26,7 +26,7 @@ and graphics processor.
 - [x] Show historical data of most important values in a separate dialog (requires GTK 3.24/GNOME 3.30)
 - [ ] Disable unsupported preferences
 - [x] Distributing with Flatpack
-- [ ] Publishing on Flathub
+- [x] Publishing on Flathub
 - [ ] Distributing with Snap
 - [ ] Check if NV-CONTROL is available and tell the user if is not
 - [ ] Add support for multi-GPU
