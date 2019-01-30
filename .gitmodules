@@ -1,3 +1,3 @@
-[submodule "dist/flatpak/shared-modules"]
-	path = dist/flatpak/shared-modules
-	url = https://github.com/flathub/shared-modules.git
+[submodule "flatpak"]
+	path = flatpak
+	url = https://github.com/flathub/com.leinardi.gwe.git

@@ -37,22 +37,22 @@ MESON_BUILD_DIR="${BUILD_DIR}/meson"
 FLATPAK_BUILD_DIR="${BUILD_DIR}/flatpak/build"
 FLATPAK_REPO_DIR="${BUILD_DIR}/flatpak/repo"
 FLATPAK_INSTALL_PARAMETERS="--user --install"
-FLATPAK_REMOTE_MANIFEST="dist/flatpak/${APP_ID}.json"
+FLATPAK_REMOTE_MANIFEST="flatpak/${APP_ID}.json"
 FLATPAK_LOCAL_MANIFEST="build/flatpak/${APP_ID}.json"
 FLATPAK_OUTPUT_FILE="${OUTPUT_DIR}/${APP_ID}.flatpak"
 INSTALL_DIR="${OUTPUT_DIR}/install"
 
 function build_flatpak {
-	mkdir -p ${FLATPAK_REPO_DIR}
-	mkdir -p ${FLATPAK_BUILD_DIR}
+	mkdir -p ${FLATPAK_REPO_DIR} && \
+	mkdir -p ${FLATPAK_BUILD_DIR} && \
 
-	time flatpak-builder --force-clean $2 --install-deps-from=flathub --repo=${FLATPAK_REPO_DIR} ${FLATPAK_BUILD_DIR} $1
+	time flatpak-builder --force-clean $2 --install-deps-from=flathub --repo=${FLATPAK_REPO_DIR} ${FLATPAK_BUILD_DIR} $1 && \
 	desktop-file-validate build/flatpak/build/files/share/applications/com.leinardi.gwe.desktop || exit $?
 }
 
 function build_flatpak_bundle {
-	mkdir -p ${OUTPUT_DIR}
-	time flatpak build-bundle ${FLATPAK_REPO_DIR} ${FLATPAK_OUTPUT_FILE} ${APP_ID}
+	mkdir -p ${OUTPUT_DIR} && \
+	time flatpak build-bundle ${FLATPAK_REPO_DIR} ${FLATPAK_OUTPUT_FILE} ${APP_ID} || exit $?
 }
 
 if [[ ${#POSITIONAL[@]} -ne 0 ]]; then
@@ -88,9 +88,9 @@ elif [[ ${FLATPAK_BUNDLE} -eq 1 ]]; then
 	build_flatpak_bundle
 else
 	[[ -d ${MESON_BUILD_DIR} ]] && rm -rfv ${MESON_BUILD_DIR}
-	mkdir -pv ${MESON_BUILD_DIR} ${INSTALL_DIR}
-	meson . ${MESON_BUILD_DIR} --prefix=$PWD/${INSTALL_DIR}
-	ninja -v -C ${MESON_BUILD_DIR}
-	desktop-file-validate build/meson/data/com.leinardi.gwe.desktop || exit $?
+	mkdir -pv ${MESON_BUILD_DIR} ${INSTALL_DIR} && \
+	meson . ${MESON_BUILD_DIR} --prefix=$PWD/${INSTALL_DIR} && \
+	ninja -v -C ${MESON_BUILD_DIR} && \
+	desktop-file-validate build/meson/data/com.leinardi.gwe.desktop && \
 	ninja -v -C ${MESON_BUILD_DIR} install
 fi

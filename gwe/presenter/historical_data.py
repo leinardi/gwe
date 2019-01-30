@@ -89,8 +89,9 @@ class HistoricalDataPresenter:
             if mem_usage is not None:
                 data[GraphType.MEMORY_USAGE] = (time, float(mem_usage), 'MiB', 0.0, float(gpu_status.info.memory_total))
             power_draw = gpu_status.power.draw
+            maximum = gpu_status.power.maximum
             if power_draw is not None:
-                data[GraphType.POWER_DRAW] = (time, power_draw, 'W', 0.0, gpu_status.power.maximum)
+                data[GraphType.POWER_DRAW] = (time, power_draw, 'W', 0.0, 400 if maximum is None else maximum)
             self.view.refresh_graphs(data)
 
     def show(self) -> None:
