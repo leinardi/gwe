@@ -43,7 +43,10 @@ A possible solution for all this problems could be distributing the app via Flat
 will be bundled and provided automatically.
 **No new build will be published on PyPI**.
 
-## Installing the app from Flathub
+## How to get GWE
+### Install from Flathub
+This is the preferred way to get GWE on any major distribution (Arch, Fedora, Linux Mint, openSUSE, Ubuntu, etc).
+
 If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
 
 Make sure to have the Flathub remote added to the current user:
@@ -52,15 +55,18 @@ Make sure to have the Flathub remote added to the current user:
 flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
-### Install
+#### Install
 ```bash
 flatpak --user install flathub com.leinardi.gwe
 ```
 
-### Run
+#### Run
 ```bash
 flatpak run com.leinardi.gwe
 ```
+### Distro specific packages
+#### Arch
+Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
 
 <!--
 ## Application entry
