@@ -65,7 +65,7 @@ flatpak --user install flathub com.leinardi.gwe
 flatpak run com.leinardi.gwe
 ```
 ### Distro specific packages
-#### Arch
+#### Arch Linux
 Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
 
 <!--
@@ -126,10 +126,8 @@ sudo apt install python3-pip libcairo2-dev libgirepository1.0-dev libglib2.0-dev
 ### Fedora 28+ (outdated, please let me know if new dependencies are needed)
 Install [(K)StatusNotifierItem/AppIndicator Support](https://extensions.gnome.org/extension/615/appindicator-support/)
 
-### Arch Linux (outdated, please let me know if new dependencies are needed)
-```bash
-sudo pacman -Syu python-pip libdazzle libappindicator-gtk3
-```
+### Arch Linux
+The list of all the dependencies is available here: https://aur.archlinux.org/packages/gwe/
 
 ### Python dependencies
 ```
@@ -178,6 +176,16 @@ It would be really helpful if someone with more knowledge of the X-Protocol or P
 Something simple that everyone can do is to star it on both [GitLab](https://gitlab.com/leinardi/gwe) and [GitHub](https://github.com/leinardi/gwe).
 Feedback is always welcome: if you found a bug or would like to suggest a feature,
 feel free to open an issue on the [issue tracker](https://gitlab.com/leinardi/gwe/issues).
+
+## Acknowledgements
+Thanks to:
+
+ - GabMus and TingPing for the huge help with Flatpak
+ - The999eagle for maintaining the [AUR package](https://aur.archlinux.org/packages/gwe/)
+ - Lighty for moderating the [Discord](https://discord.gg/YjPdNff) server
+ - fbcotter for the [py3nvml](https://github.com/fbcotter/py3nvml/) library
+ - tiheum for the [Faenza](https://www.deviantart.com/tiheum/art/Faenza-Icons-173323228) icons set, from which I took the current GWE launcher icon
+ - all the people that helped testing and reported bugs
 
 ## License
 ```
