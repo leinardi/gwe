@@ -498,10 +498,10 @@ class NvidiaRepository:
                 self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementLimit, handle)),
             default=self._convert_milliwatt_to_watt(
                 self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementDefaultLimit, handle)),
-            minimum=self._convert_milliwatt_to_watt(power_con[0]),
+            minimum=None if power_con is None else self._convert_milliwatt_to_watt(power_con[0]),
             enforced=self._convert_milliwatt_to_watt(
                 self._nvml_get_val(py3nvml.nvmlDeviceGetEnforcedPowerLimit, handle)),
-            maximum=self._convert_milliwatt_to_watt(power_con[1])
+            maximum=None if power_con is None else self._convert_milliwatt_to_watt(power_con[1])
         )
 
     @staticmethod
