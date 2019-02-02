@@ -43,7 +43,10 @@ A possible solution for all this problems could be distributing the app via Flat
 will be bundled and provided automatically.
 **No new build will be published on PyPI**.
 
-## Installing the app from Flathub
+## How to get GWE
+### Install from Flathub
+This is the preferred way to get GWE on any major distribution (Arch, Fedora, Linux Mint, openSUSE, Ubuntu, etc).
+
 If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
 
 Make sure to have the Flathub remote added to the current user:
@@ -52,15 +55,18 @@ Make sure to have the Flathub remote added to the current user:
 flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
-### Install
+#### Install
 ```bash
 flatpak --user install flathub com.leinardi.gwe
 ```
 
-### Run
+#### Run
 ```bash
 flatpak run com.leinardi.gwe
 ```
+### Distro specific packages
+#### Arch Linux
+Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
 
 <!--
 ## Application entry
@@ -120,10 +126,8 @@ sudo apt install python3-pip libcairo2-dev libgirepository1.0-dev libglib2.0-dev
 ### Fedora 28+ (outdated, please let me know if new dependencies are needed)
 Install [(K)StatusNotifierItem/AppIndicator Support](https://extensions.gnome.org/extension/615/appindicator-support/)
 
-### Arch Linux (outdated, please let me know if new dependencies are needed)
-```bash
-sudo pacman -Syu python-pip libdazzle libappindicator-gtk3
-```
+### Arch Linux
+The list of all the dependencies is available here: https://aur.archlinux.org/packages/gwe/
 
 ### Python dependencies
 ```
@@ -138,6 +142,21 @@ pip3 install -r requirements.txt
 ```
 
 ## FAQ
+### The Flatpak version of GWE is not using my theme, how can I fix it?
+Due to sandboxing, Flatpak applications use the default Gnome theme (Adwaita), 
+and not whatever Gtk theme you're currently using.  
+The fix for this issue is to install your current Gtk theme from Flathub. 
+This way, Flatpak applications will automatically pick the installed Gtk theme 
+and use that instead of Adwaita.
+
+Use this command to get a list of all the available Gtk themes on Flathub:
+```bash
+flatpak --user remote-ls flathub | grep org.gtk.Gtk3theme
+```
+And then just install your preferred theme. For example, to install Yaru:
+```
+flatpak install flathub org.gtk.Gtk3theme.Yaru
+```
 ### Why the memory overclock offsets effectively applied does not match the one set in the Nvidia Settings app?
 Because Memory Transfer Rate, what Nvidia Settings reports and changes, 
 is different from the effective Memory Clock, what is actually being 
@@ -150,28 +169,25 @@ If you want to help testing or developing it would be easier to get in touch usi
 Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
 
 ### We need people with experience in at least one of these topics:
- - X-Protocol (see [#15](https://gitlab.com/leinardi/gwe/issues/15) and [#16](https://gitlab.com/leinardi/gwe/issues/16))
  - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
 
 Knowing Python will be also very helpful but not strictly necessary.
- 
-### Why do we need it?
-Currently there are some roadblocks that are preventing GWE to move to stable and have an official launch.  
-The biggest issues right now are related to the X-Protocol implementation and the distribution of the application.
-
-#### X-Protocol
-To make the app as lightweight as possible, GWE uses the X-Protocol to communicate directly with [NV-CONTROL](https://github.com/NVIDIA/nvidia-settings/blob/master/doc/NV-CONTROL-API.txt).  
-The code that implements the X-Protocol was taken form [disper](https://github.com/phatina/disperd/blob/master/src/nvidia/minx.py),
-a Python 2 software, and ported to Python 3. The current implementation is only able to read data ([#16](https://gitlab.com/leinardi/gwe/issues/16)) and has to relay
-on the `nvidia-settings` binary to set values (e.g. fan speed or overclock). Also the reading is not 100% reliable due to [#15](https://gitlab.com/leinardi/gwe/issues/15).  
-It would be really helpful if someone with more knowledge of the X-Protocol or Python could help fixing these two issues.
-
 
 ### Can I support this project some other way?
 
 Something simple that everyone can do is to star it on both [GitLab](https://gitlab.com/leinardi/gwe) and [GitHub](https://github.com/leinardi/gwe).
 Feedback is always welcome: if you found a bug or would like to suggest a feature,
 feel free to open an issue on the [issue tracker](https://gitlab.com/leinardi/gwe/issues).
+
+## Acknowledgements
+Thanks to:
+
+ - GabMus and TingPing for the huge help with Flatpak
+ - The999eagle for maintaining the [AUR package](https://aur.archlinux.org/packages/gwe/)
+ - Lighty for moderating the [Discord](https://discord.gg/YjPdNff) server
+ - fbcotter for the [py3nvml](https://github.com/fbcotter/py3nvml/) library
+ - tiheum for the [Faenza](https://www.deviantart.com/tiheum/art/Faenza-Icons-173323228) icons set, from which I took the current GWE launcher icon
+ - all the people that helped testing and reported bugs
 
 ## License
 ```

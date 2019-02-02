@@ -228,8 +228,7 @@ class MainPresenter:
                     try:
                         speed = round(self._get_fan_duty(self._fan_profile_applied, gpu_status.temp.gpu))
                         if fan.fan_list and fan.fan_list[0][0] != speed:
-                            for index in range(len(fan.fan_list)):
-                                self._set_fan_speed(index, round(speed))
+                            self._set_fan_speed(gpu_status.index, round(speed))
                     except ValueError:
                         LOG.exception('Unable to parse temperature %s', gpu_status.temp.gpu)
 

@@ -25,6 +25,15 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+        <release date="2019-02-02" version="0.9.0">
+            <description>
+                <ul>
+                    <li>Fixed #16: [X-Protocol] Unable to set values</li>
+                    <li>Fixed #15: [X-Protocol] struct.error: unpack requires a buffer of xxx bytes while reading</li>
+                    <li>Fixed crash when Encoder/Decoder usage is not available</li>
+                </ul>
+            </description>
+        </release>
         <release date="2019-01-30" version="0.8.0">
             <description>
                 <ul>

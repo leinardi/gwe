@@ -1,3 +1,6 @@
 [submodule "flatpak"]
 	path = flatpak
 	url = https://github.com/flathub/com.leinardi.gwe.git
+[submodule "python-xlib"]
+	path = python-xlib
+	url = https://github.com/leinardi/python-xlib.git
