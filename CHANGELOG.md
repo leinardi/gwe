@@ -1,3 +1,12 @@
+Version 0.9.0
+=============
+Released: 2019-02-02
+
+ * Fixed #16: [X-Protocol] Unable to set values
+ * Fixed #15: [X-Protocol] struct.error: unpack requires a buffer of xxx bytes
+   while reading
+ * Fixed crash when Encoder/Decoder usage is not available
+
 Version 0.8.0
 =============
 Released: 2019-01-30

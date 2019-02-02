@@ -30,6 +30,7 @@
                 <ul>
                     <li>Fixed #16: [X-Protocol] Unable to set values</li>
                     <li>Fixed #15: [X-Protocol] struct.error: unpack requires a buffer of xxx bytes while reading</li>
+                    <li>Fixed crash when Encoder/Decoder usage is not available</li>
                 </ul>
             </description>
         </release>

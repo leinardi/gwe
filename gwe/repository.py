@@ -107,8 +107,8 @@ class NvidiaRepository:
                     memory_interface=xlib_display.nvcontrol_get_memory_bus_width(gpu),
                     memory_usage=util.memory if hasattr(util, 'memory') else util,
                     gpu_usage=util.gpu if hasattr(util, 'gpu') else util,
-                    encoder_usage=util_enc[0],
-                    decoder_usage=util_dec[0]
+                    encoder_usage=None if util_enc is None else util_enc[0],
+                    decoder_usage=None if util_dec is None else util_dec[0]
                 )
 
                 power = self._get_power_from_py3nvml(handle)
