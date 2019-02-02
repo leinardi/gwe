@@ -154,22 +154,9 @@ If you want to help testing or developing it would be easier to get in touch usi
 Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
 
 ### We need people with experience in at least one of these topics:
- - X-Protocol (see [#15](https://gitlab.com/leinardi/gwe/issues/15) and [#16](https://gitlab.com/leinardi/gwe/issues/16))
  - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
 
 Knowing Python will be also very helpful but not strictly necessary.
- 
-### Why do we need it?
-Currently there are some roadblocks that are preventing GWE to move to stable and have an official launch.  
-The biggest issues right now are related to the X-Protocol implementation and the distribution of the application.
-
-#### X-Protocol
-To make the app as lightweight as possible, GWE uses the X-Protocol to communicate directly with [NV-CONTROL](https://github.com/NVIDIA/nvidia-settings/blob/master/doc/NV-CONTROL-API.txt).  
-The code that implements the X-Protocol was taken form [disper](https://github.com/phatina/disperd/blob/master/src/nvidia/minx.py),
-a Python 2 software, and ported to Python 3. The current implementation is only able to read data ([#16](https://gitlab.com/leinardi/gwe/issues/16)) and has to relay
-on the `nvidia-settings` binary to set values (e.g. fan speed or overclock). Also the reading is not 100% reliable due to [#15](https://gitlab.com/leinardi/gwe/issues/15).  
-It would be really helpful if someone with more knowledge of the X-Protocol or Python could help fixing these two issues.
-
 
 ### Can I support this project some other way?
 
