@@ -10,5 +10,5 @@
 8. `git push --follow-tags` 
 9. Trigger Flathub build bot `cd flatpak && git commit -am "Release X.Y.Z" && git push` (where X.Y.Z is the version you set in step 1)
 10. Make a PR to the Flathub repository master, test the build and, if OK, merge the PR
-11. `git commit -am "Release 0.9.0" && git push` (where X.Y.Z is the version you set in step 1)
+11. `git commit -am "Release X.X.X" && git push` (where X.Y.Z is the version you set in step 1)
 12. Create a PR from [master](../../tree/master) to [release](../../tree/release)
