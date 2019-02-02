@@ -142,6 +142,21 @@ pip3 install -r requirements.txt
 ```
 
 ## FAQ
+### The Flatpak version of GWE is not using my theme, how can I fix it?
+Due to sandboxing, Flatpak applications use the default Gnome theme (Adwaita), 
+and not whatever Gtk theme you're currently using.  
+The fix for this issue is to install your current Gtk theme from Flathub. 
+This way, Flatpak applications will automatically pick the installed Gtk theme 
+and use that instead of Adwaita.
+
+Use this command to get a list of all the available Gtk themes on Flathub:
+```bash
+flatpak --user remote-ls flathub | grep org.gtk.Gtk3theme
+```
+And then just install your preferred theme. For example, to install Yaru:
+```
+flatpak install flathub org.gtk.Gtk3theme.Yaru
+```
 ### Why the memory overclock offsets effectively applied does not match the one set in the Nvidia Settings app?
 Because Memory Transfer Rate, what Nvidia Settings reports and changes, 
 is different from the effective Memory Clock, what is actually being 
