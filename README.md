@@ -34,14 +34,24 @@ and graphics processor.
 - [ ] Add support for i18n (internationalization and localization)
 
 ## Dropped PyPI support
-Development builds were previously distributed using PyPI. This way of distributing the software is quite simple
+Development builds were previously distributed using PyPI. This way of distributing the software is simple
 but requires the user to manually install all the non Python dependencies like cairo, glib, appindicator3, etc.  
 The current implementation of the historical data uses a new library, Dazzle, that requires Gnome 3.30 which is
 available, using Python Object introspection, only starting from Ubuntu 18.10 making the latest Ubuntu LTS, 18.04,
 unsupported.    
-A possible solution for all this problems could be distributing the app via Flatpak, since with it all the dependencies
-will be bundled and provided automatically.
+A solution for all this problems is distributing the app via Flatpak, since with it all the dependencies
+will be bundled and provided automatically, making possible to use Gnome 3.30 features also on distributions
+using an older version of Gnome.
+
 **No new build will be published on PyPI**.
+
+### Uninstall pip version
+If you have already installed GWE via `pip`, please make sure to uninstall it completely before moving to a newer version:
+
+```bash
+pip3 uninstall gwe
+rm -rf ~/.config/gwe
+```
 
 ## How to get GWE
 ### Install from Flathub
