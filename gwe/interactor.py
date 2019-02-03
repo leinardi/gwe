@@ -23,7 +23,7 @@ import requests
 from injector import singleton, inject
 from rx import Observable
 
-from gwe.conf import SETTINGS_DEFAULTS, APP_PACKAGE_NAME, APP_VERSION
+from gwe.conf import SETTINGS_DEFAULTS, APP_VERSION, APP_ID
 from gwe.model import Setting
 from gwe.repository import NvidiaRepository
 
@@ -139,7 +139,7 @@ class SettingsInteractor:
 
 @singleton
 class CheckNewVersionInteractor:
-    URL_PATTERN = 'https://pypi.python.org/pypi/{package}/json'
+    URL_PATTERN = 'https://flathub.org/api/v1/apps/{package}'
 
     @inject
     def __init__(self) -> None:
@@ -150,12 +150,10 @@ class CheckNewVersionInteractor:
         return Observable.defer(lambda: Observable.just(self.__check_new_version()))
 
     def __check_new_version(self) -> Optional[LooseVersion]:
-        req = requests.get(self.URL_PATTERN.format(package=APP_PACKAGE_NAME))
+        req = requests.get(self.URL_PATTERN.format(package=APP_ID))
         version = LooseVersion("0")
         if req.status_code == requests.codes.ok:
             j = json.loads(req.text)
-            releases = j.get('releases', [])
-            for release in releases:
-                ver = LooseVersion(release)
-                version = max(version, ver)
+            current_release_version = j.get('currentReleaseVersion', "0.0.0")
+            version = LooseVersion(current_release_version)
         return version if version > LooseVersion(APP_VERSION) else None

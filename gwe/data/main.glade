@@ -1800,4 +1800,41 @@ along with GSI.  If not, see <http://www.gnu.org/licenses/>.
       </object>
     </child>
   </object>
+  <object class="GtkMessageDialog" id="pypi_dropped_dialog">
+    <property name="can_focus">False</property>
+    <property name="type_hint">dialog</property>
+    <property name="transient_for">application_window</property>
+    <property name="message_type">warning</property>
+    <property name="text" translatable="yes">&lt;span size="large"&gt;&lt;b&gt;PyPI support dropped!&lt;/b&gt;&lt;/span&gt;</property>
+    <property name="use_markup">True</property>
+    <property name="secondary_text" translatable="yes">GWE will not be released anymore on PyPI and this last update had the only purpose to add this warning dialog.
+
+For more info about how to get a new version of GWE, please visit the official project website: &lt;a href="https://gitlab.com/leinardi/gwe#dropped-pypi-support"&gt;https://gitlab.com/leinardi/gwe&lt;/a&gt;</property>
+    <property name="secondary_use_markup">True</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can_focus">False</property>
+            <property name="homogeneous">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
 </interface>

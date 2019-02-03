@@ -1,3 +1,6 @@
+**[0.6.0] 2019-02-03**
+ - Dropped support for PyPI: https://gitlab.com/leinardi/gwe/blob/master/README.md#dropped-pypi-support
+
 **[0.5.1] 2019-01-03**
  - Min duty changed from 25 to 0
  - Slightly bigger app indicator icon

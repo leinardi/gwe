@@ -156,6 +156,8 @@ class MainView(MainViewInterface):
         fan_scrolled_window: Gtk.ScrolledWindow = self._builder.get_object('fan_scrolled_window')
         self._fan_edit_button: Gtk.Button = self._builder.get_object('fan_edit_button')
         self._init_plot_charts(fan_scrolled_window)
+        self._pypi_dropped_dialog: Gtk.AboutDialog = self._builder.get_object("pypi_dropped_dialog")
+        self._pypi_dropped_dialog.show()
 
     def _init_about_dialog(self) -> None:
         self._about_dialog.set_program_name(APP_NAME)
