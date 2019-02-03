@@ -21,7 +21,7 @@
         </screenshot>
     </screenshots>
     <categories>
-      <category>Utility</category>
+        <category>Utility</category>
     </categories>
     <url type="homepage">https://gitlab.com/leinardi/gwe</url>
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
@@ -120,5 +120,5 @@
             </description>
         </release>
     </releases>
-    <content_rating type="oars-1.1" />
+    <content_rating type="oars-1.1"/>
 </component>
