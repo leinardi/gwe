@@ -21,6 +21,7 @@ from typing import Any, Tuple, Dict
 from gi.repository import Gtk, GLib
 from injector import singleton, inject
 
+from gwe.interactor import SettingsInteractor
 from gwe.model import Status
 from gwe.util.view import hide_on_delete, is_dazzle_version_supported
 
@@ -55,8 +56,11 @@ class HistoricalDataViewInterface:
 @singleton
 class HistoricalDataPresenter:
     @inject
-    def __init__(self) -> None:
+    def __init__(self,
+                 settings_interactor: SettingsInteractor,
+                 ) -> None:
         LOG.debug("init HistoricalDataPresenter ")
+        self._settings_interactor = settings_interactor
         self.view: HistoricalDataViewInterface = HistoricalDataViewInterface()
 
     def add_status(self, new_status: Status) -> None:
@@ -99,3 +103,6 @@ class HistoricalDataPresenter:
 
     def on_dialog_delete_event(self, widget: Gtk.Widget, *_: Any) -> Any:
         return hide_on_delete(widget)
+
+    def get_refresh_interval(self) -> int:
+        return self._settings_interactor.get_int('settings_refresh_interval')
