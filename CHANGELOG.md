@@ -3,6 +3,8 @@ Version 0.10.0
 Released: 2019-02-03
 
  * Updated new version check to use Flathub instead of PyPI
+ * Workaround for memory leak caused by python-xlib
+   (https://github.com/python-xlib/python-xlib/issues/136)
 
 Version 0.9.0
 =============

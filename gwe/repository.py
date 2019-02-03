@@ -67,6 +67,8 @@ class NvidiaRepository:
         self._lock = threading.RLock()
         self._gpu_count = 0
         self._gpu_setting_cache: List[Dict[str, str]] = []
+        # class instance because of https://github.com/python-xlib/python-xlib/issues/136
+        self._xlib_display = display.Display()
 
     @staticmethod
     def is_nvidia_smi_available() -> bool:
@@ -74,12 +76,10 @@ class NvidiaRepository:
 
     @synchronized_with_attr("_lock")
     def get_status(self) -> Optional[Status]:
-        xlib_display = None
         try:
             time1 = time.time()
             py3nvml.nvmlInit()
-            xlib_display = display.Display()
-            self._gpu_count = xlib_display.nvcontrol_get_gpu_count()
+            self._gpu_count = self._xlib_display.nvcontrol_get_gpu_count()
             gpu_status_list: List[GpuStatus] = []
             for gpu_index in range(self._gpu_count):
                 handle = py3nvml.nvmlDeviceGetHandleByIndex(gpu_index)
@@ -100,11 +100,11 @@ class NvidiaRepository:
                     pcie_generation=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxPcieLinkGeneration, handle),
                     pcie_current_link=self._nvml_get_val(py3nvml.nvmlDeviceGetCurrPcieLinkWidth, handle),
                     pcie_max_link=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxPcieLinkWidth, handle),
-                    cuda_cores=xlib_display.nvcontrol_get_cuda_cores(gpu),
+                    cuda_cores=self._xlib_display.nvcontrol_get_cuda_cores(gpu),
                     uuid=self._nvml_get_val(py3nvml.nvmlDeviceGetUUID, handle),
                     memory_total=memory_total,
                     memory_used=memory_used,
-                    memory_interface=xlib_display.nvcontrol_get_memory_bus_width(gpu),
+                    memory_interface=self._xlib_display.nvcontrol_get_memory_bus_width(gpu),
                     memory_usage=util.memory if hasattr(util, 'memory') else util,
                     gpu_usage=util.gpu if hasattr(util, 'gpu') else util,
                     encoder_usage=None if util_enc is None else util_enc[0],
@@ -114,7 +114,7 @@ class NvidiaRepository:
                 power = self._get_power_from_py3nvml(handle)
                 temp = self._get_temp_from_py3nvml(handle)
 
-                perf_modes = xlib_display.nvcontrol_get_performance_modes(gpu)
+                perf_modes = self._xlib_display.nvcontrol_get_performance_modes(gpu)
                 perf_mode = next((p for p in perf_modes if p['perf'] == len(perf_modes) - 1), None)
                 if perf_mode:
                     clocks = Clocks(
@@ -130,19 +130,20 @@ class NvidiaRepository:
                 else:
                     clocks = Clocks()
 
-                mem_transfer_rate_offset_range = xlib_display.nvcontrol_get_mem_transfer_rate_offset_range(gpu)
-                perf_level = xlib_display.nvcontrol_get_current_performance_level(gpu)
+                mem_transfer_rate_offset_range = self._xlib_display.nvcontrol_get_mem_transfer_rate_offset_range(gpu)
+                perf_level = self._xlib_display.nvcontrol_get_current_performance_level(gpu)
                 if mem_transfer_rate_offset_range is not None:
                     mem_clock_offset_range = (mem_transfer_rate_offset_range[0] // 2,
                                               mem_transfer_rate_offset_range[1] // 2)
-                    mem_transfer_rate_offset = xlib_display.nvcontrol_get_mem_transfer_rate_offset(gpu, perf_level)
+                    mem_transfer_rate_offset = self._xlib_display.nvcontrol_get_mem_transfer_rate_offset(gpu,
+                                                                                                         perf_level)
                     mem_clock_offset = None
                     if mem_transfer_rate_offset is not None:
                         mem_clock_offset = mem_transfer_rate_offset // 2
                     overclock = Overclock(
                         available=mem_transfer_rate_offset is not None,
-                        gpu_range=xlib_display.nvcontrol_get_gpu_nvclock_offset_range(gpu),
-                        gpu_offset=xlib_display.nvcontrol_get_gpu_nvclock_offset(gpu, perf_level),
+                        gpu_range=self._xlib_display.nvcontrol_get_gpu_nvclock_offset_range(gpu),
+                        gpu_offset=self._xlib_display.nvcontrol_get_gpu_nvclock_offset(gpu, perf_level),
                         memory_range=mem_clock_offset_range,
                         memory_offset=mem_clock_offset,
                         perf_level_max=perf_mode.get('perf') if perf_mode else None
@@ -150,15 +151,15 @@ class NvidiaRepository:
                 else:
                     overclock = Overclock(perf_level_max=perf_mode.get('perf') if perf_mode else None)
 
-                manual_control = xlib_display.nvcontrol_get_cooler_manual_control_enabled(gpu)
+                manual_control = self._xlib_display.nvcontrol_get_cooler_manual_control_enabled(gpu)
                 fan_list: Optional[List[Tuple[int, int]]] = None
-                fan_indexes = xlib_display.nvcontrol_get_coolers_used_by_gpu(gpu)
+                fan_indexes = self._xlib_display.nvcontrol_get_coolers_used_by_gpu(gpu)
                 if fan_indexes:
                     fan_list = []
                     for i in fan_indexes:
                         fan = Cooler(i)
-                        duty = xlib_display.nvcontrol_get_fan_duty(fan)
-                        rpm = xlib_display.nvcontrol_get_fan_rpm(fan)
+                        duty = self._xlib_display.nvcontrol_get_fan_duty(fan)
+                        rpm = self._xlib_display.nvcontrol_get_fan_rpm(fan)
                         if duty is not None and rpm is not None:
                             fan_list.append((duty, rpm))
                 fan = Fan(
@@ -195,20 +196,15 @@ class NvidiaRepository:
             LOG.exception("Error while getting status")
         finally:
             try:
-                if xlib_display:
-                    xlib_display.close()
                 py3nvml.nvmlShutdown()
             except:
                 LOG.exception("Error while getting status")
         return None
 
-    @staticmethod
-    def set_overclock(gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> bool:
-        xlib_display = display.Display()
+    def set_overclock(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> bool:
         gpu = Gpu(gpu_index)
-        gpu_result = xlib_display.nvcontrol_set_gpu_nvclock_offset(gpu, perf, gpu_offset)
-        mem_result = xlib_display.nvcontrol_set_mem_transfer_rate_offset(gpu, perf, memory_offset * 2)
-        xlib_display.close()
+        gpu_result = self._xlib_display.nvcontrol_set_gpu_nvclock_offset(gpu, perf, gpu_offset)
+        mem_result = self._xlib_display.nvcontrol_set_mem_transfer_rate_offset(gpu, perf, memory_offset * 2)
         return gpu_result and mem_result
 
     @staticmethod
@@ -227,21 +223,18 @@ class NvidiaRepository:
         for gpu_index in range(self._gpu_count):
             self.set_fan_speed(gpu_index, manual_control=False)
 
-    @staticmethod
-    def set_fan_speed(gpu_index: int, speed: int = 100, manual_control: bool = False) -> bool:
-        xlib_display = display.Display()
+    def set_fan_speed(self, gpu_index: int, speed: int = 100, manual_control: bool = False) -> bool:
         gpu = Gpu(gpu_index)
-        fan_indexes = xlib_display.nvcontrol_get_coolers_used_by_gpu(gpu)
+        fan_indexes = self._xlib_display.nvcontrol_get_coolers_used_by_gpu(gpu)
         error = False
         if fan_indexes:
-            result = xlib_display.nvcontrol_set_cooler_manual_control_enabled(gpu, manual_control)
+            result = self._xlib_display.nvcontrol_set_cooler_manual_control_enabled(gpu, manual_control)
             if not result:
                 error = True
             for fan_index in fan_indexes:
-                result = xlib_display.nvcontrol_set_fan_duty(Cooler(fan_index), speed)
+                result = self._xlib_display.nvcontrol_set_fan_duty(Cooler(fan_index), speed)
                 if not result:
                     error = True
-        xlib_display.close()
         return error
 
     @staticmethod
