@@ -4,6 +4,47 @@ and graphics processor.
 
 <img src="/art/screenshot-1.png" width="800"/>
 
+## How to get GWE
+### Install from Flathub
+This is the preferred way to get GWE on any major distribution (Arch, Fedora, Linux Mint, openSUSE, Ubuntu, etc).
+
+If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
+
+Make sure to have the Flathub remote added to the current user:
+
+```bash
+flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+```
+
+#### Install
+```bash
+flatpak --user install flathub com.leinardi.gwe
+```
+
+#### Run
+```bash
+flatpak run com.leinardi.gwe
+```
+### Distro specific packages
+#### Arch Linux
+Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
+
+### Install from source code
+#### Required dependencies for (K/X)Ubuntu 18.10 or newer
+```bash
+sudo apt install git meson python3-pip libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo appstream-util
+```
+
+#### Clone project and install
+```bash
+git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
+cd gwe
+pip3 install -r requirements.txt
+meson . build --prefix /usr
+ninja -v -C build
+sudo ninja -v -C build install
+```
+
 ## TODO
 
 - [x] Show general GPU info
@@ -52,31 +93,6 @@ If you have already installed GWE via `pip`, please make sure to uninstall it co
 pip3 uninstall gwe
 rm -rf ~/.config/gwe
 ```
-
-## How to get GWE
-### Install from Flathub
-This is the preferred way to get GWE on any major distribution (Arch, Fedora, Linux Mint, openSUSE, Ubuntu, etc).
-
-If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
-
-Make sure to have the Flathub remote added to the current user:
-
-```bash
-flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-```
-
-#### Install
-```bash
-flatpak --user install flathub com.leinardi.gwe
-```
-
-#### Run
-```bash
-flatpak run com.leinardi.gwe
-```
-### Distro specific packages
-#### Arch Linux
-Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
 
 <!--
 ## Application entry
@@ -130,9 +146,8 @@ If you want to clone the project and run directly from the source you need to ma
 dependencies.
  
 ### (K/X)Ubuntu 18.04 or newer
-```bash
-sudo apt install python3-pip libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo python3-pip appstream-util
-```
+See [Install from source](https://gitlab.com/leinardi/gwe#kxubuntu-1810-or-newer-dependencies)
+
 ### Fedora 28+ (outdated, please let me know if new dependencies are needed)
 Install [(K)StatusNotifierItem/AppIndicator Support](https://extensions.gnome.org/extension/615/appindicator-support/)
 
@@ -140,7 +155,7 @@ Install [(K)StatusNotifierItem/AppIndicator Support](https://extensions.gnome.or
 The list of all the dependencies is available here: https://aur.archlinux.org/packages/gwe/
 
 ### Python dependencies
-```
+```bash
 git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
 cd gwe
 pip3 install -r requirements.txt
