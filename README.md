@@ -1,4 +1,4 @@
-# GWE
+# GreenWithEnvy (GWE)
 GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video card 
 and graphics processor.
 
@@ -42,7 +42,7 @@ cd gwe
 pip3 install -r requirements.txt
 meson . build --prefix /usr
 ninja -v -C build
-sudo ninja -v -C build install
+ninja -v -C build install
 ```
 
 ## TODO
