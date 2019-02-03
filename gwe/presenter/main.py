@@ -34,7 +34,6 @@ from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfil
 from gwe.presenter.edit_fan_profile import EditFanProfilePresenter
 from gwe.presenter.historical_data import HistoricalDataPresenter
 from gwe.presenter.preferences import PreferencesPresenter
-from gwe.repository import NOT_AVAILABLE_STRING
 
 LOG = logging.getLogger(__name__)
 _ADD_NEW_PROFILE_INDEX = -10

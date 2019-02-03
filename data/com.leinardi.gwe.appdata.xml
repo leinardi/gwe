@@ -25,6 +25,16 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+        <release date="2019-02-03" version="0.10.1">
+            <description>
+                <ul>
+                    <li>Updated new version check to use Flathub instead of PyPI</li>
+                    <li>Workaround for memory leak caused by python-xlib
+                        (https://github.com/python-xlib/python-xlib/issues/136)
+                    </li>
+                </ul>
+            </description>
+        </release>
         <release date="2019-02-02" version="0.9.0">
             <description>
                 <ul>
