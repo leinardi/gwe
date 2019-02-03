@@ -1,3 +1,12 @@
+Version 0.11.0
+==============
+Released: 2019-02-03
+
+ * Launcher name changed to GreenWithEnvy
+ * Graph max sample based on refresh interval
+ * Removed workaround for memory leak caused by python-xlib
+   (https://github.com/python-xlib/python-xlib/issues/136)
+
 Version 0.10.1
 ==============
 Released: 2019-02-03
