@@ -25,7 +25,7 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
-        <release date="2019-02-03" version="0.10.0">
+        <release date="2019-02-03" version="0.10.1">
             <description>
                 <ul>
                     <li>Updated new version check to use Flathub instead of PyPI</li>
