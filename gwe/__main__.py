@@ -34,9 +34,9 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Dazzle', '1.0')
 from gi.repository import GLib
 from gwe.util.log import set_log_level
+from gwe.repository import NvidiaRepository
 from gwe.di import INJECTOR
 from gwe.app import Application
-from gwe.repository import NvidiaRepository
 
 WHERE_AM_I = abspath(dirname(__file__))
 LOCALE_DIR = join(WHERE_AM_I, 'mo')
