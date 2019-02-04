@@ -52,6 +52,8 @@ class Application(Gtk.Application):
         super().__init__(*args, application_id=APP_ID,
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
                          **kwargs)
+
+        database.connect()
         database.create_tables([FanProfile, SpeedStep, CurrentFanProfile, Setting])
 
         if FanProfile.select().count() == 0:

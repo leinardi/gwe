@@ -78,7 +78,7 @@ class HistoricalDataView(HistoricalDataViewInterface):
             graph_renderer.set_stroke_color_rgba(stroke_color)
             graph_renderer.set_stacked_color_rgba(stacked_color)
             graph_model.set_timespan(MONITORING_INTERVAL * 1000 * 1000)
-            graph_model.set_max_samples(MONITORING_INTERVAL / self._presenter.get_refresh_interval() + 1)
+            graph_model.set_max_samples(MONITORING_INTERVAL / 3)
             graph_model.props.value_max = 100.0
             graph_model.props.value_min = 0.0
 
