@@ -188,6 +188,10 @@ is different from the effective Memory Clock, what is actually being
 displayed by GWE. It is also what other Windows applications like MSI Afterburner show.
 The Memory Transfer Rate is simply double the Memory Clock.
 
+### GreenWithEnvy, why using such name?
+The name comes from the slogan of the GeForce 8 series, that was "Green with envy".  
+Nvidia is meant to be pronounced "invidia", which means envy in Latin (and Italian). And their logo is green so, GreenWithEnvy
+
 ## How to help the project
 ### Discord server
 If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/YjPdNff  
