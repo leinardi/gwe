@@ -19,6 +19,7 @@ flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flath
 #### Install
 ```bash
 flatpak --user install flathub com.leinardi.gwe
+flatpak update # needed to be sure to have the latest org.freedesktop.Platform.GL.nvidia
 ```
 
 #### Run
