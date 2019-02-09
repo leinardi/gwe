@@ -31,6 +31,12 @@ flatpak run com.leinardi.gwe
 Currently [Flatpak does not support Nvidia Beta drivers](https://github.com/flathub/org.freedesktop.Platform.GL.nvidia/issues/1)
 like 396.54.09 or 415.22.05.
 
+### Bumblebee and optirun
+If you use Bumblebee you need to start GWE with `optirun` and you need to specify the NV-CONTROL display as the `:8`:
+```bash
+optirun flatpak run com.leinardi.gwe --ctrl-display ":8"
+```
+
 ### Distro specific packages
 #### Arch Linux
 Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
