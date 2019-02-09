@@ -4,7 +4,7 @@ and graphics processor.
 
 <img src="/art/screenshot-1.png" width="800"/>
 
-## How to get GWE
+## 📦 How to get GWE
 ### Install from Flathub
 This is the preferred way to get GWE on any major distribution (Arch, Fedora, Linux Mint, openSUSE, Ubuntu, etc).
 
@@ -59,7 +59,7 @@ ninja -v -C build
 ninja -v -C build install
 ```
 
-## TODO
+## ℹ️ TODO
 
 - [x] Show general GPU info
 - [x] Show power info
@@ -90,26 +90,6 @@ ninja -v -C build install
 - [ ] Allow to select profiles from app indicator
 - [ ] Add support for i18n (internationalization and localization)
 
-## Dropped PyPI support
-Development builds were previously distributed using PyPI. This way of distributing the software is simple
-but requires the user to manually install all the non Python dependencies like cairo, glib, appindicator3, etc.  
-The current implementation of the historical data uses a new library, Dazzle, that requires Gnome 3.30 which is
-available, using Python Object introspection, only starting from Ubuntu 18.10 making the latest Ubuntu LTS, 18.04,
-unsupported.    
-A solution for all this problems is distributing the app via Flatpak, since with it all the dependencies
-will be bundled and provided automatically, making possible to use Gnome 3.30 features also on distributions
-using an older version of Gnome.
-
-**No new build will be published on PyPI**.
-
-### Uninstall pip version
-If you have already installed GWE via `pip`, please make sure to uninstall it completely before moving to a newer version:
-
-```bash
-pip3 uninstall gwe
-rm -rf ~/.config/gwe
-```
-
 <!--
 ## Application entry
 To add a desktop entry for the application run the following command (not supported by Flatpak):
@@ -119,7 +99,7 @@ gwe --application-entry
 If you don't want to create this custom rule you can run gwe as root 
 (using sudo) but we advise against this solution.
 -->
-## Command line options
+## ⌨️ Command line options
 
   | Parameter                 | Description                               | Source | Flatpak |
   |---------------------------|-------------------------------------------|:------:|:-------:|
@@ -131,7 +111,7 @@ If you don't want to create this custom rule you can run gwe as root
   |--autostart-on             |Enable automatic start of the app on login |    x   |         |
   |--autostart-off            |Disable automatic start of the app on login|    x   |         |
 
-## Build, install and run with Flatpak
+## 🖥️ Build, install and run with Flatpak
 If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
 
 Make sure to have the Flathub remote added to the current user:
@@ -159,7 +139,7 @@ It is possible to build the local source or the remote one (the same that Flathu
 flatpak run com.leinardi.gwe
 ```
 
-## How to build and run the source code
+## 🖥️ How to build and run the source code
 If you want to clone the project and run directly from the source you need to manually install all the needed
 dependencies.
  
@@ -184,7 +164,7 @@ pip3 install -r requirements.txt
 ./run.sh
 ```
 
-## FAQ
+## ❓ FAQ
 ### The Flatpak version of GWE is not using my theme, how can I fix it?
 Due to sandboxing, Flatpak applications use the default Gnome theme (Adwaita), 
 and not whatever Gtk theme you're currently using.  
@@ -216,7 +196,7 @@ The Memory Transfer Rate is simply double the Memory Clock.
 The name comes from the slogan of the GeForce 8 series, that was "Green with envy".  
 Nvidia is meant to be pronounced "invidia", which means envy in Latin (and Italian). And their logo is green so, GreenWithEnvy
 
-## How to help the project
+## 💚 How to help the project
 ### Discord server
 If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/YjPdNff  
 Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
@@ -232,17 +212,38 @@ Something simple that everyone can do is to star it on both [GitLab](https://git
 Feedback is always welcome: if you found a bug or would like to suggest a feature,
 feel free to open an issue on the [issue tracker](https://gitlab.com/leinardi/gwe/issues).
 
-## Acknowledgements
+## ⚠ Dropped PyPI support
+Development builds were previously distributed using PyPI. This way of distributing the software is simple
+but requires the user to manually install all the non Python dependencies like cairo, glib, appindicator3, etc.  
+The current implementation of the historical data uses a new library, Dazzle, that requires Gnome 3.30 which is
+available, using Python Object introspection, only starting from Ubuntu 18.10 making the latest Ubuntu LTS, 18.04,
+unsupported.    
+A solution for all this problems is distributing the app via Flatpak, since with it all the dependencies
+will be bundled and provided automatically, making possible to use Gnome 3.30 features also on distributions
+using an older version of Gnome.
+
+**No new build will be published on PyPI**.
+
+### Uninstall pip version
+If you have already installed GWE via `pip`, please make sure to uninstall it completely before moving to a newer version:
+
+```bash
+pip3 uninstall gwe
+rm -rf ~/.config/gwe
+```
+
+## ℹ️ Acknowledgements
 Thanks to:
 
  - GabMus and TingPing for the huge help with Flatpak
  - The999eagle for maintaining the [AUR package](https://aur.archlinux.org/packages/gwe/)
  - Lighty for moderating the [Discord](https://discord.gg/YjPdNff) server
  - fbcotter for the [py3nvml](https://github.com/fbcotter/py3nvml/) library
+ - all the devs of the [python-xlib](https://github.com/python-xlib/python-xlib/) library
  - tiheum for the [Faenza](https://www.deviantart.com/tiheum/art/Faenza-Icons-173323228) icons set, from which I took the current GWE launcher icon
  - all the people that helped testing and reported bugs
 
-## License
+## 📝 License
 ```
 This file is part of gwe.
 
