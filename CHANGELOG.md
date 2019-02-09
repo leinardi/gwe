@@ -1,14 +1,20 @@
+Version 0.10.4
+==============
+Released: 2019-02-09
+
+ * Workaround for #36: graph text color from GTK theme
+
 Version 0.10.3
 ==============
 Released: 2019-02-09
 
- * Applied Fix for #26 also to set overclock and fan speed
+ * Applied fix for #26 also to set overclock and fan speed
 
 Version 0.10.2
 ==============
 Released: 2019-02-09
 
- * Fixes #26: Added command line option to specify NV-CONTROL display
+ * Fixed #26: Added command line option to specify NV-CONTROL display
  * Fixed #28: NVMLError_InvalidArgument with more than 1 GPU
  * Fixed check for Coolbit 4 not working
  * Launcher name changed to GreenWithEnvy
