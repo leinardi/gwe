@@ -203,6 +203,8 @@ Just write a message on the general channel saying how you want to help (test, d
 
 ### We need people with experience in at least one of these topics:
  - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
+ - Getting current GTK theme text color (see [#36](https://gitlab.com/leinardi/gwe/issues/36))
+ - Making Bumblebee work with Flatpak (see [#35](https://gitlab.com/leinardi/gwe/issues/35))
 
 Knowing Python will be also very helpful but not strictly necessary.
 
