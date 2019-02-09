@@ -124,6 +124,7 @@ If you don't want to create this custom rule you can run gwe as root
   |-v, --version              |Show the app version                       |    x   |    x    |
   |--debug                    |Show debug messages                        |    x   |    x    |
   |--hide-window              |Start with the main window hidden          |    x   |    x    |
+  |--ctrl-display DISPLAY     |Specify the NV-CONTROL display             |    x   |    x    |
   |--application-entry        |Add a desktop entry for the application    |    x   |         |
   |--autostart-on             |Enable automatic start of the app on login |    x   |         |
   |--autostart-off            |Disable automatic start of the app on login|    x   |         |
