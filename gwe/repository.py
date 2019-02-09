@@ -82,8 +82,9 @@ class NvidiaRepository:
             self._gpu_count = xlib_display.nvcontrol_get_gpu_count()
             gpu_status_list: List[GpuStatus] = []
             for gpu_index in range(self._gpu_count):
-                handle = py3nvml.nvmlDeviceGetHandleByIndex(gpu_index)
                 gpu = Gpu(gpu_index)
+                uuid = xlib_display.nvcontrol_get_gpu_uuid(gpu)
+                handle = py3nvml.nvmlDeviceGetHandleByUUID(uuid.encode('utf-8'))
                 memory_total = None
                 memory_used = None
                 mem_info = self._nvml_get_val(py3nvml.nvmlDeviceGetMemoryInfo, handle)
@@ -101,7 +102,7 @@ class NvidiaRepository:
                     pcie_current_link=self._nvml_get_val(py3nvml.nvmlDeviceGetCurrPcieLinkWidth, handle),
                     pcie_max_link=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxPcieLinkWidth, handle),
                     cuda_cores=xlib_display.nvcontrol_get_cuda_cores(gpu),
-                    uuid=self._nvml_get_val(py3nvml.nvmlDeviceGetUUID, handle),
+                    uuid=uuid,
                     memory_total=memory_total,
                     memory_used=memory_used,
                     memory_interface=xlib_display.nvcontrol_get_memory_bus_width(gpu),
