@@ -1,6 +1,6 @@
-Version 0.11.0
+Version 0.10.2
 ==============
-Released: 2019-02-03
+Released: 2019-02-09
 
  * Fixes #26: Added command line option to specify NV-CONTROL display
  * Fixed #28: NVMLError_InvalidArgument with more than 1 GPU
