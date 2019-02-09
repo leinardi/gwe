@@ -2,6 +2,7 @@ Version 0.11.0
 ==============
 Released: 2019-02-03
 
+ * Fixed #28: NVMLError_InvalidArgument with more than 1 GPU
  * Fixed check for Coolbit 4 not working
  * Launcher name changed to GreenWithEnvy
  * Removed workaround for memory leak caused by python-xlib
