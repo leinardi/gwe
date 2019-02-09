@@ -29,6 +29,7 @@ from gwe.conf import APP_NAME, APP_ID, APP_VERSION, APP_ICON_NAME
 from gwe.di import MainBuilder
 from gwe.model import FanProfile, SpeedStep, Setting, CurrentFanProfile, load_db_default_data
 from gwe.presenter.main import MainPresenter
+from gwe.repository import NvidiaRepository
 from gwe.util.deployment import is_flatpak
 from gwe.util.desktop_entry import set_autostart_entry, add_application_entry
 from gwe.util.log import LOG_DEBUG_FORMAT
@@ -45,6 +46,7 @@ class Application(Gtk.Application):
                  view: MainView,
                  presenter: MainPresenter,
                  builder: MainBuilder,
+                 nvidia_repository: NvidiaRepository,
                  *args: Any,
                  **kwargs: Any) -> None:
         LOG.debug("init Application")
@@ -63,6 +65,7 @@ class Application(Gtk.Application):
         self._view = view
         self._presenter = presenter
         self._presenter.application_quit = self.quit
+        self._nvidia_repository = nvidia_repository
         self._window: Optional[Gtk.ApplicationWindow] = None
         self._builder: Gtk.Builder = builder
         self._start_hidden: bool = False
@@ -84,23 +87,23 @@ class Application(Gtk.Application):
         Gtk.Application.do_startup(self)
 
     def do_command_line(self, command_line: Gio.ApplicationCommandLine) -> int:
+
         start_app = True
         options = command_line.get_options_dict()
         # convert GVariantDict -> GVariant -> dict
         options = options.end().unpack()
 
         exit_value = 0
-
-        if _Options.VERSION.value in options:
-            LOG.debug("Option %s selected", _Options.VERSION.value)
-            print(APP_VERSION)
-            start_app = False
-
         if _Options.DEBUG.value in options:
             logging.getLogger().setLevel(logging.DEBUG)
             for handler in logging.getLogger().handlers:
                 handler.formatter = logging.Formatter(LOG_DEBUG_FORMAT)
             LOG.debug("Option %s selected", _Options.DEBUG.value)
+
+        if _Options.VERSION.value in options:
+            LOG.debug("Option %s selected", _Options.VERSION.value)
+            print(APP_VERSION)
+            start_app = False
 
         if _Options.HIDE_WINDOW.value in options:
             LOG.debug("Option %s selected", _Options.HIDE_WINDOW.value)
@@ -121,6 +124,11 @@ class Application(Gtk.Application):
             set_autostart_entry(True)
             start_app = False
 
+        if _Options.CTRL_DISPLAY.value in options:
+            param = options[_Options.CTRL_DISPLAY.value]
+            LOG.debug("Option %s selected: %s", _Options.CTRL_DISPLAY.value, param)
+            self._nvidia_repository.set_ctrl_display(param)
+
         if start_app:
             self.activate()
         return exit_value
@@ -128,13 +136,17 @@ class Application(Gtk.Application):
     @staticmethod
     def _get_main_option_entries() -> List[GLib.OptionEntry]:
         options = [
+            build_glib_option(_Options.DEBUG.value,
+                              description="Show debug messages"),
             build_glib_option(_Options.VERSION.value,
                               short_name='v',
                               description="Show the app version"),
-            build_glib_option(_Options.DEBUG.value,
-                              description="Show debug messages"),
             build_glib_option(_Options.HIDE_WINDOW.value,
                               description="Start with the main window hidden"),
+            build_glib_option(_Options.CTRL_DISPLAY.value,
+                              arg=GLib.OptionArg.STRING,
+                              description="Specifies the NV-CONTROL display (if you use Bumblebee, set this to \":8\" "
+                                          "and start GWE with optirun)"),
         ]
         if not is_flatpak():
             options.append(build_glib_option(_Options.APPLICATION_ENTRY.value,
@@ -147,9 +159,10 @@ class Application(Gtk.Application):
 
 
 class _Options(Enum):
-    VERSION = 'version'
     DEBUG = 'debug'
+    VERSION = 'version'
     HIDE_WINDOW = 'hide-window'
+    CTRL_DISPLAY = 'ctrl-display'
     APPLICATION_ENTRY = 'application-entry'
     AUTOSTART_ON = 'autostart-on'
     AUTOSTART_OFF = 'autostart-off'

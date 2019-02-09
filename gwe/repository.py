@@ -67,10 +67,14 @@ class NvidiaRepository:
         self._lock = threading.RLock()
         self._gpu_count = 0
         self._gpu_setting_cache: List[Dict[str, str]] = []
+        self._ctrl_display: Optional[str] = None
 
     @staticmethod
     def is_nvidia_smi_available() -> bool:
         return run_and_get_stdout(['which', _NVIDIA_SMI_BINARY_NAME])[0] == 0
+
+    def set_ctrl_display(self, ctrl_display: str) -> None:
+        self._ctrl_display = ctrl_display
 
     @synchronized_with_attr("_lock")
     def get_status(self) -> Optional[Status]:
@@ -78,7 +82,7 @@ class NvidiaRepository:
         try:
             time1 = time.time()
             py3nvml.nvmlInit()
-            xlib_display = display.Display()
+            xlib_display = display.Display(self._ctrl_display)
             self._gpu_count = xlib_display.nvcontrol_get_gpu_count()
             gpu_status_list: List[GpuStatus] = []
             for gpu_index in range(self._gpu_count):

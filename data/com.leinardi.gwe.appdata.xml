@@ -30,6 +30,7 @@
         <release date="2019-02-03" version="0.11.0">
             <description>
                 <ul>
+                    <li>Fixes #26: Added command line option to specify NV-CONTROL display</li>
                     <li>Fixed #28: NVMLError_InvalidArgument with more than 1 GPU</li>
                     <li>Fixed check for Coolbit 4 not working</li>
                     <li>Launcher name changed to GreenWithEnvy</li>

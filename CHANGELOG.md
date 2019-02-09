@@ -2,6 +2,7 @@ Version 0.11.0
 ==============
 Released: 2019-02-03
 
+ * Fixes #26: Added command line option to specify NV-CONTROL display
  * Fixed #28: NVMLError_InvalidArgument with more than 1 GPU
  * Fixed check for Coolbit 4 not working
  * Launcher name changed to GreenWithEnvy
