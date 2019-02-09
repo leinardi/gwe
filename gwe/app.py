@@ -145,7 +145,7 @@ class Application(Gtk.Application):
                               description="Start with the main window hidden"),
             build_glib_option(_Options.CTRL_DISPLAY.value,
                               arg=GLib.OptionArg.STRING,
-                              description="Specifies the NV-CONTROL display (if you use Bumblebee, set this to \":8\" "
+                              description="Specify the NV-CONTROL display (if you use Bumblebee, set this to \":8\" "
                                           "and start GWE with optirun)"),
         ]
         if not is_flatpak():

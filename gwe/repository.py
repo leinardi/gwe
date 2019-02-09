@@ -207,9 +207,8 @@ class NvidiaRepository:
                 LOG.exception("Error while getting status")
         return None
 
-    @staticmethod
-    def set_overclock(gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> bool:
-        xlib_display = display.Display()
+    def set_overclock(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> bool:
+        xlib_display = display.Display(self._ctrl_display)
         gpu = Gpu(gpu_index)
         gpu_result = xlib_display.nvcontrol_set_gpu_nvclock_offset(gpu, perf, gpu_offset)
         mem_result = xlib_display.nvcontrol_set_mem_transfer_rate_offset(gpu, perf, memory_offset * 2)
@@ -232,9 +231,8 @@ class NvidiaRepository:
         for gpu_index in range(self._gpu_count):
             self.set_fan_speed(gpu_index, manual_control=False)
 
-    @staticmethod
-    def set_fan_speed(gpu_index: int, speed: int = 100, manual_control: bool = False) -> bool:
-        xlib_display = display.Display()
+    def set_fan_speed(self, gpu_index: int, speed: int = 100, manual_control: bool = False) -> bool:
+        xlib_display = display.Display(self._ctrl_display)
         gpu = Gpu(gpu_index)
         fan_indexes = xlib_display.nvcontrol_get_coolers_used_by_gpu(gpu)
         error = False

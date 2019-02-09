@@ -1,3 +1,9 @@
+Version 0.10.3
+==============
+Released: 2019-02-09
+
+ * Applied Fix for #26 also to set overclock and fan speed
+
 Version 0.10.2
 ==============
 Released: 2019-02-09
