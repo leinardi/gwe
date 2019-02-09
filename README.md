@@ -26,6 +26,11 @@ flatpak update # needed to be sure to have the latest org.freedesktop.Platform.G
 ```bash
 flatpak run com.leinardi.gwe
 ```
+
+#### Note
+Currently [Flatpak does not support Nvidia Beta drivers](https://github.com/flathub/org.freedesktop.Platform.GL.nvidia/issues/1)
+like 396.54.09 or 415.22.05.
+
 ### Distro specific packages
 #### Arch Linux
 Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
@@ -62,10 +67,12 @@ ninja -v -C build install
 - [x] Show chart of selected fan profile
 - [x] Allow to select and apply a fan profile
 - [x] Add/Delete/Edit multi speed fan profiles (fan curve)
-- [x] Add option to restore last applied profile on startup
+- [x] Add option to restore last applied fan profile on app startup
 - [x] Find better icons for app indicator
 - [x] Try to lower resource consumption (mostly caused by `nvidia-settings` invocations)
 - [x] Show historical data of most important values in a separate dialog (requires GTK 3.24/GNOME 3.30)
+- [ ] Add overclock profiles
+- [ ] Add option to restore last applied overclock profile on app startup
 - [ ] Disable unsupported preferences
 - [x] Distributing with Flatpack
 - [x] Publishing on Flathub
@@ -183,6 +190,12 @@ And then just install your preferred theme. For example, to install Yaru:
 ```
 flatpak install flathub org.gtk.Gtk3theme.Yaru
 ```
+
+### I have installed the app using Flatpak, but all the GWE fields are empty
+This issue can be usually solved by closing GWE, executing `flatpak update` and starting GWE again.
+This is necessary to be sure to have the latest [org.freedesktop.Platform.GL.nvidia](https://github.com/flathub/org.freedesktop.Platform.GL.nvidia).
+If, after the update, all the fields are still empty, feel free to open a new issue on the project tracker.
+
 ### Why the memory overclock offsets effectively applied does not match the one set in the Nvidia Settings app?
 Because Memory Transfer Rate, what Nvidia Settings reports and changes, 
 is different from the effective Memory Clock, what is actually being 
