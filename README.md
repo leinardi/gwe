@@ -27,14 +27,16 @@ flatpak update # needed to be sure to have the latest org.freedesktop.Platform.G
 flatpak run com.leinardi.gwe
 ```
 
-#### Note
+#### ⚠ Beta Drivers
 Currently [Flatpak does not support Nvidia Beta drivers](https://github.com/flathub/org.freedesktop.Platform.GL.nvidia/issues/1)
 like 396.54.09 or 415.22.05.
 
-### Bumblebee and optirun
-If you use Bumblebee you need to start GWE with `optirun` and you need to specify the NV-CONTROL display as the `:8`:
+### ⚠ Bumblebee and Optimus
+Currently [Flatpak does not support Bumblebee](https://github.com/flatpak/flatpak/issues/869). If you want to use GWE with Bumblebee 
+you need to install it from the source code and start it with `optirun`, setting the the NV-CONTROL display to `:8`:
+
 ```bash
-optirun flatpak run com.leinardi.gwe --ctrl-display ":8"
+optirun gwe --ctrl-display ":8"
 ```
 
 ### Distro specific packages
