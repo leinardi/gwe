@@ -128,7 +128,8 @@ If you don't have Flatpak installed you can find step by step instructions [here
 Make sure to have the Flathub remote added to the current user:
 
 ```bash
-flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepoù
+flatpak uninstall com.leinardi.gwe
 ```
 
 ### Clone the repo
