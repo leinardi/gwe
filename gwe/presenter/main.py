@@ -354,8 +354,10 @@ class MainPresenter:
         self.main_view.set_statusbar_text('%s fan profile selected' % profile.name)
 
     def _refresh_overclock_profile_ui(self, init: bool = False, profile_id: Optional[int] = None) -> None:
+        gpu_index = 0
         current: Optional[CurrentOverclockProfile] = None
-        if init and self._settings_interactor.get_bool('settings_load_last_profile'):
+        if init and self._settings_interactor.get_bool('settings_load_last_profile') \
+                and self._latest_status.gpu_status_list[gpu_index].overclock.available:
             current = CurrentOverclockProfile.get_or_none()
             if current is not None:
                 self._overclock_profile_selected = current.profile

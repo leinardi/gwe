@@ -1319,7 +1319,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Reports the current core temperature of the GPU</property>
+                                <property name="tooltip_text" translatable="yes">Reports the current GPU core temperature</property>
                                 <property name="label" translatable="yes">GPU TEMP</property>
                                 <property name="single_line_mode">True</property>
                                 <attributes>
@@ -1377,7 +1377,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Report the default core slowdown threshold temperatures</property>
+                                <property name="tooltip_text" translatable="yes">Report the default core slowdown threshold temperature</property>
                                 <property name="label" translatable="yes">SLOWDOWN TEMP</property>
                                 <property name="single_line_mode">True</property>
                                 <attributes>
@@ -1406,7 +1406,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="tooltip_text" translatable="yes">Report the maximum core slowdown threshold temperatures</property>
+                                <property name="tooltip_text" translatable="yes">Report the maximum core slowdown threshold temperature</property>
                                 <property name="label" translatable="yes">SHUTDOWN TEMP</property>
                                 <property name="single_line_mode">True</property>
                                 <attributes>
