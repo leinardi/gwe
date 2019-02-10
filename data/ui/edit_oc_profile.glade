@@ -62,10 +62,11 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
         <property name="show_close_button">True</property>
         <child>
           <object class="GtkButton" id="delete_profile_button">
-            <property name="label">Delete profile</property>
+            <property name="label">Delete</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="tooltip_text" translatable="yes">Delete this overclock profile</property>
             <signal name="clicked" handler="on_delete_profile_button_clicked" swapped="no"/>
             <style>
               <class name="destructive-action"/>
@@ -110,6 +111,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
               <object class="GtkEntry" id="profile_name_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">The name of the profile</property>
                 <property name="xalign">0.5</property>
                 <property name="placeholder_text" translatable="yes">Profile name</property>
                 <property name="input_hints">GTK_INPUT_HINT_SPELLCHECK | GTK_INPUT_HINT_NONE</property>
@@ -178,6 +180,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Save changes on this overclock profile</property>
                             <property name="use_stock">True</property>
                             <signal name="clicked" handler="on_save_offsets_button_clicked" swapped="no"/>
                             <style>
@@ -195,6 +198,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Apply the the current offset overclog (useful to test an OC before saving it)</property>
                             <property name="use_stock">True</property>
                             <signal name="clicked" handler="on_apply_offsets_button_clicked" swapped="no"/>
                           </object>
@@ -207,6 +211,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                           <object class="GtkScale" id="gpu_offset_scale">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="tooltip_text" translatable="yes">The GPU clock offsets (in MHz) used for overclocking per performance level</property>
                             <property name="hexpand">True</property>
                             <property name="adjustment">gpu_offset_adjustment</property>
                             <property name="round_digits">0</property>
@@ -223,6 +228,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                           <object class="GtkScale" id="memory_offset_scale">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="tooltip_text" translatable="yes">The memory clock offsets (in MHz) used for overclocking per performance level (this is half the memory transfer rate offsets)</property>
                             <property name="hexpand">True</property>
                             <property name="adjustment">memory_offset_adjustment</property>
                             <property name="round_digits">0</property>

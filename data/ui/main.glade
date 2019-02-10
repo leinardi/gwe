@@ -267,6 +267,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The product name of the GPU</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">Name</property>
                               </object>
@@ -293,6 +294,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The video bios version on the GPU</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">VBIOS</property>
                               </object>
@@ -321,6 +323,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The NVIDIA driver version number</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">Driver</property>
                               </object>
@@ -348,6 +351,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The number of GPU cores supported by the graphics pipeline</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">CUDA</property>
                               </object>
@@ -375,6 +379,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The UUID of the GPU</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">UUID</property>
                               </object>
@@ -429,6 +434,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The percentage usage of the video decoder engine</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">Decoder %</property>
                               </object>
@@ -454,6 +460,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="visible">True</property>
                                 <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">The percentage usage of the video decoder engine</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
@@ -468,6 +475,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The percentage usage of the video encoder engine</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">Encoder %</property>
                               </object>
@@ -493,6 +501,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="visible">True</property>
                                 <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">The percentage usage of the video encoder engine</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
@@ -523,6 +532,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The used and  total amount of dedicated GPU video memory, in MB, on the specified GPU. This excludes any TurboCache padding.</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">Memory</property>
                               </object>
@@ -536,6 +546,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="visible">True</property>
                                 <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">The Memory Interface</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
@@ -574,6 +585,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The percentage usage of Frame Buffer</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">Mem ctrl %</property>
                               </object>
@@ -586,6 +598,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The percentage usage of graphics engine</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">GPU %</property>
                               </object>
@@ -599,6 +612,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="visible">True</property>
                                 <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">The percentage usage of graphics engine</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
@@ -614,6 +628,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="visible">True</property>
                                 <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">The percentage usage of Frame Buffer</property>
                                 <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="width_chars">8</property>
@@ -1121,6 +1136,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The GPU clock offsets (in MHz) used for overclocking per performance level</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">GPU Offset</property>
                               </object>
@@ -1133,6 +1149,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">The memory clock offsets (in MHz) used for overclocking per performance level (this is half the memory transfer rate offsets)</property>
                                 <property name="halign">end</property>
                                 <property name="label" translatable="yes">Mem Offset</property>
                               </object>
@@ -1178,6 +1195,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Apply the selected overclock profile (it will be applied only to the highest performance level)</property>
                                 <property name="margin_top">4</property>
                                 <property name="use_stock">True</property>
                                 <signal name="clicked" handler="on_overclock_apply_button_clicked" swapped="no"/>
@@ -1300,6 +1318,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Reports the current core temperature of the GPU</property>
                                 <property name="label" translatable="yes">GPU TEMP</property>
                                 <property name="single_line_mode">True</property>
                                 <attributes>
@@ -1328,6 +1347,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Reports the current GPU core slowdown threshold temperature</property>
                                 <property name="label" translatable="yes">MAX OP. TEMP</property>
                                 <property name="single_line_mode">True</property>
                                 <attributes>
@@ -1356,6 +1376,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Report the default core slowdown threshold temperatures</property>
                                 <property name="label" translatable="yes">SLOWDOWN TEMP</property>
                                 <property name="single_line_mode">True</property>
                                 <attributes>
@@ -1384,6 +1405,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="tooltip_text" translatable="yes">Report the maximum core slowdown threshold temperatures</property>
                                 <property name="label" translatable="yes">SHUTDOWN TEMP</property>
                                 <property name="single_line_mode">True</property>
                                 <attributes>
@@ -1722,6 +1744,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Apply the selected fan profile</property>
                                 <property name="margin_top">1</property>
                                 <property name="use_stock">True</property>
                                 <signal name="clicked" handler="on_fan_apply_button_clicked" swapped="no"/>

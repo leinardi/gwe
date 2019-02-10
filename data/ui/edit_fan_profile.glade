@@ -60,7 +60,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
         <property name="show_close_button">True</property>
         <child>
           <object class="GtkButton" id="delete_profile_button">
-            <property name="label">Delete profile</property>
+            <property name="label">Delete</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
