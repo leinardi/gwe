@@ -46,6 +46,7 @@ sudo apt install git meson python3-pip libcairo2-dev libgirepository1.0-dev libg
 ```
 
 #### Clone project and install
+If you have not installed GWE yet:
 ```bash
 git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
 cd gwe
@@ -56,7 +57,8 @@ ninja -v -C build
 ninja -v -C build install
 ```
 
-#### Update
+#### Update old installation
+If you installed GWE from source code previously and you want to update it:
 ```bash
 cd gwe
 git fetch
@@ -66,6 +68,13 @@ meson . build --prefix /usr
 ninja -v -C build
 ninja -v -C build install
 ```
+
+#### Run
+Once installed, to start it you can simply execute on a terminal:
+```bash
+gwe
+```
+
 #### ⚠ Bumblebee and Optimus
 If you want to use GWE with Bumblebee you need to start it with `optirun` and set the `--ctrl-display` parameter to `:8`:
 
