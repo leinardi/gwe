@@ -188,6 +188,13 @@ pip3 install -r requirements.txt
 ```
 
 ## ❓ FAQ
+### I see some message about CoolBits in the Overclock/Fan profile section, what's that?
+Coolbits was a Windows registry hack for Nvidia graphics cards Windows drivers, that allows 
+tweaking features via the Nvidia driver control panel.  
+Something similar is available also on Linux and is the only way to enable Overclock and manual Fan control.  
+To know more about Coolbits and how to enable them click 
+[here](https://wiki.archlinux.org/index.php/NVIDIA/Tips_and_tricks#Enabling_overclocking) 
+(to enable both OC and Fan control you need to set it to `12`).
 ### The Flatpak version of GWE is not using my theme, how can I fix it?
 Due to sandboxing, Flatpak applications use the default Gnome theme (Adwaita), 
 and not whatever Gtk theme you're currently using.  
@@ -277,6 +284,7 @@ Thanks to:
 ## 📰 Media coverage
  - [OMG! Ubuntu](https://www.omgubuntu.co.uk/2019/02/easily-overclock-nvidia-gpu-on-linux-with-this-new-app) 🇬🇧
  - [GamingOnLinux](https://www.gamingonlinux.com/articles/greenwithenvy-an-impressive-tool-for-overclocking-nvidia-gpus.13521) 🇬🇧
+ - [Phoronix](https://www.phoronix.com/scan.php?page=news_item&px=GreenWithEnvy-0.11-Released) 🇬🇧
  - [ComputerBase](https://www.computerbase.de/2019-02/green-envy-uebertakten-nvidia-grafikkarten-linux/) 🇩🇪
  - [lffl](https://www.lffl.org/2019/02/overclock-scheda-nvidia-linux.html) 🇮🇹
  - [osside blog](https://www.osside.net/2019/02/greenwithenvy-gwe-linux-easy-nvidia-status-overclock/) 🇮🇹
