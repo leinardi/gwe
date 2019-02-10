@@ -31,6 +31,7 @@
             <description>
                 <ul>
                     <li>Add overclock profiles</li>
+                    <li>Fixed GPU offset overclock not working for some cards</li>
                 </ul>
             </description>
         </release>

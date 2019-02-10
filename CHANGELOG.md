@@ -3,6 +3,7 @@ Version 0.11.0
 Released: 2019-02-10
 
  * Add overclock profiles
+ * Fixed GPU offset overclock not working for some cards
 
 Version 0.10.4
 ==============

@@ -135,22 +135,23 @@ class NvidiaRepository:
                 else:
                     clocks = Clocks()
 
-                mem_transfer_rate_offset_range = xlib_display.nvcontrol_get_mem_transfer_rate_offset_range(gpu)
-                perf_level = xlib_display.nvcontrol_get_current_performance_level(gpu)
+                perf_level_max = perf_mode.get('perf') if perf_mode else None
+                mem_transfer_rate_offset_range = \
+                    xlib_display.nvcontrol_get_mem_transfer_rate_offset_range(gpu, perf_level_max)
                 if mem_transfer_rate_offset_range is not None:
                     mem_clock_offset_range = (mem_transfer_rate_offset_range[0] // 2,
                                               mem_transfer_rate_offset_range[1] // 2)
-                    mem_transfer_rate_offset = xlib_display.nvcontrol_get_mem_transfer_rate_offset(gpu, perf_level)
+                    mem_transfer_rate_offset = xlib_display.nvcontrol_get_mem_transfer_rate_offset(gpu, perf_level_max)
                     mem_clock_offset = None
                     if mem_transfer_rate_offset is not None:
                         mem_clock_offset = mem_transfer_rate_offset // 2
                     overclock = Overclock(
                         available=mem_transfer_rate_offset is not None,
-                        gpu_range=xlib_display.nvcontrol_get_gpu_nvclock_offset_range(gpu),
-                        gpu_offset=xlib_display.nvcontrol_get_gpu_nvclock_offset(gpu, perf_level),
+                        gpu_range=xlib_display.nvcontrol_get_gpu_nvclock_offset_range(gpu, perf_level_max),
+                        gpu_offset=xlib_display.nvcontrol_get_gpu_nvclock_offset(gpu, perf_level_max),
                         memory_range=mem_clock_offset_range,
                         memory_offset=mem_clock_offset,
-                        perf_level_max=perf_mode.get('perf') if perf_mode else None
+                        perf_level_max=perf_level_max
                     )
                 else:
                     overclock = Overclock(perf_level_max=perf_mode.get('perf') if perf_mode else None)
