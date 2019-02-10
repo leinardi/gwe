@@ -43,6 +43,7 @@ if __name__ == '__main__':
 
     gi.require_version('Gtk', '3.0')
     gi.require_version('Gdk', '3.0')
+    gi.require_version('Notify', '0.7')
 
     from gi.repository import Gio
     resource = Gio.Resource.load(os.path.join(PKGDATA_DIR, 'com.leinardi.gwe.gresource'))

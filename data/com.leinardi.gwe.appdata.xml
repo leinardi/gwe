@@ -32,6 +32,7 @@
                 <ul>
                     <li>Add overclock profiles</li>
                     <li>Fixed GPU offset overclock not working for some cards</li>
+                    <li>Showing notification via libnotify if an update is available</li>
                 </ul>
             </description>
         </release>

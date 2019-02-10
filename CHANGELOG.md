@@ -4,6 +4,7 @@ Released: 2019-02-10
 
  * Add overclock profiles
  * Fixed GPU offset overclock not working for some cards
+ * Showing notification via libnotify if an update is available
 
 Version 0.10.4
 ==============

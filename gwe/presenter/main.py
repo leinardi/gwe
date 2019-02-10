@@ -31,11 +31,12 @@ from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockP
 from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
     CheckNewVersionInteractor, SetOverclockInteractor, SetPowerLimitInteractor, SetFanSpeedInteractor
 from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfileType, GpuStatus, \
-    CurrentOverclockProfile, OverclockProfile, OverclockProfileType
+    CurrentOverclockProfile, OverclockProfile
 from gwe.presenter.edit_fan_profile import EditFanProfilePresenter
 from gwe.presenter.edit_overclock_profile import EditOverclockProfilePresenter
 from gwe.presenter.historical_data import HistoricalDataPresenter
 from gwe.presenter.preferences import PreferencesPresenter
+from gwe.util.view import show_notification
 
 LOG = logging.getLogger(__name__)
 _ADD_NEW_PROFILE_INDEX = -10
@@ -444,3 +445,6 @@ class MainPresenter:
             message = "%s version <b>%s</b> is available! Click <a href=\"%s/blob/%s/CHANGELOG.md\"><b>here</b></a> " \
                       "to see what's new." % (APP_NAME, version, APP_SOURCE_URL, version)
             self.main_view.show_main_infobar_message(message, True)
+            message = "%s version <b>%s</b> is available! Click here to see what's new: %s/blob/%s/CHANGELOG.md" \
+                      % (APP_NAME, version, APP_SOURCE_URL, version)
+            show_notification("GWE update available!", message, "dialog-information")

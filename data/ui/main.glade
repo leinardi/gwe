@@ -851,6 +851,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                 <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Apply selected Power Limit (requires nvidia-smi binary!)</property>
                                 <property name="margin_top">6</property>
                                 <property name="use_stock">True</property>
                                 <signal name="clicked" handler="on_power_limit_apply_button_clicked" swapped="no"/>
