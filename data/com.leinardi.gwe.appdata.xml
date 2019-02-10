@@ -6,10 +6,9 @@
     <!-- <translation type="gettext">trg</translation> -->
     <name>GreenWithEnvy</name>
     <developer_name>Roberto Leinardi</developer_name>
-    <summary>System utility designed to provide information, control the fans and overclock your NVIDIA card
-    </summary>
+    <summary>System utility designed to provide information, control the fans and overclock your NVIDIA card</summary>
     <metadata_license>CC0-1.0</metadata_license>
-    <project_license>GPL-3.0+</project_license>
+    <project_license>GPL-3.0-or-later</project_license>
     <description>
         <p>GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video
             card and graphics processor.
@@ -21,10 +20,40 @@
             <image>https://gitlab.com/leinardi/gwe/raw/master/art/screenshot-1.png</image>
         </screenshot>
     </screenshots>
+    <categories>
+        <category>Utility</category>
+    </categories>
     <url type="homepage">https://gitlab.com/leinardi/gwe</url>
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+        <release date="2019-02-9" version="0.10.4">
+            <description>
+                <ul>
+                    <li>Workaround for #36: graph text color from GTK theme</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2019-02-09" version="0.10.3">
+            <description>
+                <ul>
+                    <li>Applied fix for #26 also to set overclock and fan speed</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2019-02-09" version="0.10.2">
+            <description>
+                <ul>
+                    <li>Fixed #26: Added command line option to specify NV-CONTROL display</li>
+                    <li>Fixed #28: NVMLError_InvalidArgument with more than 1 GPU</li>
+                    <li>Fixed check for Coolbit 4 not working</li>
+                    <li>Launcher name changed to GreenWithEnvy</li>
+                    <li>Removed workaround for memory leak caused by python-xlib
+                        (https://github.com/python-xlib/python-xlib/issues/136)
+                    </li>
+                </ul>
+            </description>
+        </release>
         <release date="2019-02-03" version="0.10.1">
             <description>
                 <ul>
@@ -118,34 +147,5 @@
             </description>
         </release>
     </releases>
-    <content_rating type="oars-1.1">
-        <content_attribute id="violence-cartoon">none</content_attribute>
-        <content_attribute id="violence-fantasy">none</content_attribute>
-        <content_attribute id="violence-realistic">none</content_attribute>
-        <content_attribute id="violence-bloodshed">none</content_attribute>
-        <content_attribute id="violence-sexual">none</content_attribute>
-        <content_attribute id="violence-desecration">none</content_attribute>
-        <content_attribute id="violence-slavery">none</content_attribute>
-        <content_attribute id="violence-worship">none</content_attribute>
-        <content_attribute id="drugs-alcohol">none</content_attribute>
-        <content_attribute id="drugs-narcotics">none</content_attribute>
-        <content_attribute id="drugs-tobacco">none</content_attribute>
-        <content_attribute id="sex-nudity">none</content_attribute>
-        <content_attribute id="sex-themes">none</content_attribute>
-        <content_attribute id="sex-homosexuality">none</content_attribute>
-        <content_attribute id="sex-prostitution">none</content_attribute>
-        <content_attribute id="sex-adultery">none</content_attribute>
-        <content_attribute id="sex-appearance">none</content_attribute>
-        <content_attribute id="language-profanity">none</content_attribute>
-        <content_attribute id="language-humor">none</content_attribute>
-        <content_attribute id="language-discrimination">none</content_attribute>
-        <content_attribute id="social-chat">none</content_attribute>
-        <content_attribute id="social-info">none</content_attribute>
-        <content_attribute id="social-audio">none</content_attribute>
-        <content_attribute id="social-location">none</content_attribute>
-        <content_attribute id="social-contacts">none</content_attribute>
-        <content_attribute id="money-purchasing">none</content_attribute>
-        <content_attribute id="money-gambling">none</content_attribute>
-    </content_rating>
-
+    <content_rating type="oars-1.1"/>
 </component>
