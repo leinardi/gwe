@@ -79,8 +79,8 @@ ninja -v -C build install
 - [x] Find better icons for app indicator
 - [x] Try to lower resource consumption (mostly caused by `nvidia-settings` invocations)
 - [x] Show historical data of most important values in a separate dialog (requires GTK 3.24/GNOME 3.30)
-- [ ] Add overclock profiles
-- [ ] Add option to restore last applied overclock profile on app startup
+- [x] Add overclock profiles
+- [x] Add option to restore last applied overclock profile on app startup
 - [ ] Disable unsupported preferences
 - [x] Distributing with Flatpack
 - [x] Publishing on Flathub

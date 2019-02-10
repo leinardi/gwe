@@ -16,7 +16,6 @@
 # along with gwe.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-import sys
 from enum import Enum
 from gettext import gettext as _
 from typing import Any, Optional, List
@@ -27,7 +26,8 @@ from peewee import SqliteDatabase
 
 from gwe.conf import APP_NAME, APP_ID, APP_VERSION, APP_ICON_NAME
 from gwe.di import MainBuilder
-from gwe.model import FanProfile, SpeedStep, Setting, CurrentFanProfile, load_db_default_data
+from gwe.model import FanProfile, SpeedStep, Setting, CurrentFanProfile, load_fan_db_default_data, OverclockProfile, \
+    load_overclock_db_default_data, CurrentOverclockProfile
 from gwe.presenter.main import MainPresenter
 from gwe.repository import NvidiaRepository
 from gwe.util.deployment import is_flatpak
@@ -56,10 +56,19 @@ class Application(Gtk.Application):
                          **kwargs)
 
         database.connect()
-        database.create_tables([FanProfile, SpeedStep, CurrentFanProfile, Setting])
+        database.create_tables([
+            SpeedStep,
+            FanProfile,
+            CurrentFanProfile,
+            OverclockProfile,
+            CurrentOverclockProfile,
+            Setting
+        ])
 
         if FanProfile.select().count() == 0:
-            load_db_default_data()
+            load_fan_db_default_data()
+        if OverclockProfile.select().count() == 0:
+            load_overclock_db_default_data()
 
         self.add_main_option_entries(self._get_main_option_entries())
         self._view = view

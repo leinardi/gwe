@@ -1,3 +1,12 @@
+Version 0.11.0
+==============
+Released: 2019-02-10
+
+ * Added overclock profiles
+ * Fixed GPU offset overclock not working for some cards
+ * Showing notification via libnotify if an update is available
+ * Added PCIe current generation info
+
 Version 0.10.4
 ==============
 Released: 2019-02-09
