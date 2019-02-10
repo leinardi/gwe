@@ -33,6 +33,7 @@
                     <li>Add overclock profiles</li>
                     <li>Fixed GPU offset overclock not working for some cards</li>
                     <li>Showing notification via libnotify if an update is available</li>
+                    <li>Added PCIe current generation info</li>
                 </ul>
             </description>
         </release>

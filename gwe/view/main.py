@@ -252,10 +252,11 @@ class MainView(MainViewInterface):
                     self._power_limit_scale.set_sensitive(False)
                     self._power_limit_apply_button.set_sensitive(False)
 
-            self._set_entry_text(self._info_pcie_entry, "%dx Gen%d @ %dx",
+            self._set_entry_text(self._info_pcie_entry, "%dx Gen%d @ %dx Gen%d",
                                  gpu_status.info.pcie_max_link,
-                                 gpu_status.info.pcie_generation,
-                                 gpu_status.info.pcie_current_link)
+                                 gpu_status.info.pcie_max_generation,
+                                 gpu_status.info.pcie_current_link,
+                                 gpu_status.info.pcie_current_generation)
             self._set_entry_text(self._info_memory_entry, "%d MiB / %d MiB",
                                  gpu_status.info.memory_used,
                                  gpu_status.info.memory_total)

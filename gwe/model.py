@@ -38,7 +38,8 @@ class Info:
                  name: Optional[str] = None,
                  vbios: Optional[str] = None,
                  driver: Optional[str] = None,
-                 pcie_generation: Optional[int] = None,
+                 pcie_current_generation: Optional[int] = None,
+                 pcie_max_generation: Optional[int] = None,
                  pcie_current_link: Optional[int] = None,
                  pcie_max_link: Optional[int] = None,
                  cuda_cores: Optional[int] = None,
@@ -54,7 +55,8 @@ class Info:
         self.name: Optional[str] = name
         self.vbios: Optional[str] = vbios
         self.driver: Optional[str] = driver
-        self.pcie_generation: Optional[int] = pcie_generation
+        self.pcie_current_generation: Optional[int] = pcie_current_generation
+        self.pcie_max_generation: Optional[int] = pcie_max_generation
         self.pcie_current_link: Optional[int] = pcie_current_link
         self.pcie_max_link: Optional[int] = pcie_max_link
         self.cuda_cores: Optional[int] = cuda_cores
