@@ -26,18 +26,14 @@ flatpak update # needed to be sure to have the latest org.freedesktop.Platform.G
 ```bash
 flatpak run com.leinardi.gwe
 ```
-
-#### ⚠ Beta Drivers
+#### ⚠ Flatpak limitations
+##### Beta Drivers
 Currently [Flatpak does not support Nvidia Beta drivers](https://github.com/flathub/org.freedesktop.Platform.GL.nvidia/issues/1)
 like 396.54.09 or 415.22.05.
 
-### ⚠ Bumblebee and Optimus
+##### Bumblebee and Optimus
 Currently [Flatpak does not support Bumblebee](https://github.com/flatpak/flatpak/issues/869). If you want to use GWE with Bumblebee 
-you need to install it from the source code and start it with `optirun`, setting the the NV-CONTROL display to `:8`:
-
-```bash
-optirun gwe --ctrl-display ":8"
-```
+you need to install it from the source code.
 
 ### Distro specific packages
 #### Arch Linux
@@ -53,10 +49,28 @@ sudo apt install git meson python3-pip libcairo2-dev libgirepository1.0-dev libg
 ```bash
 git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
 cd gwe
+git checkout release
 pip3 install -r requirements.txt
 meson . build --prefix /usr
 ninja -v -C build
 ninja -v -C build install
+```
+
+#### Update
+```bash
+cd gwe
+git fetch
+git reset --hard origin/release
+pip3 install -r requirements.txt
+meson . build --prefix /usr
+ninja -v -C build
+ninja -v -C build install
+```
+#### ⚠ Bumblebee and Optimus
+If you want to use GWE with Bumblebee you need to start it with `optirun` and set the `--ctrl-display` parameter to `:8`:
+
+```bash
+optirun gwe --ctrl-display ":8"
 ```
 
 ## ℹ️ TODO
@@ -191,6 +205,12 @@ Because Memory Transfer Rate, what Nvidia Settings reports and changes,
 is different from the effective Memory Clock, what is actually being 
 displayed by GWE. It is also what other Windows applications like MSI Afterburner show.
 The Memory Transfer Rate is simply double the Memory Clock.
+
+### Where are the settings and profiles stored on the filesystem?
+| Installation type |                     Location                     |
+|-------------------|:------------------------------------------------:|
+| Flatpak           |        `$HOME/.var/app/com.leinardi.gwe/`        |
+| Source code       | `$XDG_CONFIG_HOME` (usually `$HOME/.config/gwe`) |
 
 ### GreenWithEnvy, why using such name?
 The name comes from the slogan of the GeForce 8 series, that was "Green with envy".  
