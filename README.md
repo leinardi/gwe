@@ -105,7 +105,7 @@ optirun gwe --ctrl-display ":8"
 - [x] Add overclock profiles
 - [x] Add option to restore last applied overclock profile on app startup
 - [ ] Disable unsupported preferences
-- [x] Distributing with Flatpack
+- [x] Distributing with Flatpak
 - [x] Publishing on Flathub
 - [ ] Distributing with Snap
 - [ ] Check if NV-CONTROL is available and tell the user if is not
