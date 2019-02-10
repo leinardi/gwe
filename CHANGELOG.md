@@ -1,3 +1,9 @@
+Version 0.11.0
+==============
+Released: 2019-02-10
+
+ * Add overclock profiles
+
 Version 0.10.4
 ==============
 Released: 2019-02-09

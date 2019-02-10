@@ -5,6 +5,7 @@
 
         <file preprocess="xml-stripblanks">ui/main.glade</file>
         <file preprocess="xml-stripblanks">ui/edit_fan_profile.glade</file>
+        <file preprocess="xml-stripblanks">ui/edit_oc_profile.glade</file>
         <file preprocess="xml-stripblanks">ui/historical_data.glade</file>
         <file preprocess="xml-stripblanks">ui/preferences.glade</file>
 

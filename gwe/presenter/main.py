@@ -27,11 +27,13 @@ from rx.concurrency.schedulerbase import SchedulerBase
 from rx.disposables import CompositeDisposable
 
 from gwe.conf import APP_NAME, APP_SOURCE_URL
-from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject
+from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject
 from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
     CheckNewVersionInteractor, SetOverclockInteractor, SetPowerLimitInteractor, SetFanSpeedInteractor
-from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfileType, GpuStatus
+from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfileType, GpuStatus, \
+    CurrentOverclockProfile, OverclockProfile, OverclockProfileType
 from gwe.presenter.edit_fan_profile import EditFanProfilePresenter
+from gwe.presenter.edit_overclock_profile import EditOverclockProfilePresenter
 from gwe.presenter.historical_data import HistoricalDataPresenter
 from gwe.presenter.preferences import PreferencesPresenter
 
@@ -49,6 +51,9 @@ class MainViewInterface:
     def refresh_fan_profile_combobox(self, data: List[Tuple[int, str]], active: Optional[int]) -> None:
         raise NotImplementedError()
 
+    def refresh_overclock_profile_combobox(self, data: List[Tuple[int, str]], active: Optional[int]) -> None:
+        raise NotImplementedError()
+
     def refresh_chart(self, profile: Optional[FanProfile] = None, reset: bool = False) -> None:
         raise NotImplementedError()
 
@@ -56,6 +61,12 @@ class MainViewInterface:
         raise NotImplementedError()
 
     def set_edit_fan_profile_button_enabled(self, enabled: bool) -> None:
+        raise NotImplementedError()
+
+    def set_apply_overclock_profile_button_enabled(self, enabled: bool) -> None:
+        raise NotImplementedError()
+
+    def set_edit_overclock_profile_button_enabled(self, enabled: bool) -> None:
         raise NotImplementedError()
 
     def set_statusbar_text(self, text: str) -> None:
@@ -67,9 +78,6 @@ class MainViewInterface:
     def get_power_limit(self) -> Tuple[int, int]:
         raise NotImplementedError()
 
-    def get_overclock_offsets(self) -> Tuple[int, int, int, int]:
-        raise NotImplementedError()
-
     def show_about_dialog(self) -> None:
         raise NotImplementedError()
 
@@ -79,6 +87,7 @@ class MainPresenter:
     @inject
     def __init__(self,
                  edit_fan_profile_presenter: EditFanProfilePresenter,
+                 edit_overclock_profile_presenter: EditOverclockProfilePresenter,
                  historical_data_presenter: HistoricalDataPresenter,
                  preferences_presenter: PreferencesPresenter,
                  get_status_interactor: GetStatusInteractor,
@@ -87,13 +96,15 @@ class MainPresenter:
                  set_fan_speed_interactor: SetFanSpeedInteractor,
                  settings_interactor: SettingsInteractor,
                  check_new_version_interactor: CheckNewVersionInteractor,
-                 fan_profile_changed_subject: FanProfileChangedSubject,
                  speed_step_changed_subject: SpeedStepChangedSubject,
+                 fan_profile_changed_subject: FanProfileChangedSubject,
+                 overclock_profile_changed_subject: OverclockProfileChangedSubject,
                  composite_disposable: CompositeDisposable,
                  ) -> None:
         LOG.debug("init MainPresenter ")
         self.main_view: MainViewInterface = MainViewInterface()
         self._edit_fan_profile_presenter = edit_fan_profile_presenter
+        self._edit_overclock_profile_presenter = edit_overclock_profile_presenter
         self._historical_data_presenter = historical_data_presenter
         self._preferences_presenter = preferences_presenter
         self._scheduler: SchedulerBase = ThreadPoolScheduler(multiprocessing.cpu_count())
@@ -103,12 +114,16 @@ class MainPresenter:
         self._settings_interactor = settings_interactor
         self._check_new_version_interactor = check_new_version_interactor
         self._set_fan_speed_interactor = set_fan_speed_interactor
-        self._fan_profile_changed_subject = fan_profile_changed_subject
         self._speed_step_changed_subject = speed_step_changed_subject
+        self._fan_profile_changed_subject = fan_profile_changed_subject
+        self._overclock_profile_changed_subject = overclock_profile_changed_subject
         self._composite_disposable: CompositeDisposable = composite_disposable
         self._fan_profile_selected: Optional[FanProfile] = None
         self._fan_profile_applied: Optional[FanProfile] = None
+        self._overclock_profile_selected: Optional[OverclockProfile] = None
+        self._overclock_profile_applied: Optional[OverclockProfile] = None
         self.application_quit: Callable = lambda *args: None  # will be set by the Application
+        self._latest_status: Optional[Status] = None
 
     def on_start(self) -> None:
         self._refresh_fan_profile_ui(True)
@@ -127,14 +142,6 @@ class MainPresenter:
                  .subscribe(on_next=self._handle_set_power_limit_result, on_error=self._handle_set_power_limit_result)
                  )
 
-    def on_overclock_apply_button_clicked(self, *_: Any) -> None:
-        self._composite_disposable \
-            .add(self._set_overclock_interactor.execute(*self.main_view.get_overclock_offsets())
-                 .subscribe_on(self._scheduler)
-                 .observe_on(GtkScheduler())
-                 .subscribe(on_next=self._handle_set_overclock_result, on_error=self._handle_set_overclock_result)
-                 )
-
     def on_fan_edit_button_clicked(self, *_: Any) -> None:
         profile = self._fan_profile_selected
         if profile:
@@ -149,7 +156,32 @@ class MainPresenter:
             if self._fan_profile_selected.type == FanProfileType.AUTO.value:
                 self._set_fan_speed(gpu_index, manual_control=False)
             self._refresh_fan_profile_ui(profile_id=self._fan_profile_selected.id)
-        self._update_current_fan_profile(self._fan_profile_selected)
+            self._update_current_fan_profile(self._fan_profile_selected)
+
+    def on_overclock_edit_button_clicked(self, *_: Any) -> None:
+        gpu_index = 0
+        profile = self._overclock_profile_selected
+        overclock = self._latest_status.gpu_status_list[gpu_index].overclock
+        if profile:
+            self._edit_overclock_profile_presenter.show_edit(profile, overclock)
+        else:
+            LOG.error('Profile is None!')
+
+    def on_overclock_apply_button_clicked(self, *_: Any) -> None:
+        gpu_index = 0
+        if self._overclock_profile_selected:
+            self._overclock_profile_applied = self._overclock_profile_selected
+            self._refresh_overclock_profile_ui(profile_id=self._overclock_profile_selected.id)
+            self._composite_disposable.add(self._set_overclock_interactor.execute(
+                gpu_index,
+                self._latest_status.gpu_status_list[gpu_index].overclock.perf_level_max,
+                self._overclock_profile_applied.gpu,
+                self._overclock_profile_applied.memory)
+                                           .subscribe_on(self._scheduler)
+                                           .observe_on(GtkScheduler())
+                                           .subscribe(on_next=self._handle_set_overclock_result,
+                                                      on_error=self._handle_set_overclock_result)
+                                           )
 
     def on_menu_settings_clicked(self, *_: Any) -> None:
         self._preferences_presenter.show()
@@ -163,6 +195,12 @@ class MainPresenter:
             profile_id = widget.get_model()[active][0]
             self._select_fan_profile(profile_id)
 
+    def on_overclock_profile_selected(self, widget: Any, *_: Any) -> None:
+        active = widget.get_active()
+        if active >= 0:
+            profile_id = widget.get_model()[active][0]
+            self._select_overclock_profile(profile_id)
+
     def on_quit_clicked(self, *_: Any) -> None:
         self.application_quit()
 
@@ -170,10 +208,18 @@ class MainPresenter:
         self.main_view.toggle_window_visibility()
 
     def _register_db_listeners(self) -> None:
-        self._fan_profile_changed_subject.subscribe(on_next=self._on_fan_profile_list_changed,
-                                                    on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
         self._speed_step_changed_subject.subscribe(on_next=self._on_speed_step_list_changed,
                                                    on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
+        self._fan_profile_changed_subject.subscribe(on_next=self._on_fan_profile_list_changed,
+                                                    on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
+        self._overclock_profile_changed_subject.subscribe(on_next=self._on_overclock_profile_list_changed,
+                                                          on_error=lambda e: LOG.exception("Db signal error: %s",
+                                                                                           str(e)))
+
+    def _on_speed_step_list_changed(self, db_change: DbChange) -> None:
+        profile = db_change.entry.profile
+        if self._fan_profile_selected and self._fan_profile_selected.id == profile.id:
+            self.main_view.refresh_chart(profile)
 
     def _on_fan_profile_list_changed(self, db_change: DbChange) -> None:
         profile = db_change.entry
@@ -184,10 +230,14 @@ class MainPresenter:
         elif db_change.type == DbChange.INSERT or db_change.type == DbChange.UPDATE:
             self._refresh_fan_profile_ui(profile_id=profile.id)
 
-    def _on_speed_step_list_changed(self, db_change: DbChange) -> None:
-        profile = db_change.entry.profile
-        if self._fan_profile_selected and self._fan_profile_selected.id == profile.id:
-            self.main_view.refresh_chart(profile)
+    def _on_overclock_profile_list_changed(self, db_change: DbChange) -> None:
+        profile = db_change.entry
+        if db_change.type == DbChange.DELETE:
+            self._refresh_overclock_profile_ui()
+            self._overclock_profile_selected = None
+            self._overclock_profile_applied = None
+        elif db_change.type == DbChange.INSERT or db_change.type == DbChange.UPDATE:
+            self._refresh_overclock_profile_ui(profile_id=profile.id)
 
     def _start_refresh(self) -> None:
         LOG.debug("start refresh")
@@ -205,6 +255,10 @@ class MainPresenter:
 
     def _on_status_updated(self, status: Optional[Status]) -> None:
         if status is not None:
+            was_latest_status_none = self._latest_status is None
+            self._latest_status = status
+            if was_latest_status_none:
+                self._refresh_overclock_profile_ui(True)
             gpu_status = status.gpu_status_list[0]
             self._update_fan(gpu_status)
             self.main_view.refresh_status(status)
@@ -298,6 +352,56 @@ class MainPresenter:
             current.save()
         self.main_view.set_statusbar_text('%s fan profile selected' % profile.name)
 
+    def _refresh_overclock_profile_ui(self, init: bool = False, profile_id: Optional[int] = None) -> None:
+        current: Optional[CurrentOverclockProfile] = None
+        if init and self._settings_interactor.get_bool('settings_load_last_profile'):
+            current = CurrentOverclockProfile.get_or_none()
+            if current is not None:
+                self._overclock_profile_selected = current.profile
+                self.on_overclock_apply_button_clicked()
+        data: List[Tuple[int, str]] = []
+        for overclock_profile in OverclockProfile.select():
+            name_with_freqs = "{} ({}, {})".format(overclock_profile.name,
+                                                   overclock_profile.gpu,
+                                                   overclock_profile.memory)
+            if self._overclock_profile_applied is not None \
+                    and self._overclock_profile_applied.id == overclock_profile.id:
+                name = "<b>{}</b>".format(name_with_freqs)
+            else:
+                name = name_with_freqs
+            data.append((overclock_profile.id, name))
+        active = None
+        if profile_id is not None:
+            active = next(i for i, item in enumerate(data) if item[0] == profile_id)
+        elif current is not None:
+            active = next(i for i, item in enumerate(data) if item[0] == current.profile.id)
+        data.append((_ADD_NEW_PROFILE_INDEX, "<span style='italic' alpha='50%'>Add new profile...</span>"))
+        self.main_view.refresh_overclock_profile_combobox(data, active)
+
+    def _select_overclock_profile(self, profile_id: int) -> None:
+        gpu_index = 0
+        if profile_id == _ADD_NEW_PROFILE_INDEX:
+            self.main_view.set_apply_overclock_profile_button_enabled(False)
+            self.main_view.set_edit_overclock_profile_button_enabled(False)
+            self._edit_overclock_profile_presenter.show_add(self._latest_status.gpu_status_list[gpu_index].overclock)
+        else:
+            profile: OverclockProfile = OverclockProfile.get(id=profile_id)
+            self._overclock_profile_selected = profile
+            if profile.read_only:
+                self.main_view.set_edit_overclock_profile_button_enabled(False)
+            else:
+                self.main_view.set_edit_overclock_profile_button_enabled(True)
+            self.main_view.set_apply_overclock_profile_button_enabled(True)
+
+    def _update_current_overclock_profile(self, profile: OverclockProfile) -> None:
+        current: CurrentOverclockProfile = CurrentOverclockProfile.get_or_none()
+        if current is None:
+            CurrentOverclockProfile.create(profile=profile)
+        else:
+            current.profile = profile
+            current.save()
+        self.main_view.set_statusbar_text('%s overclock profile selected' % profile.name)
+
     def _log_exception_return_empty_observable(self, ex: Exception) -> Observable:
         LOG.exception("Err = %s", ex)
         self.main_view.set_statusbar_text(str(ex))
@@ -320,16 +424,20 @@ class MainPresenter:
         self._handle_generic_set_result(result, "power limit")
 
     def _handle_set_overclock_result(self, result: Any) -> None:
-        self._handle_generic_set_result(result, "overclock")
+        if self._handle_generic_set_result(result, "overclock"):
+            self._update_current_overclock_profile(self._overclock_profile_selected)
 
-    def _handle_generic_set_result(self, result: Any, name: str) -> None:
+    def _handle_generic_set_result(self, result: Any, name: str) -> bool:
         if not isinstance(result, bool):
             LOG.exception("Set overclock error: %s", str(result))
             self.main_view.set_statusbar_text('Error applying %s! %s' % (name, str(result)))
+            return False
         elif not result:
             self.main_view.set_statusbar_text('Error applying %s!' % name)
+            return False
         else:
             self.main_view.set_statusbar_text('%s applied' % name.capitalize())
+            return True
 
     def _handle_new_version_response(self, version: Optional[str]) -> None:
         if version is not None:

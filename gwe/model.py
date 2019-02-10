@@ -25,11 +25,12 @@ from playhouse.sqlite_ext import AutoIncrementField
 from peewee import CharField, DateTimeField, SqliteDatabase, SQL, IntegerField, Check, \
     ForeignKeyField, BooleanField, BlobField
 
-from gwe.di import INJECTOR, FanProfileChangedSubject, SpeedStepChangedSubject
+from gwe.di import INJECTOR, FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject
 
 LOG = logging.getLogger(__name__)
-FAN_PROFILE_CHANGED_SUBJECT = INJECTOR.get(FanProfileChangedSubject)
 SPEED_STEP_CHANGED_SUBJECT = INJECTOR.get(SpeedStepChangedSubject)
+FAN_PROFILE_CHANGED_SUBJECT = INJECTOR.get(FanProfileChangedSubject)
+OVERCLOCK_PROFILE_CHANGED_SUBJECT = INJECTOR.get(OverclockProfileChangedSubject)
 
 
 class Info:
@@ -245,6 +246,49 @@ class CurrentFanProfile(Model):
         database = INJECTOR.get(SqliteDatabase)
 
 
+class OverclockProfileType(Enum):
+    DEFAULT = 'default'
+    OFFSET = 'offset'
+
+
+class OverclockProfile(Model):
+    id = AutoIncrementField()
+    type = CharField(
+        constraints=[Check("type='%s' OR type='%s'" % (
+            OverclockProfileType.DEFAULT.value, OverclockProfileType.OFFSET.value))],
+        default=OverclockProfileType.OFFSET.value)
+    name = CharField()
+    gpu = IntegerField(default=0)
+    memory = IntegerField(default=0)
+    read_only = BooleanField(default=False)
+    timestamp = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
+
+    class Meta:
+        legacy_table_names = False
+        database = INJECTOR.get(SqliteDatabase)
+
+
+@post_save(sender=OverclockProfile)
+def on_overclock_profile_added(_: Any, profile: OverclockProfile, created: bool) -> None:
+    LOG.debug("Profile added")
+    OVERCLOCK_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.INSERT if created else DbChange.UPDATE))
+
+
+@post_delete(sender=OverclockProfile)
+def on_overclock_profile_deleted(_: Any, profile: OverclockProfile) -> None:
+    LOG.debug("Profile deleted")
+    OVERCLOCK_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.DELETE))
+
+
+class CurrentOverclockProfile(Model):
+    profile = ForeignKeyField(OverclockProfile, unique=True)
+    timestamp = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
+
+    class Meta:
+        legacy_table_names = False
+        database = INJECTOR.get(SqliteDatabase)
+
+
 class Setting(Model):
     key = CharField(primary_key=True)
     value = BlobField()
@@ -254,7 +298,7 @@ class Setting(Model):
         database = INJECTOR.get(SqliteDatabase)
 
 
-def load_db_default_data() -> None:
+def load_fan_db_default_data() -> None:
     FanProfile.create(name="Auto (VBIOS controlled)", type=FanProfileType.AUTO.value, read_only=True)
     fan_silent = FanProfile.create(name="Custom")
 
@@ -265,3 +309,7 @@ def load_db_default_data() -> None:
     SpeedStep.create(profile=fan_silent.id, temperature=65, duty=70)
     SpeedStep.create(profile=fan_silent.id, temperature=70, duty=90)
     SpeedStep.create(profile=fan_silent.id, temperature=75, duty=100)
+
+
+def load_overclock_db_default_data() -> None:
+    OverclockProfile.create(type=OverclockProfileType.DEFAULT.value, name="Default", gpu=0, memory=0, read_only=True)

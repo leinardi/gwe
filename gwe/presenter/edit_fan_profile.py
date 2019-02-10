@@ -107,10 +107,6 @@ class EditFanProfilePresenter:
 
         self.refresh_controls(step, True)
 
-    def on_add_profile_clicked(self, *_: Any) -> None:
-        self._profile.delete_instance(recursive=True)
-        self.view.hide()
-
     def on_delete_profile_clicked(self, *_: Any) -> None:
         self._profile.delete_instance(recursive=True)
         self.view.hide()

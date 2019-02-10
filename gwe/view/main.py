@@ -32,6 +32,7 @@ from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCan
 
 # AppIndicator3 may not be installed
 from gwe.interactor import SettingsInteractor
+from gwe.view.edit_overclock_profile import EditOverclockProfileView
 from gwe.view.historical_data import HistoricalDataView
 from gwe.view.preferences import PreferencesView
 
@@ -57,6 +58,7 @@ class MainView(MainViewInterface):
     def __init__(self,
                  presenter: MainPresenter,
                  edit_fan_profile_view: EditFanProfileView,
+                 edit_overclock_profile_view: EditOverclockProfileView,
                  historical_data_view: HistoricalDataView,
                  preferences_view: PreferencesView,
                  builder: MainBuilder,
@@ -65,6 +67,7 @@ class MainView(MainViewInterface):
         LOG.debug('init MainView')
         self._presenter: MainPresenter = presenter
         self._edit_fan_profile_view = edit_fan_profile_view
+        self._edit_overclock_profile_view = edit_overclock_profile_view
         self._historical_data_view = historical_data_view
         self._preferences_view = preferences_view
         self._presenter.main_view = self
@@ -72,12 +75,12 @@ class MainView(MainViewInterface):
         self._settings_interactor = settings_interactor
         self._first_refresh = True
         self._init_widgets()
-        self._latest_status: Optional[Status] = None
 
     def _init_widgets(self) -> None:
         self._app_indicator: Optional[AppIndicator3.Indicator] = None
         self._window = self._builder.get_object("application_window")
         self._edit_fan_profile_view.set_transient_for(self._window)
+        self._edit_overclock_profile_view.set_transient_for(self._window)
         self._historical_data_view.set_transient_for(self._window)
         self._preferences_view.set_transient_for(self._window)
         self._main_menu: Gtk.Menu = self._builder.get_object("main_menu")
@@ -117,6 +120,8 @@ class MainView(MainViewInterface):
         self._clocks_memory_max_entry: Gtk.Entry = self._builder.get_object('clocks_memory_max_entry')
         self._clocks_video_current_entry: Gtk.Entry = self._builder.get_object('clocks_video_current_entry')
         self._clocks_video_max_entry: Gtk.Entry = self._builder.get_object('clocks_video_max_entry')
+        self._overclock_gpu_offset_entry: Gtk.Entry = self._builder.get_object('overclock_gpu_offset_entry')
+        self._overclock_mem_offset_entry: Gtk.Entry = self._builder.get_object('overclock_mem_offset_entry')
         self._info_memory_usage_levelbar: Gtk.LevelBar = self._builder.get_object('info_memory_usage_levelbar')
         self._info_gpu_usage_levelbar: Gtk.LevelBar = self._builder.get_object('info_gpu_usage_levelbar')
         self._info_encoder_usage_levelbar: Gtk.LevelBar = self._builder.get_object('info_encoder_usage_levelbar')
@@ -144,20 +149,17 @@ class MainView(MainViewInterface):
         self._fan_profile_frame: Gtk.Frame = self._builder.get_object('fan_profile_frame')
         self._overclock_frame: Gtk.Frame = self._builder.get_object('overclock_frame')
         self._power_limit_scale: Gtk.Scale = self._builder.get_object('power_limit_scale')
-        self._overclock_gpu_offset_scale: Gtk.Scale = self._builder.get_object('overclock_gpu_offset_scale')
-        self._overclock_memory_offset_scale: Gtk.Scale = self._builder.get_object('overclock_memory_offset_scale')
         self._power_limit_adjustment: Gtk.Adjustment = self._builder.get_object('power_limit_adjustment')
-        self._overclock_gpu_offset_adjustment: Gtk.Adjustment = self._builder.get_object(
-            'overclock_gpu_offset_adjustment')
-        self._overclock_memory_offset_adjustment: Gtk.Adjustment = self._builder.get_object(
-            'overclock_memory_offset_adjustment')
         self._fan_apply_button: Gtk.Button = self._builder.get_object('fan_apply_button')
+        self._overclock_apply_button: Gtk.Button = self._builder.get_object('overclock_apply_button')
         self._power_limit_apply_button: Gtk.Button = self._builder.get_object('power_limit_apply_button')
-
         self._fan_liststore: Gtk.ListStore = self._builder.get_object('fan_profile_liststore')
+        self._overclock_liststore: Gtk.ListStore = self._builder.get_object('overclock_profile_liststore')
         self._fan_combobox: Gtk.ComboBox = self._builder.get_object('fan_profile_combobox')
+        self._overclock_combobox: Gtk.ComboBox = self._builder.get_object('overclock_profile_combobox')
         fan_scrolled_window: Gtk.ScrolledWindow = self._builder.get_object('fan_scrolled_window')
         self._fan_edit_button: Gtk.Button = self._builder.get_object('fan_edit_button')
+        self._overclock_edit_button: Gtk.Button = self._builder.get_object('overclock_edit_button')
         self._init_plot_charts(fan_scrolled_window)
         if not is_dazzle_version_supported():
             self._builder.get_object("historical_data_button").set_sensitive(False)
@@ -203,14 +205,6 @@ class MainView(MainViewInterface):
     def get_power_limit(self) -> Tuple[int, int]:
         return 0, self._power_limit_adjustment.get_value()
 
-    def get_overclock_offsets(self) -> Tuple[int, int, int, int]:
-        return (
-            0,
-            self._latest_status.gpu_status_list[0].overclock.perf_level_max,
-            int(self._overclock_gpu_offset_adjustment.get_value()),
-            int(self._overclock_memory_offset_adjustment.get_value())
-        )
-
     def show_about_dialog(self) -> None:
         self._about_dialog.show()
 
@@ -221,7 +215,6 @@ class MainView(MainViewInterface):
     def refresh_status(self, status: Optional[Status]) -> None:
         LOG.debug('view status')
         if status:
-            self._latest_status = status
             gpu_status = status.gpu_status_list[0]
             if self._first_refresh:
                 self._first_refresh = False
@@ -259,18 +252,6 @@ class MainView(MainViewInterface):
                     self._power_limit_scale.set_sensitive(False)
                     self._power_limit_apply_button.set_sensitive(False)
 
-                if gpu_status.overclock.available:
-                    self._overclock_gpu_offset_adjustment.set_lower(gpu_status.overclock.gpu_range[0])
-                    self._overclock_gpu_offset_adjustment.set_upper(gpu_status.overclock.gpu_range[1])
-                    self._overclock_memory_offset_adjustment.set_lower(gpu_status.overclock.memory_range[0])
-                    self._overclock_memory_offset_adjustment.set_upper(gpu_status.overclock.memory_range[1])
-                    self._overclock_gpu_offset_adjustment.set_value(gpu_status.overclock.gpu_offset)
-                    self._overclock_memory_offset_adjustment.set_value(gpu_status.overclock.memory_offset)
-                    self._overclock_gpu_offset_scale.clear_marks()
-                    self._overclock_gpu_offset_scale.add_mark(0, Gtk.PositionType.BOTTOM, str(0))
-                    self._overclock_memory_offset_scale.clear_marks()
-                    self._overclock_memory_offset_scale.add_mark(0, Gtk.PositionType.BOTTOM, str(0))
-
             self._set_entry_text(self._info_pcie_entry, "%dx Gen%d @ %dx",
                                  gpu_status.info.pcie_max_link,
                                  gpu_status.info.pcie_generation,
@@ -298,6 +279,9 @@ class MainView(MainViewInterface):
             self._set_level_bar(self._info_gpu_usage_levelbar, gpu_status.info.gpu_usage)
             self._set_level_bar(self._info_encoder_usage_levelbar, gpu_status.info.encoder_usage)
             self._set_level_bar(self._info_decoder_usage_levelbar, gpu_status.info.decoder_usage)
+            if gpu_status.overclock.available:
+                self._set_entry_text(self._overclock_gpu_offset_entry, "%d MHz", gpu_status.overclock.gpu_offset)
+                self._set_entry_text(self._overclock_mem_offset_entry, "%d MHz", gpu_status.overclock.memory_offset)
             self._set_label_markup(self._temp_gpu_value,
                                    "<span size=\"xx-large\">%d</span> °C", gpu_status.temp.gpu)
             for index, value in enumerate(self._fan_duty):
@@ -372,6 +356,21 @@ class MainView(MainViewInterface):
 
     def set_edit_fan_profile_button_enabled(self, enabled: bool) -> None:
         self._fan_edit_button.set_sensitive(enabled)
+
+    def set_apply_overclock_profile_button_enabled(self, enabled: bool) -> None:
+        self._overclock_apply_button.set_sensitive(enabled)
+
+    def set_edit_overclock_profile_button_enabled(self, enabled: bool) -> None:
+        self._overclock_edit_button.set_sensitive(enabled)
+
+    def refresh_overclock_profile_combobox(self, data: List[Tuple[int, str]], active: Optional[int]) -> None:
+        self._overclock_liststore.clear()
+        for item in data:
+            self._overclock_liststore.append([item[0], item[1]])
+        self._overclock_combobox.set_model(self._overclock_liststore)
+        self._overclock_combobox.set_sensitive(len(self._overclock_liststore) > 1)
+        if active is not None:
+            self._overclock_combobox.set_active(active)
 
     # pylint: disable=attribute-defined-outside-init
     def _init_plot_charts(self, fan_scrolled_window: Gtk.ScrolledWindow) -> None:

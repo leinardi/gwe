@@ -24,15 +24,17 @@ from rx.disposables import CompositeDisposable
 from rx.subjects import Subject
 
 from gwe.conf import APP_PACKAGE_NAME, APP_MAIN_UI_NAME, APP_DB_NAME, APP_EDIT_FAN_PROFILE_UI_NAME, \
-    APP_PREFERENCES_UI_NAME, APP_HISTORICAL_DATA_UI_NAME
-from gwe.util.path import get_data_path, get_config_path
+    APP_PREFERENCES_UI_NAME, APP_HISTORICAL_DATA_UI_NAME, APP_EDIT_OC_PROFILE_UI_NAME
+from gwe.util.path import get_config_path
 
 LOG = logging.getLogger(__name__)
 
-FanProfileChangedSubject = Key("FanProfileChangedSubject")
 SpeedStepChangedSubject = Key("SpeedStepChangedSubject")
+FanProfileChangedSubject = Key("FanProfileChangedSubject")
+OverclockProfileChangedSubject = Key("OverclockProfileChangedSubject")
 MainBuilder = Key(APP_MAIN_UI_NAME)
 EditFanProfileBuilder = Key(APP_EDIT_FAN_PROFILE_UI_NAME)
+EditOverclockProfileBuilder = Key(APP_EDIT_OC_PROFILE_UI_NAME)
 HistoricalDataBuilder = Key(APP_HISTORICAL_DATA_UI_NAME)
 PreferencesBuilder = Key(APP_PREFERENCES_UI_NAME)
 
@@ -45,7 +47,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_resource("/com/leinardi/gwe/ui/{0}".format(APP_MAIN_UI_NAME))
+        builder.add_from_resource("/com/leinardi/gwe/ui/{}".format(APP_MAIN_UI_NAME))
         return builder
 
     @singleton
@@ -54,7 +56,16 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_resource("/com/leinardi/gwe/ui/{0}".format(APP_EDIT_FAN_PROFILE_UI_NAME))
+        builder.add_from_resource("/com/leinardi/gwe/ui/{}".format(APP_EDIT_FAN_PROFILE_UI_NAME))
+        return builder
+
+    @singleton
+    @provider
+    def provide_edit_overclock_profile_builder(self) -> EditOverclockProfileBuilder:
+        LOG.debug("provide Gtk.Builder")
+        builder = Gtk.Builder()
+        builder.set_translation_domain(APP_PACKAGE_NAME)
+        builder.add_from_resource("/com/leinardi/gwe/ui/{}".format(APP_EDIT_OC_PROFILE_UI_NAME))
         return builder
 
     @singleton
@@ -63,7 +74,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_resource("/com/leinardi/gwe/ui/{0}".format(APP_HISTORICAL_DATA_UI_NAME))
+        builder.add_from_resource("/com/leinardi/gwe/ui/{}".format(APP_HISTORICAL_DATA_UI_NAME))
         return builder
 
     @singleton
@@ -72,7 +83,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_resource("/com/leinardi/gwe/ui/{0}".format(APP_PREFERENCES_UI_NAME))
+        builder.add_from_resource("/com/leinardi/gwe/ui/{}".format(APP_PREFERENCES_UI_NAME))
         return builder
 
     @singleton
@@ -89,12 +100,17 @@ class ProviderModule(Module):
 
     @singleton
     @provider
+    def provide_speed_step_changed_subject(self) -> SpeedStepChangedSubject:
+        return Subject()
+
+    @singleton
+    @provider
     def provide_fan_profile_changed_subject(self) -> FanProfileChangedSubject:
         return Subject()
 
     @singleton
     @provider
-    def provide_speed_step_changed_subject(self) -> SpeedStepChangedSubject:
+    def provide_overclock_profile_changed_subject(self) -> OverclockProfileChangedSubject:
         return Subject()
 
 
