@@ -16,13 +16,13 @@
 # along with gwe.  If not, see <http://www.gnu.org/licenses/>.
 
 from typing import Optional, Any, Dict
-
+from gi.repository import Notify
 from gi.repository import GLib, Gtk, Gdk
 from matplotlib.axes import Axes
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 from matplotlib.figure import Figure
 
-from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY, GRAPH_COLOR_HEX
+from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY, GRAPH_COLOR_HEX, APP_NAME
 from gwe.model import FanProfile
 
 
@@ -110,3 +110,9 @@ def is_dazzle_version_supported() -> bool:
     if Gtk.MAJOR_VERSION >= 3 and Gtk.MINOR_VERSION >= 24:  # Mypy says that this check returns Any, not sure why...
         return True
     return False
+
+
+def show_notification(summary: str, body: str, icon: str) -> None:
+    if Notify.init(APP_NAME):
+        hello = Notify.Notification.new(summary=summary, body=body, icon=icon)
+        hello.show()

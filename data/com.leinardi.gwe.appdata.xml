@@ -27,6 +27,16 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+        <release date="2019-02-10" version="0.11.0">
+            <description>
+                <ul>
+                    <li>Add overclock profiles</li>
+                    <li>Fixed GPU offset overclock not working for some cards</li>
+                    <li>Showing notification via libnotify if an update is available</li>
+                    <li>Added PCIe current generation info</li>
+                </ul>
+            </description>
+        </release>
         <release date="2019-02-9" version="0.10.4">
             <description>
                 <ul>
