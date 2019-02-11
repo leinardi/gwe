@@ -40,9 +40,14 @@ you need to install it from the source code.
 Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
 
 ### Install from source code
-#### Required dependencies for (K/X)Ubuntu 18.10 or newer
+#### Dependencies for (K/X)Ubuntu 18.10 or newer
 ```bash
 sudo apt install git meson python3-pip libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo appstream-util
+```
+
+#### Dependencies for Fedora 28 or newer
+```bash
+dnf install desktop-file-utils git gobject-introspection-devel gtk3-devel libappstream-glib libdazzle libnotify meson python3-cairocffi python3-devel python3-pip redhat-rpm-config
 ```
 
 #### Clone project and install
