@@ -67,7 +67,10 @@ If you installed GWE from source code previously and you want to update it:
 ```bash
 cd gwe
 git fetch
+git checkout release
 git reset --hard origin/release
+git submodule init
+git submodule update
 pip3 install -r requirements.txt
 meson . build --prefix /usr
 ninja -v -C build
