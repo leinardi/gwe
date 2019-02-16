@@ -34,6 +34,7 @@
                         cards
                     </li>
                     <li>Fix #11: Power limit Apply should check exit code</li>
+                    <li>Fix #9: The Close button in the About dialog box does not work on KDE</li>
                 </ul>
             </description>
         </release>

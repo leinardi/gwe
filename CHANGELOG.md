@@ -5,6 +5,7 @@ Released: 2019-02-16
  * Using NV-CONTROL instead of NVML, when possible, to provide better
    compatibility with older cards
  * Fix #11: Power limit Apply should check exit code
+ * Fix #9: The Close button in the About dialog box does not work on KDE
 
 Version 0.11.0
 ==============
