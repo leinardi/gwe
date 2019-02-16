@@ -1,3 +1,10 @@
+Version 0.12.0
+==============
+Released: 2019-02-16
+
+ * Using NV-CONTROL instead of NVML, when possible, to provide better
+   compatibility with older cards
+
 Version 0.11.0
 ==============
 Released: 2019-02-10
