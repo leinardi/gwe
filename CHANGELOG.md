@@ -4,6 +4,7 @@ Released: 2019-02-16
 
  * Using NV-CONTROL instead of NVML, when possible, to provide better
    compatibility with older cards
+ * Fix #11: Power limit Apply should check exit code
 
 Version 0.11.0
 ==============

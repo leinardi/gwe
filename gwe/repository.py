@@ -223,7 +223,7 @@ class NvidiaRepository:
                str(gpu_index),
                '-pl',
                str(limit)]
-        result = run_and_get_stdout(cmd, ['xargs'])
+        result = run_and_get_stdout(cmd)
         LOG.info("Exit code: %d. %s", result[0], result[1])
         return result[0] == 0
 

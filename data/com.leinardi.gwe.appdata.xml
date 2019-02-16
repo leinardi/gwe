@@ -33,6 +33,7 @@
                     <li>Using NV-CONTROL instead of NVML, when possible, to provide better compatibility with older
                         cards
                     </li>
+                    <li>Fix #11: Power limit Apply should check exit code</li>
                 </ul>
             </description>
         </release>
