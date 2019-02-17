@@ -23,20 +23,17 @@ import logging
 import sys
 from typing import Type, Any
 
-import gi
 from os.path import abspath, join, dirname
 from peewee import SqliteDatabase
 from rx.disposables import CompositeDisposable
 
 from gwe.conf import APP_PACKAGE_NAME
-
-gi.require_version('Gtk', '3.0')
-gi.require_version('Dazzle', '1.0')
+from gwe.model import SpeedStep, FanProfile, CurrentFanProfile, OverclockProfile, CurrentOverclockProfile, Setting
 from gi.repository import GLib
 from gwe.util.log import set_log_level
-from gwe.repository import NvidiaRepository
 from gwe.di import INJECTOR
 from gwe.app import Application
+from gwe.repository import NvidiaRepository
 
 WHERE_AM_I = abspath(dirname(__file__))
 LOCALE_DIR = join(WHERE_AM_I, 'mo')
@@ -80,8 +77,21 @@ def handle_exception(exc_type: Type[BaseException], exc_value: BaseException, ex
 sys.excepthook = handle_exception
 
 
+def _init_database() -> None:
+    database = INJECTOR.get(SqliteDatabase)
+    database.create_tables([
+        SpeedStep,
+        FanProfile,
+        CurrentFanProfile,
+        OverclockProfile,
+        CurrentOverclockProfile,
+        Setting
+    ])
+
+
 def main() -> int:
     LOG.debug("main")
+    _init_database()
     application: Application = INJECTOR.get(Application)
     GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, application.quit)
     exit_status = application.run(sys.argv)

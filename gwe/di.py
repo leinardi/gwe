@@ -95,8 +95,10 @@ class ProviderModule(Module):
     @singleton
     @provider
     def provide_database(self) -> SqliteDatabase:
-        LOG.debug("provide CompositeDisposable")
-        return SqliteDatabase(get_config_path(APP_DB_NAME))
+        LOG.debug("provide SqliteDatabase")
+        database = SqliteDatabase(get_config_path(APP_DB_NAME))
+        database.connect()
+        return database
 
     @singleton
     @provider
