@@ -2,6 +2,14 @@
 GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video card 
 and graphics processor.
 
+## 💡 Features
+
+* Show general GPU stats (model name, driver version, gpu/memory/power usage, clocks, temps, etc)
+* GPU and Memory overclock offset profiles
+* Custom Fan curve profiles
+* Change power limit
+* Historical data graphs
+
 <img src="/art/screenshot-1.png" width="800"/>
 
 ## 📦 How to get GWE
@@ -26,37 +34,68 @@ flatpak update # needed to be sure to have the latest org.freedesktop.Platform.G
 ```bash
 flatpak run com.leinardi.gwe
 ```
-
-#### ⚠ Beta Drivers
+#### ⚠ Flatpak limitations
+##### Beta Drivers
 Currently [Flatpak does not support Nvidia Beta drivers](https://github.com/flathub/org.freedesktop.Platform.GL.nvidia/issues/1)
 like 396.54.09 or 415.22.05.
 
-### ⚠ Bumblebee and Optimus
+##### Bumblebee and Optimus
 Currently [Flatpak does not support Bumblebee](https://github.com/flatpak/flatpak/issues/869). If you want to use GWE with Bumblebee 
-you need to install it from the source code and start it with `optirun`, setting the the NV-CONTROL display to `:8`:
-
-```bash
-optirun gwe --ctrl-display ":8"
-```
+you need to install it from the source code.
 
 ### Distro specific packages
 #### Arch Linux
 Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
 
 ### Install from source code
-#### Required dependencies for (K/X)Ubuntu 18.10 or newer
+#### Dependencies for (K/X)Ubuntu 18.10 or newer
 ```bash
 sudo apt install git meson python3-pip libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo appstream-util
 ```
 
+#### Dependencies for Fedora 28 or newer
+```bash
+dnf install desktop-file-utils git gobject-introspection-devel gtk3-devel libappstream-glib libdazzle libnotify meson python3-cairocffi python3-devel python3-pip redhat-rpm-config
+```
+
 #### Clone project and install
+If you have not installed GWE yet:
 ```bash
 git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
 cd gwe
+git checkout release
 pip3 install -r requirements.txt
 meson . build --prefix /usr
 ninja -v -C build
 ninja -v -C build install
+```
+
+#### Update old installation
+If you installed GWE from source code previously and you want to update it:
+```bash
+cd gwe
+git fetch
+git checkout release
+git reset --hard origin/release
+git submodule init
+git submodule update
+pip3 install -r requirements.txt
+meson . build --prefix /usr
+ninja -v -C build
+ninja -v -C build install
+```
+
+#### Run
+Once installed, to start it you can simply execute on a terminal:
+```bash
+gwe
+```
+
+#### ⚠ Bumblebee and Optimus
+If you want to use GWE with Bumblebee you need to start it with `optirun` and set the `--ctrl-display` parameter to `:8`:
+
+```bash
+optirun gwe --ctrl-display ":8"
 ```
 
 ## ℹ️ TODO
@@ -82,7 +121,7 @@ ninja -v -C build install
 - [x] Add overclock profiles
 - [x] Add option to restore last applied overclock profile on app startup
 - [ ] Disable unsupported preferences
-- [x] Distributing with Flatpack
+- [x] Distributing with Flatpak
 - [x] Publishing on Flathub
 - [ ] Distributing with Snap
 - [ ] Check if NV-CONTROL is available and tell the user if is not
@@ -165,6 +204,13 @@ pip3 install -r requirements.txt
 ```
 
 ## ❓ FAQ
+### I see some message about CoolBits in the Overclock/Fan profile section, what's that?
+Coolbits was a Windows registry hack for Nvidia graphics cards Windows drivers, that allows 
+tweaking features via the Nvidia driver control panel.  
+Something similar is available also on Linux and is the only way to enable Overclock and manual Fan control.  
+To know more about Coolbits and how to enable them click 
+[here](https://wiki.archlinux.org/index.php/NVIDIA/Tips_and_tricks#Enabling_overclocking) 
+(to enable both OC and Fan control you need to set it to `12`).
 ### The Flatpak version of GWE is not using my theme, how can I fix it?
 Due to sandboxing, Flatpak applications use the default Gnome theme (Adwaita), 
 and not whatever Gtk theme you're currently using.  
@@ -192,21 +238,30 @@ is different from the effective Memory Clock, what is actually being
 displayed by GWE. It is also what other Windows applications like MSI Afterburner show.
 The Memory Transfer Rate is simply double the Memory Clock.
 
+### Where are the settings and profiles stored on the filesystem?
+| Installation type |                     Location                     |
+|-------------------|:------------------------------------------------:|
+| Flatpak           |        `$HOME/.var/app/com.leinardi.gwe/`        |
+| Source code       | `$XDG_CONFIG_HOME` (usually `$HOME/.config/gwe`) |
+
 ### GreenWithEnvy, why using such name?
 The name comes from the slogan of the GeForce 8 series, that was "Green with envy".  
 Nvidia is meant to be pronounced "invidia", which means envy in Latin (and Italian). And their logo is green so, GreenWithEnvy
 
 ## 💚 How to help the project
-### Discord server
-If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/YjPdNff  
-Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
 
 ### We need people with experience in at least one of these topics:
+ - **Icon/Logo design** (see [#43](https://gitlab.com/leinardi/gwe/issues/43))
  - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
  - Getting current GTK theme text color (see [#36](https://gitlab.com/leinardi/gwe/issues/36))
  - Making Bumblebee work with Flatpak (see [#35](https://gitlab.com/leinardi/gwe/issues/35))
 
 Knowing Python will be also very helpful but not strictly necessary.
+
+### Discord server
+If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/YjPdNff  
+Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
+
 
 ### Can I support this project some other way?
 
@@ -248,6 +303,7 @@ Thanks to:
 ## 📰 Media coverage
  - [OMG! Ubuntu](https://www.omgubuntu.co.uk/2019/02/easily-overclock-nvidia-gpu-on-linux-with-this-new-app) 🇬🇧
  - [GamingOnLinux](https://www.gamingonlinux.com/articles/greenwithenvy-an-impressive-tool-for-overclocking-nvidia-gpus.13521) 🇬🇧
+ - [Phoronix](https://www.phoronix.com/scan.php?page=news_item&px=GreenWithEnvy-0.11-Released) 🇬🇧
  - [ComputerBase](https://www.computerbase.de/2019-02/green-envy-uebertakten-nvidia-grafikkarten-linux/) 🇩🇪
  - [lffl](https://www.lffl.org/2019/02/overclock-scheda-nvidia-linux.html) 🇮🇹
  - [osside blog](https://www.osside.net/2019/02/greenwithenvy-gwe-linux-easy-nvidia-status-overclock/) 🇮🇹

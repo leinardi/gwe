@@ -169,6 +169,7 @@ class MainView(MainViewInterface):
         self._about_dialog.set_version(APP_VERSION)
         self._about_dialog.set_website(APP_SOURCE_URL)
         self._about_dialog.connect("delete-event", hide_on_delete)
+        self._about_dialog.connect("response", hide_on_delete)
 
     def show(self) -> None:
         self._presenter.on_start()

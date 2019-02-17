@@ -24,8 +24,7 @@ from typing import Optional, List, Tuple, Dict, Callable, Any
 from injector import singleton, inject
 from py3nvml import py3nvml
 from py3nvml.py3nvml import NVMLError, NVML_ERROR_NOT_SUPPORTED, NVML_TEMPERATURE_GPU, \
-    NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, NVML_CLOCK_SM, NVML_CLOCK_GRAPHICS, \
-    NVML_CLOCK_MEM, NVML_ERROR_UNKNOWN
+    NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, NVML_CLOCK_SM, NVML_ERROR_UNKNOWN
 
 from gwe.Xlib import display
 from gwe.Xlib.ext.nvcontrol import Gpu, Cooler
@@ -95,26 +94,24 @@ class NvidiaRepository:
                 if mem_info:
                     memory_used = mem_info.used // 1024 // 1024
                     memory_total = mem_info.total // 1024 // 1024
-                util = self._nvml_get_val(py3nvml.nvmlDeviceGetUtilizationRates, handle)
-                util_enc = self._nvml_get_val(py3nvml.nvmlDeviceGetEncoderUtilization, handle)
-                util_dec = self._nvml_get_val(py3nvml.nvmlDeviceGetDecoderUtilization, handle)
+                util = xlib_display.nvcontrol_get_utilization_rates(gpu)
                 info = Info(
-                    name=self._nvml_get_val(py3nvml.nvmlDeviceGetName, handle),
-                    vbios=self._nvml_get_val(py3nvml.nvmlDeviceGetVbiosVersion, handle),
-                    driver=self._nvml_get_val(py3nvml.nvmlSystemGetDriverVersion),
-                    pcie_current_generation=self._nvml_get_val(py3nvml.nvmlDeviceGetCurrPcieLinkGeneration, handle),
+                    name=xlib_display.nvcontrol_get_name(gpu),
+                    vbios=xlib_display.nvcontrol_get_vbios_version(gpu),
+                    driver=xlib_display.nvcontrol_get_driver_version(gpu),
+                    pcie_current_generation=xlib_display.nvcontrol_get_curr_pcie_link_generation(gpu),
                     pcie_max_generation=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxPcieLinkGeneration, handle),
-                    pcie_current_link=self._nvml_get_val(py3nvml.nvmlDeviceGetCurrPcieLinkWidth, handle),
-                    pcie_max_link=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxPcieLinkWidth, handle),
+                    pcie_current_link=xlib_display.nvcontrol_get_curr_pcie_link_width(gpu),
+                    pcie_max_link=xlib_display.nvcontrol_get_max_pcie_link_width(gpu),
                     cuda_cores=xlib_display.nvcontrol_get_cuda_cores(gpu),
                     uuid=uuid,
                     memory_total=memory_total,
                     memory_used=memory_used,
                     memory_interface=xlib_display.nvcontrol_get_memory_bus_width(gpu),
-                    memory_usage=util.memory if hasattr(util, 'memory') else util,
-                    gpu_usage=util.gpu if hasattr(util, 'gpu') else util,
-                    encoder_usage=None if util_enc is None else util_enc[0],
-                    decoder_usage=None if util_dec is None else util_dec[0]
+                    memory_usage=util.get('memory') if util is not None else None,
+                    gpu_usage=util.get('graphics') if util is not None else None,
+                    encoder_usage=xlib_display.nvcontrol_get_encoder_utilization(gpu),
+                    decoder_usage=xlib_display.nvcontrol_get_decoder_utilization(gpu)
                 )
 
                 power = self._get_power_from_py3nvml(handle)
@@ -122,14 +119,15 @@ class NvidiaRepository:
 
                 perf_modes = xlib_display.nvcontrol_get_performance_modes(gpu)
                 perf_mode = next((p for p in perf_modes if p['perf'] == len(perf_modes) - 1), None)
+                clock_info = xlib_display.nvcontrol_get_clock_info(gpu)
                 if perf_mode:
                     clocks = Clocks(
-                        graphic_current=self._nvml_get_val(py3nvml.nvmlDeviceGetClockInfo, handle, NVML_CLOCK_GRAPHICS),
-                        graphic_max=perf_mode.get('nvclockmax'),
+                        graphic_current=clock_info.get('nvclock') if clock_info is not None else None,
+                        graphic_max=perf_mode.get('nvclockmax') if perf_mode is not None else None,
                         sm_current=self._nvml_get_val(py3nvml.nvmlDeviceGetClockInfo, handle, NVML_CLOCK_SM),
                         sm_max=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxClockInfo, handle, NVML_CLOCK_SM),
-                        memory_current=self._nvml_get_val(py3nvml.nvmlDeviceGetClockInfo, handle, NVML_CLOCK_MEM),
-                        memory_max=perf_mode.get('memclockmax'),
+                        memory_current=clock_info.get('memclock') if clock_info is not None else None,
+                        memory_max=perf_mode.get('memclockmax') if perf_mode is not None else None,
                         video_current=self._nvml_get_val(py3nvml.nvmlDeviceGetClockInfo, handle, 3),  # Missing
                         video_max=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxClockInfo, handle, 3)  # Missing
                     )
@@ -225,7 +223,7 @@ class NvidiaRepository:
                str(gpu_index),
                '-pl',
                str(limit)]
-        result = run_and_get_stdout(cmd, ['xargs'])
+        result = run_and_get_stdout(cmd)
         LOG.info("Exit code: %d. %s", result[0], result[1])
         return result[0] == 0
 

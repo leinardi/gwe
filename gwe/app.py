@@ -42,7 +42,6 @@ LOG = logging.getLogger(__name__)
 class Application(Gtk.Application):
     @inject
     def __init__(self,
-                 database: SqliteDatabase,
                  view: MainView,
                  presenter: MainPresenter,
                  builder: MainBuilder,
@@ -54,17 +53,6 @@ class Application(Gtk.Application):
         super().__init__(*args, application_id=APP_ID,
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
                          **kwargs)
-
-        database.connect()
-        database.create_tables([
-            SpeedStep,
-            FanProfile,
-            CurrentFanProfile,
-            OverclockProfile,
-            CurrentOverclockProfile,
-            Setting
-        ])
-
         if FanProfile.select().count() == 0:
             load_fan_db_default_data()
         if OverclockProfile.select().count() == 0:
