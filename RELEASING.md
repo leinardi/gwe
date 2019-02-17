@@ -4,7 +4,7 @@
 2. Update `data/com.leinardi.gwe.appdata.xml` for the impending release.
 3. Update the `README.md` with the new changes (if necessary).
 4. `git commit -am "Prepare for release X.Y.Z"` (where X.Y.Z is the version you set in step 1)
-5. `flatpak uninstall com.leinardi.gwe && ./build.sh --flatpak-local --flatpak-install --flatpak-bundle && flatpak run com.leinardi.gwe`
+5. `flatpak uninstall com.leinardi.gwe --assumeyes && ./build.sh --flatpak-local --flatpak-install --flatpak-bundle && flatpak run com.leinardi.gwe`
 6. Tag version `X.Y.Z` (`git tag -s X.Y.Z`) (where X.Y.Z is the version you set in step 1)
 7. Update tag and SHA in `flatpak/com.leinardi.gwe.json`
 8. `git push --follow-tags` 
