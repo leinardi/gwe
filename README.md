@@ -2,6 +2,14 @@
 GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video card 
 and graphics processor.
 
+## 💡 Features
+
+* Show general GPU stats (model name, driver version, gpu/memory/power usage, clocks, temps, etc)
+* GPU and Memory overclock offset profiles
+* Custom Fan curve profiles
+* Change power limit
+* Historical data graphs
+
 <img src="/art/screenshot-1.png" width="800"/>
 
 ## 📦 How to get GWE
