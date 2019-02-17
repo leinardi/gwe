@@ -27,6 +27,13 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+        <release date="2019-02-17" version="0.12.1">
+            <description>
+                <ul>
+                    <li>Removing offsets from LevelBars to keep consistent colors</li>
+                </ul>
+            </description>
+        </release>
         <release date="2019-02-17" version="0.12.0">
             <description>
                 <ul>

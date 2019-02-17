@@ -20,9 +20,7 @@ from collections import OrderedDict
 from typing import Optional, Dict, List, Tuple, Any
 
 from gwe.di import MainBuilder
-from gwe.repository import NOT_AVAILABLE_STRING
 from gwe.view.edit_fan_profile import EditFanProfileView
-from gwe.util.path import get_data_path
 from gwe.util.view import hide_on_delete, init_plot_chart, get_fan_profile_data, is_dazzle_version_supported
 from injector import inject, singleton
 import gi
@@ -30,13 +28,12 @@ from gi.repository import Gtk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 
-# AppIndicator3 may not be installed
 from gwe.interactor import SettingsInteractor
 from gwe.view.edit_overclock_profile import EditOverclockProfileView
 from gwe.view.historical_data import HistoricalDataView
 from gwe.view.preferences import PreferencesView
 
-try:
+try:  # AppIndicator3 may not be installed
     gi.require_version('AppIndicator3', '0.1')
     from gi.repository import AppIndicator3
 except (ImportError, ValueError):
@@ -237,6 +234,10 @@ class MainView(MainViewInterface):
                 self._overclock_warning_label.set_visible(not gpu_status.overclock.available)
                 self._fan_profile_frame.set_sensitive(gpu_status.fan.control_allowed)
                 self._fan_warning_label.set_visible(not gpu_status.fan.control_allowed)
+                self._remove_level_bar_offsets(self._info_gpu_usage_levelbar)
+                self._remove_level_bar_offsets(self._info_memory_usage_levelbar)
+                self._remove_level_bar_offsets(self._info_encoder_usage_levelbar)
+                self._remove_level_bar_offsets(self._info_decoder_usage_levelbar)
                 minimum = gpu_status.power.minimum
                 maximum = gpu_status.power.maximum
                 default = gpu_status.power.default
@@ -277,8 +278,8 @@ class MainView(MainViewInterface):
             self._set_entry_text(self._clocks_memory_max_entry, "%d MHz", gpu_status.clocks.memory_max)
             self._set_entry_text(self._clocks_video_current_entry, "%d MHz", gpu_status.clocks.video_current)
             self._set_entry_text(self._clocks_video_max_entry, "%d MHz", gpu_status.clocks.video_max)
-            self._set_level_bar(self._info_memory_usage_levelbar, gpu_status.info.memory_usage)
             self._set_level_bar(self._info_gpu_usage_levelbar, gpu_status.info.gpu_usage)
+            self._set_level_bar(self._info_memory_usage_levelbar, gpu_status.info.memory_usage)
             self._set_level_bar(self._info_encoder_usage_levelbar, gpu_status.info.encoder_usage)
             self._set_level_bar(self._info_decoder_usage_levelbar, gpu_status.info.decoder_usage)
             if gpu_status.overclock.available:
@@ -325,9 +326,16 @@ class MainView(MainViewInterface):
             label.set_markup('')
 
     @staticmethod
+    def _remove_level_bar_offsets(levelbar: Gtk.LevelBar) -> None:
+        levelbar.remove_offset_value("low")
+        levelbar.remove_offset_value("high")
+        levelbar.remove_offset_value("full")
+        levelbar.remove_offset_value("alert")
+
+    @staticmethod
     def _set_level_bar(levelbar: Gtk.LevelBar, value: Optional[int]) -> None:
         if value is not None:
-            levelbar.set_value(int(value))
+            levelbar.set_value(value / 100)
             levelbar.set_sensitive(True)
         else:
             levelbar.set_value(0)

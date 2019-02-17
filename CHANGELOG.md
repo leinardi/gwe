@@ -1,3 +1,9 @@
+Version 0.12.1
+==============
+Released: 2019-02-17
+
+ * Removing offsets from LevelBars to keep consistent colors
+
 Version 0.12.0
 ==============
 Released: 2019-02-17
