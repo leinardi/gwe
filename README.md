@@ -241,16 +241,19 @@ The name comes from the slogan of the GeForce 8 series, that was "Green with env
 Nvidia is meant to be pronounced "invidia", which means envy in Latin (and Italian). And their logo is green so, GreenWithEnvy
 
 ## 💚 How to help the project
-### Discord server
-If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/YjPdNff  
-Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
 
 ### We need people with experience in at least one of these topics:
+ - **Icon/Logo design** (see [#43](https://gitlab.com/leinardi/gwe/issues/43))
  - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
  - Getting current GTK theme text color (see [#36](https://gitlab.com/leinardi/gwe/issues/36))
  - Making Bumblebee work with Flatpak (see [#35](https://gitlab.com/leinardi/gwe/issues/35))
 
 Knowing Python will be also very helpful but not strictly necessary.
+
+### Discord server
+If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/YjPdNff  
+Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
+
 
 ### Can I support this project some other way?
 
