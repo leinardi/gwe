@@ -27,14 +27,16 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
-        <release date="2019-02-16" version="0.12.0">
+        <release date="2019-02-17" version="0.12.0">
             <description>
                 <ul>
                     <li>Using NV-CONTROL instead of NVML, when possible, to provide better compatibility with older
                         cards
                     </li>
-                    <li>Fix #11: Power limit Apply should check exit code</li>
+                    <li>Added changelog link to app menu</li>
                     <li>Fix #9: The Close button in the About dialog box does not work on KDE</li>
+                    <li>Fix #11: Power limit Apply should check exit code</li>
+                    <li>Fix #34: Graph max sample based on refresh interval</li>
                 </ul>
             </description>
         </release>

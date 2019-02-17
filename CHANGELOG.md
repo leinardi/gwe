@@ -1,11 +1,13 @@
 Version 0.12.0
 ==============
-Released: 2019-02-16
+Released: 2019-02-17
 
  * Using NV-CONTROL instead of NVML, when possible, to provide better
    compatibility with older cards
- * Fix #11: Power limit Apply should check exit code
+ * Added changelog link to app menu
  * Fix #9: The Close button in the About dialog box does not work on KDE
+ * Fix #11: Power limit Apply should check exit code
+ * Fix #34: Graph max sample based on refresh interval
 
 Version 0.11.0
 ==============
