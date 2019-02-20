@@ -1,3 +1,9 @@
+Version 0.13
+============
+Released: 2019-02-23
+
+ * New GWE official icon! (closes #43)
+
 Version 0.12.1
 ==============
 Released: 2019-02-17
