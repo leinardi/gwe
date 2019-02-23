@@ -194,7 +194,7 @@ class NvidiaRepository:
                 # )
                 gpu_status_list.append(gpu_status)
             time2 = time.time()
-            LOG.debug('Fetching new data took {%.3f} ms', ((time2 - time1) * 1000.0))
+            LOG.debug(f'Fetching new data took {((time2 - time1) * 1000.0):.3f} ms')
             return Status(gpu_status_list)
         except:
             LOG.exception("Error while getting status")
@@ -258,7 +258,7 @@ class NvidiaRepository:
             if err.value == NVML_ERROR_UNKNOWN:
                 LOG.warning(f"Unknown error while executing function {a_function.__name__}")
                 return None
-            LOG.error("Error value = %d ", err.value)
+            LOG.error(f"Error value = {err.value}")
             raise err
 
     def _get_power_from_py3nvml(self, handle: Any) -> Power:
