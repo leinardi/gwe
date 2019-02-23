@@ -60,10 +60,10 @@ class HistoricalDataView(HistoricalDataViewInterface):
         self._graph_views: Dict[GraphType, Tuple[Gtk.Label, Gtk.Label, Gtk.Label]] = {}
         self._graph_models: Dict[GraphType, Dazzle.GraphModel] = {}
         for graph_type in GraphType:
-            self._graph_container: Gtk.Frame = self._builder.get_object('graph_container_%d' % graph_type.value)
-            self._graph_views[graph_type] = (self._builder.get_object('graph_min_value_%d' % graph_type.value),
-                                             self._builder.get_object('graph_max_value_%d' % graph_type.value),
-                                             self._builder.get_object('graph_max_axis_%d' % graph_type.value))
+            self._graph_container: Gtk.Frame = self._builder.get_object(f'graph_container_{graph_type.value}')
+            self._graph_views[graph_type] = (self._builder.get_object(f'graph_min_value_{graph_type.value}'),
+                                             self._builder.get_object(f'graph_max_value_{graph_type.value}'),
+                                             self._builder.get_object(f'graph_max_axis_{graph_type.value}'))
             graph_views = Dazzle.GraphView()
             graph_model = Dazzle.GraphModel()
             graph_renderer = GraphStackedRenderer()
@@ -102,23 +102,23 @@ class HistoricalDataView(HistoricalDataViewInterface):
             self._graph_models[graph_type].props.value_max = max(data_tuple[4], max_value)
             graph_model_iter = self._graph_models[graph_type].push(GLib.get_monotonic_time())
             self._graph_models[graph_type].iter_set(graph_model_iter, 0, data_tuple[1])
-            self._graph_views[graph_type][2].set_text("%.0f %s" % (data_tuple[1], data_tuple[2]))
+            self._graph_views[graph_type][2].set_text(f"{data_tuple[1]:.0f} {data_tuple[2]}")
 
             model_iter = Dazzle.GraphModelIter()
             if self._dialog.props.visible and self._graph_models[graph_type].get_iter_first(model_iter):
                 min_value = data_tuple[4] * 10
                 max_value = data_tuple[3]
-                while Dazzle.GraphModel.iter_next(model_iter):
+                while Dazzle.GraphModel.iter_next(iter=model_iter):
                     gval = GObject.Value()
-                    Dazzle.GraphModel.iter_get_value(model_iter, 0, gval)
+                    Dazzle.GraphModel.iter_get_value(iter=model_iter, column=0, value=gval)
                     val = gval.get_double()
                     min_value = min(val, min_value)
                     max_value = max(val, max_value)
-                self._graph_views[graph_type][0].set_text("%.0f" % min_value)
-                self._graph_views[graph_type][1].set_text("%.0f" % max_value)
+                self._graph_views[graph_type][0].set_text(f"{min_value:.0f}")
+                self._graph_views[graph_type][1].set_text(f"{max_value:.0f}")
                 self._graph_models[graph_type].props.value_max = max(data_tuple[4], max_value)
         time2 = time.time()
-        LOG.debug('Refresh graph took {%.3f} ms', ((time2 - time1) * 1000.0))
+        LOG.debug(f'Refresh graph took {((time2 - time1) * 1000.0):.3f} ms')
 
     def show(self) -> None:
         self._dialog.show_all()

@@ -93,35 +93,35 @@ class Application(Gtk.Application):
             logging.getLogger().setLevel(logging.DEBUG)
             for handler in logging.getLogger().handlers:
                 handler.formatter = logging.Formatter(LOG_DEBUG_FORMAT)
-            LOG.debug("Option %s selected", _Options.DEBUG.value)
+            LOG.debug(f"Option {_Options.DEBUG.value} selected")
 
         if _Options.VERSION.value in options:
-            LOG.debug("Option %s selected", _Options.VERSION.value)
+            LOG.debug(f"Option {_Options.VERSION.value} selected")
             print(APP_VERSION)
             start_app = False
 
         if _Options.HIDE_WINDOW.value in options:
-            LOG.debug("Option %s selected", _Options.HIDE_WINDOW.value)
+            LOG.debug(f"Option {_Options.HIDE_WINDOW.value} selected")
             self._start_hidden = True
 
         if _Options.APPLICATION_ENTRY.value in options:
-            LOG.debug("Option %s selected", _Options.APPLICATION_ENTRY.value)
+            LOG.debug(f"Option {_Options.APPLICATION_ENTRY.value} selected")
             add_application_entry()
             start_app = False
 
         if _Options.AUTOSTART_ON.value in options:
-            LOG.debug("Option %s selected", _Options.AUTOSTART_ON.value)
+            LOG.debug(f"Option {_Options.AUTOSTART_ON.value} selected")
             set_autostart_entry(True)
             start_app = False
 
         if _Options.AUTOSTART_OFF.value in options:
-            LOG.debug("Option %s selected", _Options.AUTOSTART_OFF.value)
+            LOG.debug(f"Option {_Options.AUTOSTART_OFF.value} selected")
             set_autostart_entry(True)
             start_app = False
 
         if _Options.CTRL_DISPLAY.value in options:
             param = options[_Options.CTRL_DISPLAY.value]
-            LOG.debug("Option %s selected: %s", _Options.CTRL_DISPLAY.value, param)
+            LOG.debug(f"Option {_Options.CTRL_DISPLAY.value} selected: {param}")
             self._nvidia_repository.set_ctrl_display(param)
 
         if start_app:

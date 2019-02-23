@@ -109,6 +109,6 @@ class EditOverclockProfilePresenter:
     @staticmethod
     def _handle_set_overclock_result(result: Any) -> bool:
         if not isinstance(result, bool) or not result:
-            LOG.exception("Set overclock error: %s", str(result))
+            LOG.exception(f"Set overclock error: {str(result)}")
             return False
         return True

@@ -215,12 +215,12 @@ class MainPresenter:
 
     def _register_db_listeners(self) -> None:
         self._speed_step_changed_subject.subscribe(on_next=self._on_speed_step_list_changed,
-                                                   on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
+                                                   on_error=lambda e: LOG.exception(f"Db signal error: {str(e)}"))
         self._fan_profile_changed_subject.subscribe(on_next=self._on_fan_profile_list_changed,
-                                                    on_error=lambda e: LOG.exception("Db signal error: %s", str(e)))
+                                                    on_error=lambda e: LOG.exception(f"Db signal error: {str(e)}"))
         self._overclock_profile_changed_subject.subscribe(on_next=self._on_overclock_profile_list_changed,
-                                                          on_error=lambda e: LOG.exception("Db signal error: %s",
-                                                                                           str(e)))
+                                                          on_error=lambda e: LOG.exception(
+                                                              f"Db signal error: {str(e)}"))
 
     def _on_speed_step_list_changed(self, db_change: DbChange) -> None:
         profile = db_change.entry.profile
@@ -256,7 +256,7 @@ class MainPresenter:
                  .flat_map(lambda _: self._get_status())
                  .observe_on(GtkScheduler())
                  .subscribe(on_next=self._on_status_updated,
-                            on_error=lambda e: LOG.exception("Refresh error: %s", str(e)))
+                            on_error=lambda e: LOG.exception(f"Refresh error: {str(e)}"))
                  )
 
     def _on_status_updated(self, status: Optional[Status]) -> None:
@@ -289,7 +289,7 @@ class MainPresenter:
                         if fan.fan_list and fan.fan_list[0][0] != speed:
                             self._set_fan_speed(gpu_status.index, round(speed))
                     except ValueError:
-                        LOG.exception('Unable to parse temperature %s', gpu_status.temp.gpu)
+                        LOG.exception(f'Unable to parse temperature {gpu_status.temp.gpu}')
 
     @staticmethod
     def _get_fan_duty(profile: FanProfile, gpu_temperature: float) -> float:
@@ -313,7 +313,7 @@ class MainPresenter:
         data: List[Tuple[int, str]] = []
         for fan_profile in FanProfile.select():
             if self._fan_profile_applied is not None and self._fan_profile_applied.id == fan_profile.id:
-                name = "<b>%s</b>" % fan_profile.name
+                name = f"<b>{fan_profile.name}</b>"
             else:
                 name = fan_profile.name
             data.append((fan_profile.id, name))
@@ -346,7 +346,7 @@ class MainPresenter:
             .add(self._set_fan_speed_interactor.execute(gpu_index, speed, manual_control)
                  .subscribe_on(self._scheduler)
                  .observe_on(GtkScheduler())
-                 .subscribe(on_error=lambda e: (LOG.exception("Set cooling error: %s", str(e)),
+                 .subscribe(on_error=lambda e: (LOG.exception(f"Set cooling error: {str(e)}"),
                                                 self.main_view.set_statusbar_text('Error applying fan profile!'))))
 
     def _update_current_fan_profile(self, profile: FanProfile) -> None:
@@ -356,7 +356,7 @@ class MainPresenter:
         else:
             current.profile = profile
             current.save()
-        self.main_view.set_statusbar_text('%s fan profile selected' % profile.name)
+        self.main_view.set_statusbar_text(f'{profile.name} fan profile selected')
 
     def _refresh_overclock_profile_ui(self, init: bool = False, profile_id: Optional[int] = None) -> None:
         gpu_index = 0
@@ -375,7 +375,7 @@ class MainPresenter:
                                                    overclock_profile.memory)
             if self._overclock_profile_applied is not None \
                     and self._overclock_profile_applied.id == overclock_profile.id:
-                name = "<b>{}</b>".format(name_with_freqs)
+                name = f"<b>{name_with_freqs}</b>"
             else:
                 name = name_with_freqs
             data.append((overclock_profile.id, name))
@@ -410,10 +410,10 @@ class MainPresenter:
         else:
             current.profile = profile
             current.save()
-        self.main_view.set_statusbar_text('%s overclock profile selected' % profile.name)
+        self.main_view.set_statusbar_text(f'{profile.name} overclock profile selected')
 
     def _log_exception_return_empty_observable(self, ex: Exception) -> Observable:
-        LOG.exception("Err = %s", ex)
+        LOG.exception(f"Err = {ex}")
         self.main_view.set_statusbar_text(str(ex))
         return Observable.just(None)
 
@@ -427,7 +427,7 @@ class MainPresenter:
                  .subscribe_on(self._scheduler)
                  .observe_on(GtkScheduler())
                  .subscribe(on_next=self._handle_new_version_response,
-                            on_error=lambda e: LOG.exception("Check new version error: %s", str(e)))
+                            on_error=lambda e: LOG.exception(f"Check new version error: {str(e)}"))
                  )
 
     def _handle_set_power_limit_result(self, result: Any) -> None:
@@ -439,24 +439,24 @@ class MainPresenter:
 
     def _handle_generic_set_result(self, result: Any, name: str) -> bool:
         if not isinstance(result, bool):
-            LOG.exception("Set overclock error: %s", str(result))
-            self.main_view.set_statusbar_text('Error applying %s! %s' % (name, str(result)))
+            LOG.exception(f"Set overclock error: {str(result)}")
+            self.main_view.set_statusbar_text(f'Error applying {name}! {str(result)}')
             return False
         if not result:
-            self.main_view.set_statusbar_text('Error applying %s!' % name)
+            self.main_view.set_statusbar_text(f'Error applying {name}!')
             return False
-        self.main_view.set_statusbar_text('%s applied' % name.capitalize())
+        self.main_view.set_statusbar_text(f'{name.capitalize()} applied')
         return True
 
     def _handle_new_version_response(self, version: Optional[str]) -> None:
         if version is not None:
-            message = "%s version <b>%s</b> is available! Click <a href=\"%s\"><b>here</b></a> " \
-                      "to see what's new." % (APP_NAME, version, self._get_changelog_uri(version))
+            message = f"{APP_NAME} version <b>{version}</b> is available! " \
+                f"Click <a href=\"{self._get_changelog_uri(version)}\"><b>here</b></a> to see what's new."
             self.main_view.show_main_infobar_message(message, True)
-            message = "%s version <b>%s</b> is available! Click here to see what's new: %s" \
-                      % (APP_NAME, version, self._get_changelog_uri(version))
+            message = f"{APP_NAME} version <b>{version}</b> is available! " \
+                f"lick here to see what's new: {self._get_changelog_uri(version)}"
             show_notification("GWE update available!", message, "dialog-information")
 
     @staticmethod
     def _get_changelog_uri(version: str = APP_VERSION) -> str:
-        return "{}/blob/{}/CHANGELOG.md".format(APP_SOURCE_URL, version)
+        return f"{APP_SOURCE_URL}/blob/{version}/CHANGELOG.md"

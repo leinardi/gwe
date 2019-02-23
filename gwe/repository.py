@@ -224,7 +224,7 @@ class NvidiaRepository:
                '-pl',
                str(limit)]
         result = run_and_get_stdout(cmd)
-        LOG.info("Exit code: %d. %s", result[0], result[1])
+        LOG.info(f"Exit code: {result[0]}. {result[1]}")
         return result[0] == 0
 
     def set_all_gpus_fan_to_auto(self) -> None:
@@ -253,10 +253,10 @@ class NvidiaRepository:
             return a_function(*args)
         except NVMLError as err:
             if err.value == NVML_ERROR_NOT_SUPPORTED:
-                LOG.debug("Function %s not supported", a_function.__name__)
+                LOG.debug(f"Function {a_function.__name__} not supported")
                 return None
             if err.value == NVML_ERROR_UNKNOWN:
-                LOG.warning("Unknown error while executing function %s", a_function.__name__)
+                LOG.warning(f"Unknown error while executing function {a_function.__name__}")
                 return None
             LOG.error("Error value = %d ", err.value)
             raise err

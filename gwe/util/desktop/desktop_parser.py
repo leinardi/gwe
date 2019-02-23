@@ -51,11 +51,11 @@ class DesktopParser(object):
         for key, value in self.__property_list:
             if key.lower() == name.lower():
                 return value
-        raise KeyError('%s' % name)
+        raise KeyError(name)
 
     def set(self, name: str, value: str) -> None:
         if not name:
-            raise ValueError("Invalid value for name: '%s'" % name)
+            raise ValueError(f"Invalid value for name: '{name}'")
 
         for i, (key, _) in enumerate(self.__property_list):
             if key.lower() == name.lower():
@@ -81,4 +81,4 @@ class DesktopParser(object):
         if value in ("0", "no", "false", "off"):
             return False
 
-        raise ValueError("Cannot coerce '%s' to boolean" % value)
+        raise ValueError(f"Cannot coerce '{value}' to boolean")

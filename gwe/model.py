@@ -193,7 +193,7 @@ class FanProfileType(Enum):
 class FanProfile(Model):
     id = AutoIncrementField()
     type = CharField(
-        constraints=[Check("type='%s' OR type='%s'" % (FanProfileType.AUTO.value, FanProfileType.FAN_CURVE.value))],
+        constraints=[Check(f"type='{FanProfileType.AUTO.value}' OR type='{FanProfileType.FAN_CURVE.value}'")],
         default=FanProfileType.FAN_CURVE.value)
     name = CharField()
     read_only = BooleanField(default=False)
@@ -256,8 +256,8 @@ class OverclockProfileType(Enum):
 class OverclockProfile(Model):
     id = AutoIncrementField()
     type = CharField(
-        constraints=[Check("type='%s' OR type='%s'" % (
-            OverclockProfileType.DEFAULT.value, OverclockProfileType.OFFSET.value))],
+        constraints=[Check(f"type='{OverclockProfileType.DEFAULT.value}' "
+                           f"OR type='{OverclockProfileType.OFFSET.value}'")],
         default=OverclockProfileType.OFFSET.value)
     name = CharField()
     gpu = IntegerField(default=0)
