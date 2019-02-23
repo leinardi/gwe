@@ -22,12 +22,10 @@ from typing import Any, Optional, List
 
 from gi.repository import Gtk, Gio, GLib
 from injector import inject
-from peewee import SqliteDatabase
 
 from gwe.conf import APP_NAME, APP_ID, APP_VERSION, APP_ICON_NAME
 from gwe.di import MainBuilder
-from gwe.model import FanProfile, SpeedStep, Setting, CurrentFanProfile, load_fan_db_default_data, OverclockProfile, \
-    load_overclock_db_default_data, CurrentOverclockProfile
+from gwe.model import FanProfile, load_fan_db_default_data, OverclockProfile, load_overclock_db_default_data
 from gwe.presenter.main import MainPresenter
 from gwe.repository import NvidiaRepository
 from gwe.util.deployment import is_flatpak

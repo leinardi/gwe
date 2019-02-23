@@ -48,59 +48,59 @@ class GraphStackedRenderer(GObject.Object, Dazzle.GraphRenderer):
                   x_end: int,
                   y_begin: float,
                   y_end: float,
-                  cr: cairo.Context,
+                  cairo_context: cairo.Context,
                   area: cairo.RectangleInt) -> None:
         model_iter = Dazzle.GraphModelIter()
-        cr.save()
+        cairo_context.save()
 
         if model.get_iter_first(model_iter):
             chunk = area.width / (model.props.max_samples - 1) / 2.0
             last_x = self._calc_x(model_iter, x_begin, x_end, area.width)
-            last_y = area.height
+            last_y = float(area.height)
 
-            cr.move_to(last_x, area.height)
+            cairo_context.move_to(last_x, area.height)
 
             while Dazzle.GraphModel.iter_next(model_iter):
                 x = self._calc_x(model_iter, x_begin, x_end, area.width)
                 y = self._calc_y(model_iter, y_begin, y_end, area.height, self._column)
 
-                cr.curve_to(last_x + chunk, last_y, last_x + chunk, y, x, y)
+                cairo_context.curve_to(last_x + chunk, last_y, last_x + chunk, y, x, y)
 
                 last_x = x
                 last_y = y
 
-        cr.set_line_width(self._line_width)
-        cr.set_source_rgba(self._stacked_color_rgba.red,
-                           self._stacked_color_rgba.green,
-                           self._stacked_color_rgba.blue,
-                           self._stacked_color_rgba.alpha)
-        cr.rel_line_to(0, area.height)
-        cr.stroke_preserve()
-        cr.close_path()
-        cr.fill()
+        cairo_context.set_line_width(self._line_width)
+        cairo_context.set_source_rgba(self._stacked_color_rgba.red,
+                                      self._stacked_color_rgba.green,
+                                      self._stacked_color_rgba.blue,
+                                      self._stacked_color_rgba.alpha)
+        cairo_context.rel_line_to(0, area.height)
+        cairo_context.stroke_preserve()
+        cairo_context.close_path()
+        cairo_context.fill()
 
         if model.get_iter_first(model_iter):
             chunk = area.width / (model.props.max_samples - 1) / 2.0
             last_x = self._calc_x(model_iter, x_begin, x_end, area.width)
-            last_y = area.height
+            last_y = float(area.height)
 
-            cr.move_to(last_x, last_y)
+            cairo_context.move_to(last_x, last_y)
 
             while Dazzle.GraphModel.iter_next(model_iter):
                 x = self._calc_x(model_iter, x_begin, x_end, area.width)
                 y = self._calc_y(model_iter, y_begin, y_end, area.height, self._column)
 
-                cr.curve_to(last_x + chunk, last_y, last_x + chunk, y, x, y)
+                cairo_context.curve_to(last_x + chunk, last_y, last_x + chunk, y, x, y)
 
                 last_x = x
                 last_y = y
 
-        cr.set_source_rgba(self._stroke_color_rgba.red,
-                           self._stroke_color_rgba.green,
-                           self._stroke_color_rgba.blue,
-                           self._stacked_color_rgba.alpha)
-        cr.stroke()
-        cr.restore()
+        cairo_context.set_source_rgba(self._stroke_color_rgba.red,
+                                      self._stroke_color_rgba.green,
+                                      self._stroke_color_rgba.blue,
+                                      self._stacked_color_rgba.alpha)
+        cairo_context.stroke()
+        cairo_context.restore()
 
     @staticmethod
     def _calc_x(model_iter: Dazzle.GraphModelIter, begin: float, end: int, width: int) -> float:

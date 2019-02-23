@@ -69,7 +69,7 @@ class HistoricalDataView(HistoricalDataViewInterface):
             graph_renderer = GraphStackedRenderer()
             graph_views.set_hexpand(True)
             graph_views.props.height_request = 80
-            graph_renderer._line_width = 1.5
+            graph_renderer.set_line_width(1.5)
             stroke_color = Gdk.RGBA()
             stroke_color.parse(GRAPH_COLOR_HEX)
             stacked_color = Gdk.RGBA()
@@ -118,7 +118,7 @@ class HistoricalDataView(HistoricalDataViewInterface):
                 self._graph_views[graph_type][1].set_text("%.0f" % max_value)
                 self._graph_models[graph_type].props.value_max = max(data_tuple[4], max_value)
         time2 = time.time()
-        LOG.debug('Refresh graph took {%.3f} ms' % ((time2 - time1) * 1000.0))
+        LOG.debug('Refresh graph took {%.3f} ms', ((time2 - time1) * 1000.0))
 
     def show(self) -> None:
         self._dialog.show_all()

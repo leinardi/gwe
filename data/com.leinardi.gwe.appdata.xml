@@ -31,6 +31,7 @@
             <description>
                 <ul>
                     <li>New GWE official icon! (closes #43)</li>
+                    <li>A little code cleanup (fixed many PyLint and Mypy issues)</li>
                 </ul>
             </description>
         </release>

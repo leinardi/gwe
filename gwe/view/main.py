@@ -19,26 +19,25 @@ import logging
 from collections import OrderedDict
 from typing import Optional, Dict, List, Tuple, Any
 
-from gwe.di import MainBuilder
-from gwe.view.edit_fan_profile import EditFanProfileView
-from gwe.util.view import hide_on_delete, init_plot_chart, get_fan_profile_data, is_dazzle_version_supported
 from injector import inject, singleton
-import gi
 from gi.repository import Gtk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 
-from gwe.interactor import SettingsInteractor
-from gwe.view.edit_overclock_profile import EditOverclockProfileView
-from gwe.view.historical_data import HistoricalDataView
-from gwe.view.preferences import PreferencesView
-
 try:  # AppIndicator3 may not be installed
+    import gi
+
     gi.require_version('AppIndicator3', '0.1')
     from gi.repository import AppIndicator3
 except (ImportError, ValueError):
     AppIndicator3 = None
-
+from gwe.di import MainBuilder
+from gwe.view.edit_fan_profile import EditFanProfileView
+from gwe.util.view import hide_on_delete, init_plot_chart, get_fan_profile_data, is_dazzle_version_supported
+from gwe.interactor import SettingsInteractor
+from gwe.view.edit_overclock_profile import EditOverclockProfileView
+from gwe.view.historical_data import HistoricalDataView
+from gwe.view.preferences import PreferencesView
 from gwe.model import Status, FanProfile
 from gwe.conf import APP_PACKAGE_NAME, APP_ID, APP_NAME, APP_VERSION, APP_SOURCE_URL, APP_ICON_NAME_SYMBOLIC
 from gwe.presenter.main import MainPresenter, MainViewInterface
@@ -127,14 +126,14 @@ class MainView(MainViewInterface):
         self._temp_max_gpu_value: Gtk.Label = self._builder.get_object('temp_max_gpu_value')
         self._temp_slowdown_value: Gtk.Label = self._builder.get_object('temp_slowdown_value')
         self._temp_shutdown_value: Gtk.Label = self._builder.get_object('temp_shutdown_value')
-        self._fan_duty: Tuple[Gtk.Label] = (
+        self._fan_duty: Tuple = (
             self._builder.get_object('fan_duty_0'),
             self._builder.get_object('fan_duty_1'),
             self._builder.get_object('fan_duty_2'),
             self._builder.get_object('fan_duty_3'),
             self._builder.get_object('fan_duty_4')
         )
-        self._fan_rpm: Tuple[Gtk.Label] = (
+        self._fan_rpm: Tuple = (
             self._builder.get_object('fan_rpm_0'),
             self._builder.get_object('fan_rpm_1'),
             self._builder.get_object('fan_rpm_2'),
@@ -212,8 +211,9 @@ class MainView(MainViewInterface):
 
     def refresh_status(self, status: Optional[Status]) -> None:
         LOG.debug('view status')
+        gpu_index = 0
         if status:
-            gpu_status = status.gpu_status_list[0]
+            gpu_status = status.gpu_status_list[gpu_index]
             if self._first_refresh:
                 self._first_refresh = False
                 self._set_entry_text(self._info_name_entry, gpu_status.info.name)

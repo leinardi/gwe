@@ -64,7 +64,8 @@ disable=missing-docstring,
     too-many-arguments,
     too-many-instance-attributes,
     arguments-differ,
-    too-few-public-methods
+    too-few-public-methods,
+    duplicate-code
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -334,13 +335,7 @@ function-naming-style=snake_case
 #function-rgx=
 
 # Good variable names which should always be accepted, separated by a comma.
-good-names=i,
-           j,
-           k,
-           ex,
-           Run,
-           _,
-           id
+good-names=i,j,k,x,y,z,ex,Run,_,id
 
 # Include a hint for the correct naming format with invalid-name.
 include-naming-hint=no
@@ -424,7 +419,7 @@ max-bool-expr=5
 max-branches=12
 
 # Maximum number of locals for function / method body.
-max-locals=15
+max-locals=20
 
 # Maximum number of parents for a class (see R0901).
 max-parents=7

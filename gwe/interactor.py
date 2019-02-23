@@ -107,6 +107,7 @@ class SettingsInteractor:
         setting: Setting = Setting.get_or_none(key=key)
         if setting is not None:
             return int(setting.value)
+        assert default is not None
         return default
 
     @staticmethod

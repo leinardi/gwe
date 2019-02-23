@@ -111,5 +111,4 @@ class EditOverclockProfilePresenter:
         if not isinstance(result, bool) or not result:
             LOG.exception("Set overclock error: %s", str(result))
             return False
-        else:
-            return True
+        return True

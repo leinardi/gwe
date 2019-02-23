@@ -91,7 +91,7 @@ class NvidiaRepository:
                 memory_total = None
                 memory_used = None
                 mem_info = self._nvml_get_val(py3nvml.nvmlDeviceGetMemoryInfo, handle)
-                if mem_info:
+                if mem_info is not None:
                     memory_used = mem_info.used // 1024 // 1024
                     memory_total = mem_info.total // 1024 // 1024
                 util = xlib_display.nvcontrol_get_utilization_rates(gpu)
@@ -194,7 +194,7 @@ class NvidiaRepository:
                 # )
                 gpu_status_list.append(gpu_status)
             time2 = time.time()
-            LOG.debug('Fetching new data took {%.3f} ms' % ((time2 - time1) * 1000.0))
+            LOG.debug('Fetching new data took {%.3f} ms', ((time2 - time1) * 1000.0))
             return Status(gpu_status_list)
         except:
             LOG.exception("Error while getting status")
@@ -213,7 +213,7 @@ class NvidiaRepository:
         gpu_result = xlib_display.nvcontrol_set_gpu_nvclock_offset(gpu, perf, gpu_offset)
         mem_result = xlib_display.nvcontrol_set_mem_transfer_rate_offset(gpu, perf, memory_offset * 2)
         xlib_display.close()
-        return gpu_result and mem_result
+        return gpu_result is True and mem_result is True
 
     @staticmethod
     def set_power_limit(gpu_index: int, limit: int) -> bool:
@@ -253,14 +253,13 @@ class NvidiaRepository:
             return a_function(*args)
         except NVMLError as err:
             if err.value == NVML_ERROR_NOT_SUPPORTED:
-                LOG.debug("Function %s not supported" % a_function.__name__)
+                LOG.debug("Function %s not supported", a_function.__name__)
                 return None
-            elif err.value == NVML_ERROR_UNKNOWN:
-                LOG.warning("Unknown error while executing function %s" % a_function.__name__)
+            if err.value == NVML_ERROR_UNKNOWN:
+                LOG.warning("Unknown error while executing function %s", a_function.__name__)
                 return None
-            else:
-                LOG.error("Error value = %d = " % err.value)
-                raise err
+            LOG.error("Error value = %d ", err.value)
+            raise err
 
     def _get_power_from_py3nvml(self, handle: Any) -> Power:
         power_con = self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementLimitConstraints, handle)
@@ -277,7 +276,7 @@ class NvidiaRepository:
         )
 
     @staticmethod
-    def _convert_milliwatt_to_watt(milliwatt: Optional[int]) -> float:
+    def _convert_milliwatt_to_watt(milliwatt: Optional[int]) -> Optional[float]:
         return None if milliwatt is None else milliwatt / 1000
 
     def _get_temp_from_py3nvml(self, handle: Any) -> Temp:

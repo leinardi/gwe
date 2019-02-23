@@ -3,6 +3,7 @@ Version 0.13
 Released: 2019-02-23
 
  * New GWE official icon! (closes #43)
+ * A little code cleanup (fixed many PyLint and Mypy issues)
 
 Version 0.12.1
 ==============
