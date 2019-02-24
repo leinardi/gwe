@@ -49,6 +49,9 @@ class MainViewInterface:
     def refresh_status(self, status: Optional[Status], gpu_index: int) -> None:
         raise NotImplementedError()
 
+    def refresh_gpu_combobox(self, data: List[Tuple[int, str]], active: Optional[int]) -> None:
+        raise NotImplementedError()
+
     def refresh_fan_profile_combobox(self, data: List[Tuple[int, str]], active: Optional[int]) -> None:
         raise NotImplementedError()
 
@@ -127,7 +130,7 @@ class MainPresenter:
         self._gpu_index: int = 0
 
     def on_start(self) -> None:
-        self._refresh_fan_profile_ui(True)
+        self._refresh_fan_profile_selector(True)
         self._register_db_listeners()
         self._start_refresh()
         self._check_new_version()
@@ -155,7 +158,7 @@ class MainPresenter:
             self._fan_profile_applied = self._fan_profile_selected
             if self._fan_profile_selected.type == FanProfileType.AUTO.value:
                 self._set_fan_speed(self._gpu_index, manual_control=False)
-            self._refresh_fan_profile_ui(profile_id=self._fan_profile_selected.id)
+            self._refresh_fan_profile_selector(profile_id=self._fan_profile_selected.id)
             self._update_current_fan_profile(self._fan_profile_selected)
 
     def on_overclock_edit_button_clicked(self, *_: Any) -> None:
@@ -170,7 +173,7 @@ class MainPresenter:
     def on_overclock_apply_button_clicked(self, *_: Any) -> None:
         if self._overclock_profile_selected:
             self._overclock_profile_applied = self._overclock_profile_selected
-            self._refresh_overclock_profile_ui(profile_id=self._overclock_profile_selected.id)
+            self._refresh_overclock_profile_selector(profile_id=self._overclock_profile_selected.id)
             assert self._latest_status is not None
             self._composite_disposable.add(self._set_overclock_interactor.execute(
                 self._gpu_index,
@@ -191,6 +194,15 @@ class MainPresenter:
 
     def on_menu_about_clicked(self, *_: Any) -> None:
         self.main_view.show_about_dialog()
+
+    def on_gpu_selected(self, widget: Any, *_: Any) -> None:
+        active = widget.get_active()
+        if active >= 0:
+            index = widget.get_model()[active][0]
+            if self._gpu_index != index:
+                self._gpu_index = index
+                self._refresh_gpu_selector(self._latest_status)
+                self._on_status_updated(self._latest_status)
 
     def on_fan_profile_selected(self, widget: Any, *_: Any) -> None:
         active = widget.get_active()
@@ -228,20 +240,20 @@ class MainPresenter:
     def _on_fan_profile_list_changed(self, db_change: DbChange) -> None:
         profile = db_change.entry
         if db_change.type == DbChange.DELETE:
-            self._refresh_fan_profile_ui()
+            self._refresh_fan_profile_selector()
             self._fan_profile_selected = None
             self._fan_profile_applied = None
         elif db_change.type == DbChange.INSERT or db_change.type == DbChange.UPDATE:
-            self._refresh_fan_profile_ui(profile_id=profile.id)
+            self._refresh_fan_profile_selector(profile_id=profile.id)
 
     def _on_overclock_profile_list_changed(self, db_change: DbChange) -> None:
         profile = db_change.entry
         if db_change.type == DbChange.DELETE:
-            self._refresh_overclock_profile_ui()
+            self._refresh_overclock_profile_selector()
             self._overclock_profile_selected = None
             self._overclock_profile_applied = None
         elif db_change.type == DbChange.INSERT or db_change.type == DbChange.UPDATE:
-            self._refresh_overclock_profile_ui(profile_id=profile.id)
+            self._refresh_overclock_profile_selector(profile_id=profile.id)
 
     def _start_refresh(self) -> None:
         LOG.debug("start refresh")
@@ -262,7 +274,8 @@ class MainPresenter:
             was_latest_status_none = self._latest_status is None
             self._latest_status = status
             if was_latest_status_none:
-                self._refresh_overclock_profile_ui(True)
+                self._refresh_gpu_selector(status)
+                self._refresh_overclock_profile_selector(True)
             self._update_fan(status)
             self.main_view.refresh_status(status, self._gpu_index)
             self._historical_data_presenter.add_status(status, self._gpu_index)
@@ -275,7 +288,7 @@ class MainPresenter:
             if self._fan_profile_selected is None and not fan.manual_control:
                 fan_profile = FanProfile.get(FanProfile.type == FanProfileType.AUTO.value)
                 self._fan_profile_applied = fan_profile
-                self._refresh_fan_profile_ui(profile_id=fan_profile.id)
+                self._refresh_fan_profile_selector(profile_id=fan_profile.id)
             elif self._fan_profile_applied and self._fan_profile_applied.type != FanProfileType.AUTO.value:
                 gpu_status = status.gpu_status_list[self._gpu_index]
                 if not self._fan_profile_applied.steps:
@@ -301,7 +314,16 @@ class MainPresenter:
             duty = float(p_2[1])
         return duty
 
-    def _refresh_fan_profile_ui(self, init: bool = False, profile_id: Optional[int] = None) -> None:
+    def _refresh_gpu_selector(self, status: Status) -> None:
+        data: List[Tuple[int, str]] = []
+        for index, gpu_status in enumerate(status.gpu_status_list):
+            name = gpu_status.info.name
+            if self._gpu_index == index:
+                name = f"<b>{name}</b>"
+            data.append((index, name))
+        self.main_view.refresh_gpu_combobox(data, self._gpu_index)
+
+    def _refresh_fan_profile_selector(self, init: bool = False, profile_id: Optional[int] = None) -> None:
         current: Optional[CurrentFanProfile] = None
         if init and self._settings_interactor.get_bool('settings_load_last_profile'):
             current = CurrentFanProfile.get_or_none()
@@ -355,7 +377,7 @@ class MainPresenter:
             current.save()
         self.main_view.set_statusbar_text(f'{profile.name} fan profile selected')
 
-    def _refresh_overclock_profile_ui(self, init: bool = False, profile_id: Optional[int] = None) -> None:
+    def _refresh_overclock_profile_selector(self, init: bool = False, profile_id: Optional[int] = None) -> None:
         current: Optional[CurrentOverclockProfile] = None
         assert self._latest_status is not None
         if init and self._settings_interactor.get_bool('settings_load_last_profile') \

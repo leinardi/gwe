@@ -149,8 +149,10 @@ class MainView(MainViewInterface):
         self._fan_apply_button: Gtk.Button = self._builder.get_object('fan_apply_button')
         self._overclock_apply_button: Gtk.Button = self._builder.get_object('overclock_apply_button')
         self._power_limit_apply_button: Gtk.Button = self._builder.get_object('power_limit_apply_button')
+        self._gpu_liststore: Gtk.ListStore = self._builder.get_object('gpu_liststore')
         self._fan_liststore: Gtk.ListStore = self._builder.get_object('fan_profile_liststore')
         self._overclock_liststore: Gtk.ListStore = self._builder.get_object('overclock_profile_liststore')
+        self._gpu_combobox: Gtk.ComboBox = self._builder.get_object('gpu_combobox')
         self._fan_combobox: Gtk.ComboBox = self._builder.get_object('fan_profile_combobox')
         self._overclock_combobox: Gtk.ComboBox = self._builder.get_object('overclock_profile_combobox')
         fan_scrolled_window: Gtk.ScrolledWindow = self._builder.get_object('fan_scrolled_window')
@@ -348,6 +350,16 @@ class MainView(MainViewInterface):
             self._plot_chart({})
         else:
             self._plot_chart(get_fan_profile_data(profile))
+
+    def refresh_gpu_combobox(self, data: List[Tuple[int, str]], active: Optional[int]) -> None:
+        self._gpu_liststore.clear()
+        self._first_refresh = True
+        for item in data:
+            self._gpu_liststore.append([item[0], item[1]])
+        self._gpu_combobox.set_model(self._gpu_liststore)
+        self._gpu_combobox.set_sensitive(len(self._gpu_liststore) > 1)
+        if active is not None:
+            self._gpu_combobox.set_active(active)
 
     def refresh_fan_profile_combobox(self, data: List[Tuple[int, str]], active: Optional[int]) -> None:
         self._fan_liststore.clear()
