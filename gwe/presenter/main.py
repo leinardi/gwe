@@ -36,7 +36,7 @@ from gwe.presenter.edit_fan_profile import EditFanProfilePresenter
 from gwe.presenter.edit_overclock_profile import EditOverclockProfilePresenter
 from gwe.presenter.historical_data import HistoricalDataPresenter
 from gwe.presenter.preferences import PreferencesPresenter
-from gwe.util.view import show_notification, open_uri
+from gwe.util.view import show_notification, open_uri, get_default_application
 
 LOG = logging.getLogger(__name__)
 _ADD_NEW_PROFILE_INDEX = -10
@@ -206,9 +206,7 @@ class MainPresenter:
 
     @staticmethod
     def on_quit_clicked(*_: Any) -> None:
-        from gwe.app import Application
-        application: Application = INJECTOR.get(Application)
-        application.quit()
+        get_default_application().quit()
 
     def on_toggle_app_window_clicked(self, *_: Any) -> None:
         self.main_view.toggle_window_visibility()

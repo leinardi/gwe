@@ -113,9 +113,12 @@ def is_dazzle_version_supported() -> bool:
     return False
 
 
+def get_default_application() -> Gtk.Application:
+    return Gtk.Application.get_default()
+
+
 def show_notification(summary: str, body: str, iconname: str) -> None:
-    from gwe.app import Application
-    application: Application = INJECTOR.get(Application)
+    application = get_default_application()
     notification = Gio.Notification.new(title=summary)
     notification.set_body(body)
     iconname = Gio.ThemedIcon.new(iconname=iconname)
