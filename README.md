@@ -3,6 +3,7 @@ GWE is a GTK system utility designed to provide information, control the fans an
 and graphics processor.
 
 ## 💡 Features
+<img src="/data/icons/hicolor/48x48@2x/apps/com.leinardi.gwe.png" width="96" align="right" hspace="0" />
 
 * Show general GPU stats (model name, driver version, gpu/memory/power usage, clocks, temps, etc)
 * GPU and Memory overclock offset profiles
@@ -10,7 +11,7 @@ and graphics processor.
 * Change power limit
 * Historical data graphs
 
-<img src="/art/screenshot-1.png" width="800"/>
+<img src="/art/screenshot-1.png" width="800" align="middle"/>
 
 ## 📦 How to get GWE
 ### Install from Flathub

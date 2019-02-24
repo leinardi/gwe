@@ -49,6 +49,9 @@ class HistoricalDataViewInterface:
     def hide(self) -> None:
         raise NotImplementedError()
 
+    def reset_graphs(self) -> None:
+        raise NotImplementedError()
+
     def refresh_graphs(self, data: Dict[GraphType, Tuple[int, float, str, float, float]]) -> None:
         raise NotImplementedError()
 
@@ -62,10 +65,14 @@ class HistoricalDataPresenter:
         LOG.debug("init HistoricalDataPresenter ")
         self._settings_interactor = settings_interactor
         self.view: HistoricalDataViewInterface = HistoricalDataViewInterface()
+        self._gpu_index: int = 0
 
-    def add_status(self, new_status: Status) -> None:
+    def add_status(self, new_status: Status, gpu_index: int) -> None:
         if is_dazzle_version_supported():
-            gpu_index = 0
+            if self._gpu_index != gpu_index:
+                self._gpu_index = gpu_index
+                self.view.reset_graphs()
+
             data: Dict[GraphType, Tuple[int, float, str, float, float]] = {}
             time = GLib.get_monotonic_time()
             gpu_status = new_status.gpu_status_list[gpu_index]
@@ -101,7 +108,8 @@ class HistoricalDataPresenter:
     def show(self) -> None:
         self.view.show()
 
-    def on_dialog_delete_event(self, widget: Gtk.Widget, *_: Any) -> Any:
+    @staticmethod
+    def on_dialog_delete_event(widget: Gtk.Widget, *_: Any) -> Any:
         return hide_on_delete(widget)
 
     def get_refresh_interval(self) -> int:

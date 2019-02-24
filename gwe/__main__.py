@@ -21,15 +21,14 @@ import locale
 import gettext
 import logging
 import sys
-from typing import Type, Any
-
+from types import TracebackType
+from typing import Type
 from os.path import abspath, join, dirname
 from peewee import SqliteDatabase
 from rx.disposables import CompositeDisposable
-
+from gi.repository import GLib
 from gwe.conf import APP_PACKAGE_NAME
 from gwe.model import SpeedStep, FanProfile, CurrentFanProfile, OverclockProfile, CurrentOverclockProfile, Setting
-from gi.repository import GLib
 from gwe.util.log import set_log_level
 from gwe.di import INJECTOR
 from gwe.app import Application
@@ -64,12 +63,12 @@ def _cleanup() -> None:
         LOG.exception("Error during cleanup!")
 
 
-def handle_exception(exc_type: Type[BaseException], exc_value: BaseException, exc_traceback: Any) -> None:
-    if issubclass(exc_type, KeyboardInterrupt):
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+def handle_exception(type_: Type[BaseException], value: BaseException, traceback: TracebackType) -> None:
+    if issubclass(type_, KeyboardInterrupt):
+        sys.__excepthook__(type_, value, traceback)
         return
 
-    LOG.critical("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+    LOG.critical("Uncaught exception", exc_info=(type_, value, traceback))
     _cleanup()
     sys.exit(1)
 

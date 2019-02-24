@@ -30,7 +30,7 @@ UDEV_RULE_FILE_NAME = '60-gwe.rules'
 def add_udev_rule() -> int:
     if os.geteuid() == 0:
         if not os.path.isdir(UDEV_RULES_DIR):
-            LOG.error("Udev rules have not been added (%s is not a directory)", UDEV_RULES_DIR)
+            LOG.error(f"Udev rules have not been added ({UDEV_RULES_DIR} is not a directory)")
             return 1
         try:
             shutil.copy(get_data_path(UDEV_RULE_FILE_NAME), UDEV_RULES_DIR)
@@ -55,7 +55,7 @@ def remove_udev_rule() -> int:
     if os.geteuid() == 0:
         path = Path(UDEV_RULES_DIR).joinpath(UDEV_RULE_FILE_NAME)
         if not path.is_file():
-            LOG.error("Unable to add udev rule (file %s not found)", str(path))
+            LOG.error(f"Unable to add udev rule (file {str(path)} not found)")
             return 1
         try:
             path.unlink()

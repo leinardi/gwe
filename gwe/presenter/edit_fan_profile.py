@@ -112,10 +112,12 @@ class EditFanProfilePresenter:
         self.view.hide()
 
     def on_delete_step_clicked(self, *_: Any) -> None:
+        assert self._selected_step is not None
         self._selected_step.delete_instance()
         self.view.refresh_liststore(self._profile)
 
     def on_save_step_clicked(self, *_: Any) -> None:
+        assert self._selected_step is not None
         self._selected_step.temperature = self.view.get_temperature()
         self._selected_step.duty = self.view.get_duty()
         self._selected_step.save()

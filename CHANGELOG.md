@@ -1,3 +1,12 @@
+Version 0.12.1
+==============
+Released: 2019-02-24
+
+ * New GWE official icon! (closes #43)
+ * Removing offsets from LevelBars to keep consistent colors
+ * A little code cleanup (fixed many PyLint and Mypy issues plus ground work
+   for multi-gpu support)
+
 Version 0.12.0
 ==============
 Released: 2019-02-17

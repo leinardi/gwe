@@ -77,12 +77,11 @@ if false
   endforeach
 endif
 
-icondir = join_paths(get_option('datadir'), 'icons/hicolor')
-install_data('icons/com.leinardi.gwe.svg',
-  install_dir: join_paths(icondir, 'scalable/apps')
-)
+icondir = join_paths(get_option('datadir'), 'icons')
+install_subdir('icons/hicolor', install_dir: icondir)
+
 install_data('icons/com.leinardi.gwe-symbolic.svg',
-  install_dir: join_paths(icondir, 'symbolic/apps')
+  install_dir: join_paths(icondir, 'hicolor/symbolic/apps')
 )
 
 contributors = '\n'.join([
@@ -114,18 +113,6 @@ gwe_resources = gnome.compile_resources(app_id,
   install: true,
   install_dir: PKGDATA_DIR
 )
-
-#gwe_resources = gnome.compile_resources(app_id,
-#  app_id + '.gresource.xml',
-#  gresource_bundle: true,
-#  dependencies: configure_file (
-#    input: 'ui/aboutdialog.glade.in',
-#    output: 'aboutdialog.glade',
-#    configuration: glade_conf
-#  ),
-#  install: true,
-#  install_dir: PKGDATA_DIR
-#)
 
 gwe_settings = gnome.compile_schemas()
 

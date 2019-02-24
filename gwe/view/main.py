@@ -19,29 +19,25 @@ import logging
 from collections import OrderedDict
 from typing import Optional, Dict, List, Tuple, Any
 
-from gwe.di import MainBuilder
-from gwe.repository import NOT_AVAILABLE_STRING
-from gwe.view.edit_fan_profile import EditFanProfileView
-from gwe.util.path import get_data_path
-from gwe.util.view import hide_on_delete, init_plot_chart, get_fan_profile_data, is_dazzle_version_supported
 from injector import inject, singleton
-import gi
 from gi.repository import Gtk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 
-# AppIndicator3 may not be installed
-from gwe.interactor import SettingsInteractor
-from gwe.view.edit_overclock_profile import EditOverclockProfileView
-from gwe.view.historical_data import HistoricalDataView
-from gwe.view.preferences import PreferencesView
+try:  # AppIndicator3 may not be installed
+    import gi
 
-try:
     gi.require_version('AppIndicator3', '0.1')
     from gi.repository import AppIndicator3
 except (ImportError, ValueError):
     AppIndicator3 = None
-
+from gwe.di import MainBuilder
+from gwe.view.edit_fan_profile import EditFanProfileView
+from gwe.util.view import hide_on_delete, init_plot_chart, get_fan_profile_data, is_dazzle_version_supported
+from gwe.interactor import SettingsInteractor
+from gwe.view.edit_overclock_profile import EditOverclockProfileView
+from gwe.view.historical_data import HistoricalDataView
+from gwe.view.preferences import PreferencesView
 from gwe.model import Status, FanProfile
 from gwe.conf import APP_PACKAGE_NAME, APP_ID, APP_NAME, APP_VERSION, APP_SOURCE_URL, APP_ICON_NAME_SYMBOLIC
 from gwe.presenter.main import MainPresenter, MainViewInterface
@@ -91,7 +87,7 @@ class MainView(MainViewInterface):
         self._statusbar: Gtk.Statusbar = self._builder.get_object('statusbar')
         self._context = self._statusbar.get_context_id(APP_PACKAGE_NAME)
         self._app_version: Gtk.Label = self._builder.get_object('app_version')
-        self._app_version.set_label("%s v%s" % (APP_NAME, APP_VERSION))
+        self._app_version.set_label(f"{APP_NAME} v{APP_VERSION}")
         self._about_dialog: Gtk.AboutDialog = self._builder.get_object("about_dialog")
         self._init_about_dialog()
         self._info_name_entry: Gtk.Entry = self._builder.get_object('info_name_entry')
@@ -130,14 +126,14 @@ class MainView(MainViewInterface):
         self._temp_max_gpu_value: Gtk.Label = self._builder.get_object('temp_max_gpu_value')
         self._temp_slowdown_value: Gtk.Label = self._builder.get_object('temp_slowdown_value')
         self._temp_shutdown_value: Gtk.Label = self._builder.get_object('temp_shutdown_value')
-        self._fan_duty: Tuple[Gtk.Label] = (
+        self._fan_duty: Tuple = (
             self._builder.get_object('fan_duty_0'),
             self._builder.get_object('fan_duty_1'),
             self._builder.get_object('fan_duty_2'),
             self._builder.get_object('fan_duty_3'),
             self._builder.get_object('fan_duty_4')
         )
-        self._fan_rpm: Tuple[Gtk.Label] = (
+        self._fan_rpm: Tuple = (
             self._builder.get_object('fan_rpm_0'),
             self._builder.get_object('fan_rpm_1'),
             self._builder.get_object('fan_rpm_2'),
@@ -213,30 +209,34 @@ class MainView(MainViewInterface):
         self._statusbar.remove_all(self._context)
         self._statusbar.push(self._context, text)
 
-    def refresh_status(self, status: Optional[Status]) -> None:
+    def refresh_status(self, status: Optional[Status], gpu_index: int) -> None:
         LOG.debug('view status')
         if status:
-            gpu_status = status.gpu_status_list[0]
+            gpu_status = status.gpu_status_list[gpu_index]
             if self._first_refresh:
                 self._first_refresh = False
                 self._set_entry_text(self._info_name_entry, gpu_status.info.name)
                 self._set_entry_text(self._info_vbios_entry, gpu_status.info.vbios)
                 self._set_entry_text(self._info_driver_entry, gpu_status.info.driver)
-                self._set_entry_text(self._info_cuda_entry, "%d", gpu_status.info.cuda_cores)
+                self._set_entry_text(self._info_cuda_entry, "{}", gpu_status.info.cuda_cores)
                 self._set_entry_text(self._info_uuid_entry, gpu_status.info.uuid)
-                self._set_entry_text(self._info_memory_interface_entry, "%s bit", gpu_status.info.memory_interface)
-                self._set_entry_text(self._power_min_entry, "%s W", gpu_status.power.minimum)
-                self._set_entry_text(self._power_max_entry, "%s W", gpu_status.power.maximum)
+                self._set_entry_text(self._info_memory_interface_entry, "{} bit", gpu_status.info.memory_interface)
+                self._set_entry_text(self._power_min_entry, "{} W", gpu_status.power.minimum)
+                self._set_entry_text(self._power_max_entry, "{} W", gpu_status.power.maximum)
                 self._set_label_markup(self._temp_max_gpu_value,
-                                       "<span size=\"large\">%d</span> °C", gpu_status.temp.maximum)
+                                       "<span size=\"large\">{}</span> °C", gpu_status.temp.maximum)
                 self._set_label_markup(self._temp_slowdown_value,
-                                       "<span size=\"large\">%d</span> °C", gpu_status.temp.slowdown)
+                                       "<span size=\"large\">{}</span> °C", gpu_status.temp.slowdown)
                 self._set_label_markup(self._temp_shutdown_value,
-                                       "<span size=\"large\">%d</span> °C", gpu_status.temp.shutdown)
+                                       "<span size=\"large\">{}</span> °C", gpu_status.temp.shutdown)
                 self._overclock_frame.set_sensitive(gpu_status.overclock.available)
                 self._overclock_warning_label.set_visible(not gpu_status.overclock.available)
                 self._fan_profile_frame.set_sensitive(gpu_status.fan.control_allowed)
                 self._fan_warning_label.set_visible(not gpu_status.fan.control_allowed)
+                self._remove_level_bar_offsets(self._info_gpu_usage_levelbar)
+                self._remove_level_bar_offsets(self._info_memory_usage_levelbar)
+                self._remove_level_bar_offsets(self._info_encoder_usage_levelbar)
+                self._remove_level_bar_offsets(self._info_decoder_usage_levelbar)
                 minimum = gpu_status.power.minimum
                 maximum = gpu_status.power.maximum
                 default = gpu_status.power.default
@@ -246,52 +246,52 @@ class MainView(MainViewInterface):
                     self._power_limit_adjustment.set_upper(maximum)
                     self._power_limit_adjustment.set_value(limit)
                     self._power_limit_scale.clear_marks()
-                    self._power_limit_scale.add_mark(default, Gtk.PositionType.BOTTOM, "%.0f" % default)
+                    self._power_limit_scale.add_mark(default, Gtk.PositionType.BOTTOM, f"{default:.0f}")
                     self._power_limit_scale.set_sensitive(True)
                     self._power_limit_apply_button.set_sensitive(True)
                 else:
                     self._power_limit_scale.set_sensitive(False)
                     self._power_limit_apply_button.set_sensitive(False)
 
-            self._set_entry_text(self._info_pcie_entry, "%dx Gen%d @ %dx Gen%d",
+            self._set_entry_text(self._info_pcie_entry, "{}x Gen{} @ {}x Gen{}",
                                  gpu_status.info.pcie_max_link,
                                  gpu_status.info.pcie_max_generation,
                                  gpu_status.info.pcie_current_link,
                                  gpu_status.info.pcie_current_generation)
-            self._set_entry_text(self._info_memory_entry, "%d MiB / %d MiB",
+            self._set_entry_text(self._info_memory_entry, "{} MiB / {} MiB",
                                  gpu_status.info.memory_used,
                                  gpu_status.info.memory_total)
-            self._set_entry_text(self._info_memory_usage_entry, "%d%%", gpu_status.info.memory_usage)
-            self._set_entry_text(self._info_gpu_usage_entry, "%d%%", gpu_status.info.gpu_usage)
-            self._set_entry_text(self._info_encoder_usage_entry, "%d%%", gpu_status.info.encoder_usage)
-            self._set_entry_text(self._info_decoder_usage_entry, "%d%%", gpu_status.info.decoder_usage)
-            self._set_entry_text(self._power_draw_entry, "%.2f W", gpu_status.power.draw)
-            self._set_entry_text(self._power_limit_entry, "%.0f W", gpu_status.power.limit)
-            self._set_entry_text(self._power_default_entry, "%.0f W", gpu_status.power.default)
-            self._set_entry_text(self._power_enforced_entry, "%.0f W", gpu_status.power.enforced)
-            self._set_entry_text(self._clocks_graphics_current_entry, "%d MHz", gpu_status.clocks.graphic_current)
-            self._set_entry_text(self._clocks_graphics_max_entry, "%d MHz", gpu_status.clocks.graphic_max)
-            self._set_entry_text(self._clocks_sm_current_entry, "%d MHz", gpu_status.clocks.sm_current)
-            self._set_entry_text(self._clocks_sm_max_entry, "%d MHz", gpu_status.clocks.sm_max)
-            self._set_entry_text(self._clocks_memory_current_entry, "%d MHz", gpu_status.clocks.memory_current)
-            self._set_entry_text(self._clocks_memory_max_entry, "%d MHz", gpu_status.clocks.memory_max)
-            self._set_entry_text(self._clocks_video_current_entry, "%d MHz", gpu_status.clocks.video_current)
-            self._set_entry_text(self._clocks_video_max_entry, "%d MHz", gpu_status.clocks.video_max)
-            self._set_level_bar(self._info_memory_usage_levelbar, gpu_status.info.memory_usage)
+            self._set_entry_text(self._info_memory_usage_entry, "{}%", gpu_status.info.memory_usage)
+            self._set_entry_text(self._info_gpu_usage_entry, "{}%%", gpu_status.info.gpu_usage)
+            self._set_entry_text(self._info_encoder_usage_entry, "{}%", gpu_status.info.encoder_usage)
+            self._set_entry_text(self._info_decoder_usage_entry, "{}%", gpu_status.info.decoder_usage)
+            self._set_entry_text(self._power_draw_entry, "{:.2f} W", gpu_status.power.draw)
+            self._set_entry_text(self._power_limit_entry, "{:.0f} W", gpu_status.power.limit)
+            self._set_entry_text(self._power_default_entry, "{:.0f} W", gpu_status.power.default)
+            self._set_entry_text(self._power_enforced_entry, "{:.0f} W", gpu_status.power.enforced)
+            self._set_entry_text(self._clocks_graphics_current_entry, "{} MHz", gpu_status.clocks.graphic_current)
+            self._set_entry_text(self._clocks_graphics_max_entry, "{} MHz", gpu_status.clocks.graphic_max)
+            self._set_entry_text(self._clocks_sm_current_entry, "{} MHz", gpu_status.clocks.sm_current)
+            self._set_entry_text(self._clocks_sm_max_entry, "{} MHz", gpu_status.clocks.sm_max)
+            self._set_entry_text(self._clocks_memory_current_entry, "{} MHz", gpu_status.clocks.memory_current)
+            self._set_entry_text(self._clocks_memory_max_entry, "{} MHz", gpu_status.clocks.memory_max)
+            self._set_entry_text(self._clocks_video_current_entry, "{} MHz", gpu_status.clocks.video_current)
+            self._set_entry_text(self._clocks_video_max_entry, "{} MHz", gpu_status.clocks.video_max)
             self._set_level_bar(self._info_gpu_usage_levelbar, gpu_status.info.gpu_usage)
+            self._set_level_bar(self._info_memory_usage_levelbar, gpu_status.info.memory_usage)
             self._set_level_bar(self._info_encoder_usage_levelbar, gpu_status.info.encoder_usage)
             self._set_level_bar(self._info_decoder_usage_levelbar, gpu_status.info.decoder_usage)
             if gpu_status.overclock.available:
-                self._set_entry_text(self._overclock_gpu_offset_entry, "%d MHz", gpu_status.overclock.gpu_offset)
-                self._set_entry_text(self._overclock_mem_offset_entry, "%d MHz", gpu_status.overclock.memory_offset)
+                self._set_entry_text(self._overclock_gpu_offset_entry, "{} MHz", gpu_status.overclock.gpu_offset)
+                self._set_entry_text(self._overclock_mem_offset_entry, "{} MHz", gpu_status.overclock.memory_offset)
             self._set_label_markup(self._temp_gpu_value,
-                                   "<span size=\"xx-large\">%d</span> °C", gpu_status.temp.gpu)
+                                   "<span size=\"xx-large\">{}</span> °C", gpu_status.temp.gpu)
             for index, value in enumerate(self._fan_duty):
                 if gpu_status.fan.fan_list and index < len(gpu_status.fan.fan_list):
                     self._set_label_markup(value,
-                                           "<span size=\"large\">%d</span> %%", gpu_status.fan.fan_list[index][0])
+                                           "<span size=\"large\">{}</span> %", gpu_status.fan.fan_list[index][0])
                     self._set_label_markup(self._fan_rpm[index],
-                                           "<span size=\"large\">%d</span> RPM", gpu_status.fan.fan_list[index][1])
+                                           "<span size=\"large\">{}</span> RPM", gpu_status.fan.fan_list[index][1])
                 else:
                     value.set_visible(False)
                     self._fan_rpm[index].set_visible(False)
@@ -302,7 +302,7 @@ class MainView(MainViewInterface):
                 else:
                     self._app_indicator.set_status(AppIndicator3.IndicatorStatus.PASSIVE)
                 if self._settings_interactor.get_bool('settings_app_indicator_show_gpu_temp') and gpu_status.temp.gpu:
-                    self._app_indicator.set_label("  %d°C" % gpu_status.temp.gpu, "  XX°C")
+                    self._app_indicator.set_label(f" {gpu_status.temp.gpu}°C", " XX°C")
                 else:
                     self._app_indicator.set_label("", "")
 
@@ -310,7 +310,7 @@ class MainView(MainViewInterface):
     def _set_entry_text(label: Gtk.Entry, text: Optional[str], *args: Any) -> None:
         if text is not None and None not in args:
             label.set_sensitive(True)
-            label.set_text(text % args)
+            label.set_text(text.format(*args))
         else:
             label.set_sensitive(False)
             label.set_text('')
@@ -319,15 +319,22 @@ class MainView(MainViewInterface):
     def _set_label_markup(label: Gtk.Label, markup: Optional[str], *args: Any) -> None:
         if markup is not None and None not in args:
             label.set_sensitive(True)
-            label.set_markup(markup % args)
+            label.set_markup(markup.format(*args))
         else:
             label.set_sensitive(False)
             label.set_markup('')
 
     @staticmethod
+    def _remove_level_bar_offsets(levelbar: Gtk.LevelBar) -> None:
+        levelbar.remove_offset_value("low")
+        levelbar.remove_offset_value("high")
+        levelbar.remove_offset_value("full")
+        levelbar.remove_offset_value("alert")
+
+    @staticmethod
     def _set_level_bar(levelbar: Gtk.LevelBar, value: Optional[int]) -> None:
         if value is not None:
-            levelbar.set_value(int(value))
+            levelbar.set_value(value / 100)
             levelbar.set_sensitive(True)
         else:
             levelbar.set_value(0)

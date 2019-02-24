@@ -456,7 +456,6 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLevelBar" id="info_decoder_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="max_value">100</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -497,7 +496,6 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLevelBar" id="info_encoder_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="max_value">100</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -570,7 +568,6 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLevelBar" id="info_gpu_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="max_value">100</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -582,7 +579,6 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                               <object class="GtkLevelBar" id="info_memory_usage_levelbar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="max_value">100</property>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>

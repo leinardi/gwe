@@ -27,6 +27,17 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+        <release date="2019-02-24" version="0.12.1">
+            <description>
+                <ul>
+                    <li>New GWE official icon! (closes #43)</li>
+                    <li>Removing offsets from LevelBars to keep consistent colors</li>
+                    <li>A little code cleanup (fixed many PyLint and Mypy issues plus ground work for multi-gpu
+                        support)
+                    </li>
+                </ul>
+            </description>
+        </release>
         <release date="2019-02-17" version="0.12.0">
             <description>
                 <ul>

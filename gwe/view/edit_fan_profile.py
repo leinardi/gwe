@@ -151,7 +151,7 @@ class EditFanProfileView(EditFanProfileViewInterface):
                 self._temperature_adjustment.set_lower(MIN_TEMP)
                 self._duty_adjustment.set_lower(FAN_MIN_DUTY)
             else:
-                LOG.debug("prev = %s", prev_steps[0].temperature)
+                LOG.debug(f"prev = {prev_steps[0].temperature}")
                 self._temperature_adjustment.set_lower(prev_steps[0].temperature + 1)
                 self._duty_adjustment.set_lower(prev_steps[0].duty)
 

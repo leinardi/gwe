@@ -38,6 +38,8 @@ EditOverclockProfileBuilder = Key(APP_EDIT_OC_PROFILE_UI_NAME)
 HistoricalDataBuilder = Key(APP_HISTORICAL_DATA_UI_NAME)
 PreferencesBuilder = Key(APP_PREFERENCES_UI_NAME)
 
+_UI_RESOURCE_PATH = "/com/leinardi/gwe/ui/{}"
+
 
 # pylint: disable=no-self-use
 class ProviderModule(Module):
@@ -47,7 +49,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_resource("/com/leinardi/gwe/ui/{}".format(APP_MAIN_UI_NAME))
+        builder.add_from_resource(_UI_RESOURCE_PATH.format(APP_MAIN_UI_NAME))
         return builder
 
     @singleton
@@ -56,7 +58,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_resource("/com/leinardi/gwe/ui/{}".format(APP_EDIT_FAN_PROFILE_UI_NAME))
+        builder.add_from_resource(_UI_RESOURCE_PATH.format(APP_EDIT_FAN_PROFILE_UI_NAME))
         return builder
 
     @singleton
@@ -65,7 +67,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_resource("/com/leinardi/gwe/ui/{}".format(APP_EDIT_OC_PROFILE_UI_NAME))
+        builder.add_from_resource(_UI_RESOURCE_PATH.format(APP_EDIT_OC_PROFILE_UI_NAME))
         return builder
 
     @singleton
@@ -74,7 +76,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_resource("/com/leinardi/gwe/ui/{}".format(APP_HISTORICAL_DATA_UI_NAME))
+        builder.add_from_resource(_UI_RESOURCE_PATH.format(APP_HISTORICAL_DATA_UI_NAME))
         return builder
 
     @singleton
@@ -83,7 +85,7 @@ class ProviderModule(Module):
         LOG.debug("provide Gtk.Builder")
         builder = Gtk.Builder()
         builder.set_translation_domain(APP_PACKAGE_NAME)
-        builder.add_from_resource("/com/leinardi/gwe/ui/{}".format(APP_PREFERENCES_UI_NAME))
+        builder.add_from_resource(_UI_RESOURCE_PATH.format(APP_PREFERENCES_UI_NAME))
         return builder
 
     @singleton
