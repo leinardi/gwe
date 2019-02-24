@@ -46,7 +46,7 @@ class MainViewInterface:
     def toggle_window_visibility(self) -> None:
         raise NotImplementedError()
 
-    def refresh_status(self, status: Optional[Status]) -> None:
+    def refresh_status(self, status: Optional[Status], gpu_index: int) -> None:
         raise NotImplementedError()
 
     def refresh_fan_profile_combobox(self, data: List[Tuple[int, str]], active: Optional[int]) -> None:
@@ -125,6 +125,7 @@ class MainPresenter:
         self._overclock_profile_applied: Optional[OverclockProfile] = None
         self.application_quit: Callable = lambda *args: None  # will be set by the Application
         self._latest_status: Optional[Status] = None
+        self._gpu_index: int = 0
 
     def on_start(self) -> None:
         self._refresh_fan_profile_ui(True)
@@ -151,33 +152,30 @@ class MainPresenter:
             LOG.error('Profile is None!')
 
     def on_fan_apply_button_clicked(self, *_: Any) -> None:
-        gpu_index = 0
         if self._fan_profile_selected:
             self._fan_profile_applied = self._fan_profile_selected
             if self._fan_profile_selected.type == FanProfileType.AUTO.value:
-                self._set_fan_speed(gpu_index, manual_control=False)
+                self._set_fan_speed(self._gpu_index, manual_control=False)
             self._refresh_fan_profile_ui(profile_id=self._fan_profile_selected.id)
             self._update_current_fan_profile(self._fan_profile_selected)
 
     def on_overclock_edit_button_clicked(self, *_: Any) -> None:
-        gpu_index = 0
         profile = self._overclock_profile_selected
         assert self._latest_status is not None
-        overclock = self._latest_status.gpu_status_list[gpu_index].overclock
+        overclock = self._latest_status.gpu_status_list[self._gpu_index].overclock
         if profile:
-            self._edit_overclock_profile_presenter.show_edit(profile, overclock)
+            self._edit_overclock_profile_presenter.show_edit(profile, overclock, self._gpu_index)
         else:
             LOG.error('Profile is None!')
 
     def on_overclock_apply_button_clicked(self, *_: Any) -> None:
-        gpu_index = 0
         if self._overclock_profile_selected:
             self._overclock_profile_applied = self._overclock_profile_selected
             self._refresh_overclock_profile_ui(profile_id=self._overclock_profile_selected.id)
             assert self._latest_status is not None
             self._composite_disposable.add(self._set_overclock_interactor.execute(
-                gpu_index,
-                self._latest_status.gpu_status_list[gpu_index].overclock.perf_level_max,
+                self._gpu_index,
+                self._latest_status.gpu_status_list[self._gpu_index].overclock.perf_level_max,
                 self._overclock_profile_applied.gpu,
                 self._overclock_profile_applied.memory)
                                            .subscribe_on(self._scheduler)
@@ -260,27 +258,26 @@ class MainPresenter:
                  )
 
     def _on_status_updated(self, status: Optional[Status]) -> None:
-        gpu_index = 0
         if status is not None:
             was_latest_status_none = self._latest_status is None
             self._latest_status = status
             if was_latest_status_none:
                 self._refresh_overclock_profile_ui(True)
-            gpu_status = status.gpu_status_list[gpu_index]
-            self._update_fan(gpu_status)
-            self.main_view.refresh_status(status)
-            self._historical_data_presenter.add_status(status)
+            self._update_fan(status)
+            self.main_view.refresh_status(status, self._gpu_index)
+            self._historical_data_presenter.add_status(status, self._gpu_index)
         else:
-            self._set_fan_speed(gpu_index, manual_control=False)
+            self._set_fan_speed(self._gpu_index, manual_control=False)
 
-    def _update_fan(self, gpu_status: GpuStatus) -> None:
-        fan = gpu_status.fan
+    def _update_fan(self, status: Status) -> None:
+        fan = status.gpu_status_list[self._gpu_index].fan
         if fan.control_allowed:
             if self._fan_profile_selected is None and not fan.manual_control:
                 fan_profile = FanProfile.get(FanProfile.type == FanProfileType.AUTO.value)
                 self._fan_profile_applied = fan_profile
                 self._refresh_fan_profile_ui(profile_id=fan_profile.id)
             elif self._fan_profile_applied and self._fan_profile_applied.type != FanProfileType.AUTO.value:
+                gpu_status = status.gpu_status_list[self._gpu_index]
                 if not self._fan_profile_applied.steps:
                     self._set_fan_speed(gpu_status.index, manual_control=False)
                 elif gpu_status.temp.gpu:
@@ -359,11 +356,10 @@ class MainPresenter:
         self.main_view.set_statusbar_text(f'{profile.name} fan profile selected')
 
     def _refresh_overclock_profile_ui(self, init: bool = False, profile_id: Optional[int] = None) -> None:
-        gpu_index = 0
         current: Optional[CurrentOverclockProfile] = None
         assert self._latest_status is not None
         if init and self._settings_interactor.get_bool('settings_load_last_profile') \
-                and self._latest_status.gpu_status_list[gpu_index].overclock.available:
+                and self._latest_status.gpu_status_list[self._gpu_index].overclock.available:
             current = CurrentOverclockProfile.get_or_none()
             if current is not None:
                 self._overclock_profile_selected = current.profile
@@ -388,12 +384,12 @@ class MainPresenter:
         self.main_view.refresh_overclock_profile_combobox(data, active)
 
     def _select_overclock_profile(self, profile_id: int) -> None:
-        gpu_index = 0
         assert self._latest_status is not None
         if profile_id == _ADD_NEW_PROFILE_INDEX:
             self.main_view.set_apply_overclock_profile_button_enabled(False)
             self.main_view.set_edit_overclock_profile_button_enabled(False)
-            self._edit_overclock_profile_presenter.show_add(self._latest_status.gpu_status_list[gpu_index].overclock)
+            self._edit_overclock_profile_presenter.show_add(
+                self._latest_status.gpu_status_list[self._gpu_index].overclock, self._gpu_index)
         else:
             profile: OverclockProfile = OverclockProfile.get(id=profile_id)
             self._overclock_profile_selected = profile

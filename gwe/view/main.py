@@ -209,9 +209,8 @@ class MainView(MainViewInterface):
         self._statusbar.remove_all(self._context)
         self._statusbar.push(self._context, text)
 
-    def refresh_status(self, status: Optional[Status]) -> None:
+    def refresh_status(self, status: Optional[Status], gpu_index: int) -> None:
         LOG.debug('view status')
-        gpu_index = 0
         if status:
             gpu_status = status.gpu_status_list[gpu_index]
             if self._first_refresh:

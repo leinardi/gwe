@@ -62,17 +62,19 @@ class EditOverclockProfilePresenter:
         self._profile = OverclockProfile()
         self._overclock = Overclock()
         self._scheduler: SchedulerBase = ThreadPoolScheduler(multiprocessing.cpu_count())
+        self._gpu_index: int = 0
 
-    def show_add(self, overclock: Overclock) -> None:
+    def show_add(self, overclock: Overclock, gpu_index: int) -> None:
         profile = OverclockProfile()
         profile.name = 'New profile'
         profile.save()
-        self.show_edit(profile, overclock)
+        self.show_edit(profile, overclock, gpu_index)
 
-    def show_edit(self, profile: OverclockProfile, overclock: Overclock) -> None:
+    def show_edit(self, profile: OverclockProfile, overclock: Overclock, gpu_index: int) -> None:
         self._profile = profile
         self._overclock = overclock
         self.view.show(profile, overclock)
+        self._gpu_index = gpu_index
 
     def on_dialog_delete_event(self, widget: Gtk.Widget, *_: Any) -> Any:
         self._save_profile_name()
@@ -83,9 +85,8 @@ class EditOverclockProfilePresenter:
         self.view.hide()
 
     def on_apply_offsets_button_clicked(self, *_: Any) -> None:
-        gpu_index = 0
         self._composite_disposable.add(self._set_overclock_interactor.execute(
-            gpu_index, self._overclock.perf_level_max, self.view.get_gpu_offset(), self.view.get_memory_offset())
+            self._gpu_index, self._overclock.perf_level_max, self.view.get_gpu_offset(), self.view.get_memory_offset())
                                        .subscribe_on(self._scheduler)
                                        .observe_on(GtkScheduler())
                                        .subscribe(on_next=self._handle_set_overclock_result,
