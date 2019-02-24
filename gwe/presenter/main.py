@@ -26,8 +26,8 @@ from rx.concurrency import GtkScheduler, ThreadPoolScheduler
 from rx.concurrency.schedulerbase import SchedulerBase
 from rx.disposables import CompositeDisposable
 
-from gwe.conf import APP_NAME, APP_SOURCE_URL, APP_VERSION
-from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject
+from gwe.conf import APP_NAME, APP_SOURCE_URL, APP_VERSION, APP_ID
+from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject, INJECTOR
 from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
     CheckNewVersionInteractor, SetOverclockInteractor, SetPowerLimitInteractor, SetFanSpeedInteractor
 from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfileType, GpuStatus, \
@@ -123,7 +123,6 @@ class MainPresenter:
         self._fan_profile_applied: Optional[FanProfile] = None
         self._overclock_profile_selected: Optional[OverclockProfile] = None
         self._overclock_profile_applied: Optional[OverclockProfile] = None
-        self.application_quit: Callable = lambda *args: None  # will be set by the Application
         self._latest_status: Optional[Status] = None
         self._gpu_index: int = 0
 
@@ -205,8 +204,11 @@ class MainPresenter:
             profile_id = widget.get_model()[active][0]
             self._select_overclock_profile(profile_id)
 
-    def on_quit_clicked(self, *_: Any) -> None:
-        self.application_quit()
+    @staticmethod
+    def on_quit_clicked(*_: Any) -> None:
+        from gwe.app import Application
+        application: Application = INJECTOR.get(Application)
+        application.quit()
 
     def on_toggle_app_window_clicked(self, *_: Any) -> None:
         self.main_view.toggle_window_visibility()
@@ -449,9 +451,9 @@ class MainPresenter:
             message = f"{APP_NAME} version <b>{version}</b> is available! " \
                 f"Click <a href=\"{self._get_changelog_uri(version)}\"><b>here</b></a> to see what's new."
             self.main_view.show_main_infobar_message(message, True)
-            message = f"{APP_NAME} version <b>{version}</b> is available! " \
-                f"lick here to see what's new: {self._get_changelog_uri(version)}"
-            show_notification("GWE update available!", message, "dialog-information")
+            message = f"Version {version} is available! " \
+                f"Click here to see what's new: {self._get_changelog_uri(version)}"
+            show_notification("GWE update available!", message, APP_ID)
 
     @staticmethod
     def _get_changelog_uri(version: str = APP_VERSION) -> str:

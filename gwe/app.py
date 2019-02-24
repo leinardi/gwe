@@ -21,7 +21,7 @@ from gettext import gettext as _
 from typing import Any, Optional, List
 
 from gi.repository import Gtk, Gio, GLib
-from injector import inject
+from injector import inject, singleton
 
 from gwe.conf import APP_NAME, APP_ID, APP_VERSION, APP_ICON_NAME
 from gwe.di import MainBuilder
@@ -37,6 +37,7 @@ from gwe.view.main import MainView
 LOG = logging.getLogger(__name__)
 
 
+@singleton
 class Application(Gtk.Application):
     @inject
     def __init__(self,
@@ -59,7 +60,6 @@ class Application(Gtk.Application):
         self.add_main_option_entries(self._get_main_option_entries())
         self._view = view
         self._presenter = presenter
-        self._presenter.application_quit = self.quit
         self._nvidia_repository = nvidia_repository
         self._window: Optional[Gtk.ApplicationWindow] = None
         self._builder: Gtk.Builder = builder

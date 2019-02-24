@@ -1,3 +1,9 @@
+Version 0.12.2
+==============
+Released: 2019-02-24
+
+ * Fix #46: Crash if installed via flatpak and there is an update
+
 Version 0.12.1
 ==============
 Released: 2019-02-24

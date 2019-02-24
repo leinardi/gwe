@@ -16,13 +16,14 @@
 # along with gwe.  If not, see <http://www.gnu.org/licenses/>.
 
 from typing import Optional, Any, Dict
-from gi.repository import Notify
+from gi.repository import Gio
 from gi.repository import GLib, Gtk, Gdk
 from matplotlib.axes import Axes
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 from matplotlib.figure import Figure
 
-from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY, GRAPH_COLOR_HEX, APP_NAME
+from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY, GRAPH_COLOR_HEX
+from gwe.di import INJECTOR
 from gwe.model import FanProfile
 
 
@@ -112,10 +113,14 @@ def is_dazzle_version_supported() -> bool:
     return False
 
 
-def show_notification(summary: str, body: str, icon: str) -> None:
-    if Notify.init(APP_NAME):
-        notification = Notify.Notification.new(summary=summary, body=body, icon=icon)
-        notification.show()
+def show_notification(summary: str, body: str, iconname: str) -> None:
+    from gwe.app import Application
+    application: Application = INJECTOR.get(Application)
+    notification = Gio.Notification.new(title=summary)
+    notification.set_body(body)
+    iconname = Gio.ThemedIcon.new(iconname=iconname)
+    notification.set_icon(iconname)
+    application.send_notification(None, notification)
 
 
 def open_uri(uri: str, parent: Gtk.Window = None, timestamp: int = Gdk.CURRENT_TIME) -> None:
