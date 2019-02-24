@@ -158,7 +158,6 @@ Make sure to have the Flathub remote added to the current user:
 
 ```bash
 flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepoù
-flatpak uninstall com.leinardi.gwe
 ```
 
 ### Clone the repo
@@ -176,7 +175,7 @@ It is possible to build the local source or the remote one (the same that Flathu
 ```
 ### Run
 ```bash
-flatpak run com.leinardi.gwe
+flatpak uninstall com.leinardi.gwe --assumeyes; flatpak run com.leinardi.gwe --debug
 ```
 
 ## 🖥️ How to build and run the source code

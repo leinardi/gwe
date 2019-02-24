@@ -262,7 +262,7 @@ class MainView(MainViewInterface):
                                  gpu_status.info.memory_used,
                                  gpu_status.info.memory_total)
             self._set_entry_text(self._info_memory_usage_entry, "{}%", gpu_status.info.memory_usage)
-            self._set_entry_text(self._info_gpu_usage_entry, "{}%%", gpu_status.info.gpu_usage)
+            self._set_entry_text(self._info_gpu_usage_entry, "{}%", gpu_status.info.gpu_usage)
             self._set_entry_text(self._info_encoder_usage_entry, "{}%", gpu_status.info.encoder_usage)
             self._set_entry_text(self._info_decoder_usage_entry, "{}%", gpu_status.info.decoder_usage)
             self._set_entry_text(self._power_draw_entry, "{:.2f} W", gpu_status.power.draw)
