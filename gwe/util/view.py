@@ -114,8 +114,8 @@ def is_dazzle_version_supported() -> bool:
 
 def show_notification(summary: str, body: str, icon: str) -> None:
     if Notify.init(APP_NAME):
-        hello = Notify.Notification.new(summary=summary, body=body, icon=icon)
-        hello.show()
+        notification = Notify.Notification.new(summary=summary, body=body, icon=icon)
+        notification.show()
 
 
 def open_uri(uri: str, parent: Gtk.Window = None, timestamp: int = Gdk.CURRENT_TIME) -> None:
