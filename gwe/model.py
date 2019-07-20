@@ -180,9 +180,9 @@ class DbChange:
     DELETE = 1
     UPDATE = 2
 
-    def __init__(self, entry: Any, cahnge_type: int) -> None:
+    def __init__(self, entry: Any, change_type: int) -> None:
         self.entry: Any = entry
-        self.type: int = cahnge_type
+        self.type: int = change_type
 
 
 class FanProfileType(Enum):
@@ -206,13 +206,13 @@ class FanProfile(Model):
 
 @post_save(sender=FanProfile)
 def on_fan_profile_added(_: Any, profile: FanProfile, created: bool) -> None:
-    LOG.debug("Profile added")
+    LOG.debug("Fan added")
     FAN_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.INSERT if created else DbChange.UPDATE))
 
 
 @post_delete(sender=FanProfile)
 def on_fan_profile_deleted(_: Any, profile: FanProfile) -> None:
-    LOG.debug("Profile deleted")
+    LOG.debug("Fan deleted")
     FAN_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.DELETE))
 
 
@@ -229,7 +229,7 @@ class SpeedStep(Model):
 
 @post_save(sender=SpeedStep)
 def on_speed_step_added(_: Any, step: SpeedStep, created: bool) -> None:
-    LOG.debug("Profile added")
+    LOG.debug("Step added")
     SPEED_STEP_CHANGED_SUBJECT.on_next(DbChange(step, DbChange.INSERT if created else DbChange.UPDATE))
 
 
@@ -272,13 +272,13 @@ class OverclockProfile(Model):
 
 @post_save(sender=OverclockProfile)
 def on_overclock_profile_added(_: Any, profile: OverclockProfile, created: bool) -> None:
-    LOG.debug("Profile added")
+    LOG.debug("Overclock added")
     OVERCLOCK_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.INSERT if created else DbChange.UPDATE))
 
 
 @post_delete(sender=OverclockProfile)
 def on_overclock_profile_deleted(_: Any, profile: OverclockProfile) -> None:
-    LOG.debug("Profile deleted")
+    LOG.debug("Overclock deleted")
     OVERCLOCK_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.DELETE))
 
 
