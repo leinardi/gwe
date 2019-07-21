@@ -1,5 +1,5 @@
 injector==0.17.0
-matplotlib==3.0.3
+matplotlib==3.1.1
 peewee==3.8.2
 py3nvml==0.2.3
 pygobject
