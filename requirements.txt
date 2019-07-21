@@ -5,4 +5,4 @@ py3nvml==0.2.3
 pygobject
 pyxdg==0.26
 requests
-Rx==1.6.1
+Rx==3.0.1

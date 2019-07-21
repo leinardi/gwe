@@ -20,8 +20,8 @@ import logging
 from gi.repository import Gtk
 from injector import Module, provider, singleton, Injector, Key
 from peewee import SqliteDatabase
-from rx.disposables import CompositeDisposable
-from rx.subjects import Subject
+from rx.disposable import CompositeDisposable
+from rx.subject import Subject
 
 from gwe.conf import APP_PACKAGE_NAME, APP_MAIN_UI_NAME, APP_DB_NAME, APP_EDIT_FAN_PROFILE_UI_NAME, \
     APP_PREFERENCES_UI_NAME, APP_HISTORICAL_DATA_UI_NAME, APP_EDIT_OC_PROFILE_UI_NAME

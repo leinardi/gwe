@@ -20,11 +20,13 @@ import logging
 import multiprocessing
 from typing import Optional, Any, List, Tuple, Callable
 
+import rx
+from gi.repository import GLib
 from injector import inject, singleton
-from rx import Observable
-from rx.concurrency import GtkScheduler, ThreadPoolScheduler
-from rx.concurrency.schedulerbase import SchedulerBase
-from rx.disposables import CompositeDisposable
+from rx import Observable, operators
+from rx.disposable import CompositeDisposable
+from rx.scheduler import ThreadPoolScheduler
+from rx.scheduler.mainloop import GtkScheduler
 
 from gwe.conf import APP_NAME, APP_SOURCE_URL, APP_VERSION, APP_ID
 from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject, INJECTOR
@@ -108,7 +110,7 @@ class MainPresenter:
         self._edit_overclock_profile_presenter = edit_overclock_profile_presenter
         self._historical_data_presenter = historical_data_presenter
         self._preferences_presenter = preferences_presenter
-        self._scheduler: SchedulerBase = ThreadPoolScheduler(multiprocessing.cpu_count())
+        self._scheduler = ThreadPoolScheduler(multiprocessing.cpu_count())
         self._get_status_interactor: GetStatusInteractor = get_status_interactor
         self._set_power_limit_interactor = set_power_limit_interactor
         self._set_overclock_interactor = set_overclock_interactor
@@ -136,12 +138,11 @@ class MainPresenter:
         self._historical_data_presenter.show()
 
     def on_power_limit_apply_button_clicked(self, *_: Any) -> None:
-        self._composite_disposable \
-            .add(self._set_power_limit_interactor.execute(*self.main_view.get_power_limit())
-                 .subscribe_on(self._scheduler)
-                 .observe_on(GtkScheduler())
-                 .subscribe(on_next=self._handle_set_power_limit_result, on_error=self._handle_set_power_limit_result)
-                 )
+        self._composite_disposable.add(self._set_power_limit_interactor.execute(*self.main_view.get_power_limit()).pipe(
+            operators.subscribe_on(self._scheduler),
+            operators.observe_on(GtkScheduler(GLib)),
+        ).subscribe(on_next=self._handle_set_power_limit_result,
+                    on_error=self._handle_set_power_limit_result))
 
     def on_fan_edit_button_clicked(self, *_: Any) -> None:
         profile = self._fan_profile_selected
@@ -176,12 +177,11 @@ class MainPresenter:
                 self._gpu_index,
                 self._latest_status.gpu_status_list[self._gpu_index].overclock.perf_level_max,
                 self._overclock_profile_applied.gpu,
-                self._overclock_profile_applied.memory)
-                                           .subscribe_on(self._scheduler)
-                                           .observe_on(GtkScheduler())
-                                           .subscribe(on_next=self._handle_set_overclock_result,
-                                                      on_error=self._handle_set_overclock_result)
-                                           )
+                self._overclock_profile_applied.memory).pipe(
+                operators.subscribe_on(self._scheduler),
+                operators.observe_on(GtkScheduler(GLib)),
+            ).subscribe(on_next=self._handle_set_overclock_result,
+                        on_error=self._handle_set_overclock_result))
 
     def on_menu_settings_clicked(self, *_: Any) -> None:
         self._preferences_presenter.show()
@@ -245,17 +245,14 @@ class MainPresenter:
 
     def _start_refresh(self) -> None:
         LOG.debug("start refresh")
-        refresh_interval_ms = self._settings_interactor.get_int('settings_refresh_interval') * 1000
-        self._composite_disposable \
-            .add(Observable
-                 .interval(refresh_interval_ms, scheduler=self._scheduler)
-                 .start_with(0)
-                 .subscribe_on(self._scheduler)
-                 .flat_map(lambda _: self._get_status())
-                 .observe_on(GtkScheduler())
-                 .subscribe(on_next=self._on_status_updated,
-                            on_error=lambda e: LOG.exception(f"Refresh error: {str(e)}"))
-                 )
+        refresh_interval = self._settings_interactor.get_int('settings_refresh_interval')
+        self._composite_disposable.add(rx.interval(refresh_interval, scheduler=self._scheduler).pipe(
+            operators.start_with(0),
+            operators.subscribe_on(self._scheduler),
+            operators.flat_map(lambda _: self._get_status()),
+            operators.observe_on(GtkScheduler(GLib)),
+        ).subscribe(on_next=self._on_status_updated,
+                    on_error=lambda e: LOG.exception(f"Refresh error: {str(e)}")))
 
     def _on_status_updated(self, status: Optional[Status]) -> None:
         if status is not None:
@@ -339,12 +336,11 @@ class MainPresenter:
             self.main_view.refresh_chart(profile)
 
     def _set_fan_speed(self, gpu_index: int, speed: int = 100, manual_control: bool = True) -> None:
-        self._composite_disposable \
-            .add(self._set_fan_speed_interactor.execute(gpu_index, speed, manual_control)
-                 .subscribe_on(self._scheduler)
-                 .observe_on(GtkScheduler())
-                 .subscribe(on_error=lambda e: (LOG.exception(f"Set cooling error: {str(e)}"),
-                                                self.main_view.set_statusbar_text('Error applying fan profile!'))))
+        self._composite_disposable.add(self._set_fan_speed_interactor.execute(gpu_index, speed, manual_control).pipe(
+            operators.subscribe_on(self._scheduler),
+            operators.observe_on(GtkScheduler(GLib)),
+        ).subscribe(on_error=lambda e: (LOG.exception(f"Set cooling error: {str(e)}"),
+                                        self.main_view.set_statusbar_text('Error applying fan profile!'))))
 
     def _update_current_fan_profile(self, profile: FanProfile) -> None:
         current: CurrentFanProfile = CurrentFanProfile.get_or_none()
@@ -411,20 +407,23 @@ class MainPresenter:
     def _log_exception_return_empty_observable(self, ex: Exception) -> Observable:
         LOG.exception(f"Err = {ex}")
         self.main_view.set_statusbar_text(str(ex))
-        return Observable.just(None)
+        observable = rx.just(None)
+        assert isinstance(operators, Observable)
+        return observable
 
     def _get_status(self) -> Observable:
-        return self._get_status_interactor.execute() \
-            .catch_exception(self._log_exception_return_empty_observable)
+        observable = self._get_status_interactor.execute().pipe(
+            operators.catch(self._log_exception_return_empty_observable)
+        )
+        assert isinstance(observable, Observable)
+        return observable
 
     def _check_new_version(self) -> None:
-        self._composite_disposable \
-            .add(self._check_new_version_interactor.execute()
-                 .subscribe_on(self._scheduler)
-                 .observe_on(GtkScheduler())
-                 .subscribe(on_next=self._handle_new_version_response,
-                            on_error=lambda e: LOG.exception(f"Check new version error: {str(e)}"))
-                 )
+        self._composite_disposable.add(self._check_new_version_interactor.execute().pipe(
+            operators.subscribe_on(self._scheduler),
+            operators.observe_on(GtkScheduler(GLib)),
+        ).subscribe(on_next=self._handle_new_version_response,
+                    on_error=lambda e: LOG.exception(f"Check new version error: {str(e)}")))
 
     def _handle_set_power_limit_result(self, result: Any) -> None:
         self._handle_generic_set_result(result, "power limit")

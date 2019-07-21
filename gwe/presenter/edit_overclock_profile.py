@@ -16,13 +16,14 @@
 # along with gwe.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 import multiprocessing
-from typing import Any
+from typing import Any, Optional
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 from injector import singleton, inject
-from rx.concurrency import GtkScheduler, ThreadPoolScheduler
-from rx.concurrency.schedulerbase import SchedulerBase
-from rx.disposables import CompositeDisposable
+from rx import operators
+from rx.disposable import CompositeDisposable
+from rx.scheduler import ThreadPoolScheduler
+from rx.scheduler.mainloop import GtkScheduler
 
 from gwe.interactor import SetOverclockInteractor
 from gwe.model import OverclockProfile, Overclock
@@ -61,7 +62,7 @@ class EditOverclockProfilePresenter:
         self.view: EditOverclockProfileViewInterface = EditOverclockProfileViewInterface()
         self._profile = OverclockProfile()
         self._overclock = Overclock()
-        self._scheduler: SchedulerBase = ThreadPoolScheduler(multiprocessing.cpu_count())
+        self._scheduler = ThreadPoolScheduler(multiprocessing.cpu_count())
         self._gpu_index: int = 0
 
     def show_add(self, overclock: Overclock, gpu_index: int) -> None:
@@ -86,12 +87,14 @@ class EditOverclockProfilePresenter:
 
     def on_apply_offsets_button_clicked(self, *_: Any) -> None:
         self._composite_disposable.add(self._set_overclock_interactor.execute(
-            self._gpu_index, self._overclock.perf_level_max, self.view.get_gpu_offset(), self.view.get_memory_offset())
-                                       .subscribe_on(self._scheduler)
-                                       .observe_on(GtkScheduler())
-                                       .subscribe(on_next=self._handle_set_overclock_result,
-                                                  on_error=self._handle_set_overclock_result)
-                                       )
+            self._gpu_index,
+            self._overclock.perf_level_max,
+            self.view.get_gpu_offset(),
+            self.view.get_memory_offset()).pipe(
+            operators.subscribe_on(self._scheduler),
+            operators.observe_on(GtkScheduler(GLib)),
+        ).subscribe(on_next=self._handle_set_overclock_result,
+                    on_error=self._handle_set_overclock_result))
 
     def on_save_offsets_button_clicked(self, *_: Any) -> None:
         self._profile.gpu = self.view.get_gpu_offset()
@@ -108,8 +111,6 @@ class EditOverclockProfilePresenter:
                 self._profile.save()
 
     @staticmethod
-    def _handle_set_overclock_result(result: Any) -> bool:
+    def _handle_set_overclock_result(result: Optional[Any]) -> None:
         if not isinstance(result, bool) or not result:
             LOG.exception(f"Set overclock error: {str(result)}")
-            return False
-        return True

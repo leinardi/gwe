@@ -25,8 +25,9 @@ from types import TracebackType
 from typing import Type
 from os.path import abspath, join, dirname
 from peewee import SqliteDatabase
-from rx.disposables import CompositeDisposable
 from gi.repository import GLib
+from rx.disposable import CompositeDisposable
+
 from gwe.conf import APP_PACKAGE_NAME
 from gwe.model import SpeedStep, FanProfile, CurrentFanProfile, OverclockProfile, CurrentOverclockProfile, Setting
 from gwe.util.log import set_log_level
@@ -52,7 +53,7 @@ gettext.textdomain(APP_PACKAGE_NAME)
 def _cleanup() -> None:
     try:
         LOG.debug("cleanup")
-        composite_disposable: CompositeDisposable = INJECTOR.get(CompositeDisposable)
+        composite_disposable = INJECTOR.get(CompositeDisposable)
         composite_disposable.dispose()
         nvidia_repository = INJECTOR.get(NvidiaRepository)
         nvidia_repository.set_all_gpus_fan_to_auto()
