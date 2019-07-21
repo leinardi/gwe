@@ -404,7 +404,7 @@ class MainPresenter:
             current.save()
         self.main_view.set_statusbar_text(f'{profile.name} overclock profile selected')
 
-    def _log_exception_return_empty_observable(self, ex: Exception) -> Observable:
+    def _log_exception_return_empty_observable(self, ex: Exception, _: Observable) -> Observable:
         LOG.exception(f"Err = {ex}")
         self.main_view.set_statusbar_text(str(ex))
         observable = rx.just(None)
