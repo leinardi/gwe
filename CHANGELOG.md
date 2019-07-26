@@ -1,3 +1,10 @@
+Version 0.13.0
+==============
+Released: 2019-07-26
+
+ * Fix #77: Give option to minimize to tray when closing from the X button
+ * Several library updates
+
 Version 0.12.3
 ==============
 Released: 2019-02-24

@@ -27,6 +27,14 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+        <release date="2019-07-26" version="0.13.0">
+            <description>
+                <ul>
+                    <li>Fix #77: Give option to minimize to tray when closing from the X button</li>
+                    <li>Several library updates</li>
+                </ul>
+            </description>
+        </release>
         <release date="2019-02-24" version="0.12.3">
             <description>
                 <ul>

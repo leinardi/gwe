@@ -114,6 +114,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
     <property name="can_focus">False</property>
     <property name="icon_name">com.leinardi.gwe</property>
     <property name="gravity">north</property>
+    <signal name="delete-event" handler="on_application_window_delete_event" swapped="no"/>
     <child type="titlebar">
       <object class="GtkBox">
         <property name="visible">True</property>
