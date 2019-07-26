@@ -20,6 +20,7 @@ from distutils.version import LooseVersion
 from typing import Optional
 
 import requests
+import rx
 from injector import singleton, inject
 from rx import Observable
 
@@ -38,7 +39,7 @@ class GetStatusInteractor:
 
     def execute(self) -> Observable:
         # LOG.debug("GetStatusInteractor.execute()")
-        return Observable.defer(lambda: Observable.just(self._nvidia_repository.get_status()))
+        return rx.defer(lambda _: rx.just(self._nvidia_repository.get_status()))
 
 
 @singleton
@@ -49,8 +50,8 @@ class SetOverclockInteractor:
 
     def execute(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> Observable:
         LOG.debug("SetOverclockInteractor.execute()")
-        return Observable.defer(
-            lambda: Observable.just(self._nvidia_repository.set_overclock(gpu_index, perf, gpu_offset, memory_offset)))
+        return rx.defer(
+            lambda _: rx.just(self._nvidia_repository.set_overclock(gpu_index, perf, gpu_offset, memory_offset)))
 
 
 @singleton
@@ -61,7 +62,7 @@ class SetPowerLimitInteractor:
 
     def execute(self, gpu_index: int, limit: int) -> Observable:
         LOG.debug("SetPowerLimitInteractor.execute()")
-        return Observable.defer(lambda: Observable.just(self._nvidia_repository.set_power_limit(gpu_index, limit)))
+        return rx.defer(lambda _: rx.just(self._nvidia_repository.set_power_limit(gpu_index, limit)))
 
 
 @singleton
@@ -72,8 +73,8 @@ class SetFanSpeedInteractor:
 
     def execute(self, gpu_index: int, speed: int = 100, manual_control: bool = True) -> Observable:
         LOG.debug("SetSpeedProfileInteractor.execute()")
-        return Observable.defer(
-            lambda: Observable.just(self._nvidia_repository.set_fan_speed(gpu_index, speed, manual_control)))
+        return rx.defer(
+            lambda _: rx.just(self._nvidia_repository.set_fan_speed(gpu_index, speed, manual_control)))
 
 
 @singleton
@@ -148,7 +149,7 @@ class CheckNewVersionInteractor:
 
     def execute(self) -> Observable:
         LOG.debug("CheckNewVersionInteractor.execute()")
-        return Observable.defer(lambda: Observable.just(self.__check_new_version()))
+        return rx.defer(lambda _: rx.just(self.__check_new_version()))
 
     def __check_new_version(self) -> Optional[LooseVersion]:
         req = requests.get(self.URL_PATTERN.format(package=APP_ID))
