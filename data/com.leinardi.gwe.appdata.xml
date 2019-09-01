@@ -39,7 +39,7 @@
             <description>
                 <ul>
                     <li>Fix #77: Give option to minimize to tray when closing from the X button</li>
-                    <li>Fix #44: Preferences not saved on flatpak version</li>
+                    <li>Fix #47: Preferences not saved on flatpak version</li>
                     <li>Several library updates (solves issue with RxPY 3.x)</li>
                 </ul>
             </description>

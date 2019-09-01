@@ -10,7 +10,7 @@ Version 0.13.0
 Released: 2019-09-01
 
  * Fix #77: Give option to minimize to tray when closing from the X button
- * Fix #44: Preferences not saved on flatpak version
+ * Fix #47: Preferences not saved on flatpak version
  * Several library updates (solves issue with RxPY 3.x)
 
 Version 0.12.3
