@@ -1,6 +1,6 @@
 Version 0.13.0
 ==============
-Released: 2019-07-26
+Released: 2019-09-01
 
  * Fix #77: Give option to minimize to tray when closing from the X button
  * Fix #44: Preferences not saved on flatpak version
@@ -62,7 +62,6 @@ Released: 2019-02-09
  * Fixed check for Coolbit 4 not working
  * Launcher name changed to GreenWithEnvy
  * Removed workaround for memory leak caused by python-xlib
-   (https://github.com/python-xlib/python-xlib/issues/136)
 
 Version 0.10.1
 ==============
@@ -70,7 +69,6 @@ Released: 2019-02-03
 
  * Updated new version check to use Flathub instead of PyPI
  * Workaround for memory leak caused by python-xlib
-   (https://github.com/python-xlib/python-xlib/issues/136)
 
 Version 0.9.0
 =============
@@ -85,7 +83,7 @@ Version 0.8.0
 =============
 Released: 2019-01-30
 
- * App available on Flathub! https://flathub.org/apps/details/com.leinardi.gwe
+ * App available on Flathub!
  * Fixed crash when power data is not available
 
 Version 0.7.0
