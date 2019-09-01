@@ -66,14 +66,13 @@ class PreferencesPresenter:
         self.view.refresh_settings(settings)
 
     def on_setting_changed(self, widget: Any, *args: Any) -> None:
-        key = value = None
         if isinstance(widget, Gtk.Switch):
             value = args[0]
             key = re.sub('_switch$', '', widget.get_name())
+            self._settings_interactor.set_bool(key, value)
+            if key == 'settings_launch_on_login' and not is_flatpak():
+                set_autostart_entry(value)
         elif isinstance(widget, Gtk.SpinButton):
             key = re.sub('_spinbutton$', '', widget.get_name())
             value = widget.get_value_as_int()
-        if key is not None and value is not None and not is_flatpak():
-            self._settings_interactor.set_bool(key, value)
-            if key == 'settings_launch_on_login':
-                set_autostart_entry(value)
+            self._settings_interactor.set_int(key, value)
