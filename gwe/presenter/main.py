@@ -134,6 +134,12 @@ class MainPresenter:
         self._start_refresh()
         self._check_new_version()
 
+    def on_application_window_delete_event(self, *_: Any) -> bool:
+        if self._settings_interactor.get_int('settings_minimize_to_tray'):
+            self.on_toggle_app_window_clicked()
+            return True
+        return False
+
     def on_historical_data_button_clicked(self, *_: Any) -> None:
         self._historical_data_presenter.show()
 
