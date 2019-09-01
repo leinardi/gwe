@@ -175,7 +175,7 @@ It is possible to build the local source or the remote one (the same that Flathu
 ```
 ### Run
 ```bash
-flatpak uninstall com.leinardi.gwe --assumeyes; flatpak run com.leinardi.gwe --debug
+flatpak run com.leinardi.gwe --debug
 ```
 
 ## 🖥️ How to build and run the source code
