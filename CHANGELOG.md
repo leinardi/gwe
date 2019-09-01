@@ -1,3 +1,10 @@
+Version 0.13.1
+==============
+Released: 2019-09-01
+
+ * Fix #82: Quit app with Ctrl+Q
+ * Hide app with Ctrl+H
+
 Version 0.13.0
 ==============
 Released: 2019-09-01
