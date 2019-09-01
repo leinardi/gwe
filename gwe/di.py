@@ -16,12 +16,13 @@
 # along with gwe.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+from typing import NewType
 
 from gi.repository import Gtk
-from injector import Module, provider, singleton, Injector, Key
+from injector import Module, provider, singleton, Injector
 from peewee import SqliteDatabase
-from rx.disposables import CompositeDisposable
-from rx.subjects import Subject
+from rx.disposable import CompositeDisposable
+from rx.subject import Subject
 
 from gwe.conf import APP_PACKAGE_NAME, APP_MAIN_UI_NAME, APP_DB_NAME, APP_EDIT_FAN_PROFILE_UI_NAME, \
     APP_PREFERENCES_UI_NAME, APP_HISTORICAL_DATA_UI_NAME, APP_EDIT_OC_PROFILE_UI_NAME
@@ -29,14 +30,14 @@ from gwe.util.path import get_config_path
 
 LOG = logging.getLogger(__name__)
 
-SpeedStepChangedSubject = Key("SpeedStepChangedSubject")
-FanProfileChangedSubject = Key("FanProfileChangedSubject")
-OverclockProfileChangedSubject = Key("OverclockProfileChangedSubject")
-MainBuilder = Key(APP_MAIN_UI_NAME)
-EditFanProfileBuilder = Key(APP_EDIT_FAN_PROFILE_UI_NAME)
-EditOverclockProfileBuilder = Key(APP_EDIT_OC_PROFILE_UI_NAME)
-HistoricalDataBuilder = Key(APP_HISTORICAL_DATA_UI_NAME)
-PreferencesBuilder = Key(APP_PREFERENCES_UI_NAME)
+SpeedStepChangedSubject = NewType('SpeedStepChangedSubject', Subject)
+FanProfileChangedSubject = NewType('FanProfileChangedSubject', Subject)
+OverclockProfileChangedSubject = NewType('OverclockProfileChangedSubject', Subject)
+MainBuilder = NewType('MainBuilder', Gtk.Builder)
+EditFanProfileBuilder = NewType('EditFanProfileBuilder', Gtk.Builder)
+EditOverclockProfileBuilder = NewType('EditOverclockProfileBuilder', Gtk.Builder)
+HistoricalDataBuilder = NewType('HistoricalDataBuilder', Gtk.Builder)
+PreferencesBuilder = NewType('PreferencesBuilder', Gtk.Builder)
 
 _UI_RESOURCE_PATH = "/com/leinardi/gwe/ui/{}"
 
@@ -47,7 +48,7 @@ class ProviderModule(Module):
     @provider
     def provide_main_builder(self) -> MainBuilder:
         LOG.debug("provide Gtk.Builder")
-        builder = Gtk.Builder()
+        builder = MainBuilder(Gtk.Builder())
         builder.set_translation_domain(APP_PACKAGE_NAME)
         builder.add_from_resource(_UI_RESOURCE_PATH.format(APP_MAIN_UI_NAME))
         return builder
@@ -56,7 +57,7 @@ class ProviderModule(Module):
     @provider
     def provide_edit_fan_profile_builder(self) -> EditFanProfileBuilder:
         LOG.debug("provide Gtk.Builder")
-        builder = Gtk.Builder()
+        builder = EditFanProfileBuilder(Gtk.Builder())
         builder.set_translation_domain(APP_PACKAGE_NAME)
         builder.add_from_resource(_UI_RESOURCE_PATH.format(APP_EDIT_FAN_PROFILE_UI_NAME))
         return builder
@@ -65,7 +66,7 @@ class ProviderModule(Module):
     @provider
     def provide_edit_overclock_profile_builder(self) -> EditOverclockProfileBuilder:
         LOG.debug("provide Gtk.Builder")
-        builder = Gtk.Builder()
+        builder = EditOverclockProfileBuilder(Gtk.Builder())
         builder.set_translation_domain(APP_PACKAGE_NAME)
         builder.add_from_resource(_UI_RESOURCE_PATH.format(APP_EDIT_OC_PROFILE_UI_NAME))
         return builder
@@ -74,7 +75,7 @@ class ProviderModule(Module):
     @provider
     def provide_historical_data_builder(self) -> HistoricalDataBuilder:
         LOG.debug("provide Gtk.Builder")
-        builder = Gtk.Builder()
+        builder = HistoricalDataBuilder(Gtk.Builder())
         builder.set_translation_domain(APP_PACKAGE_NAME)
         builder.add_from_resource(_UI_RESOURCE_PATH.format(APP_HISTORICAL_DATA_UI_NAME))
         return builder
@@ -83,7 +84,7 @@ class ProviderModule(Module):
     @provider
     def provide_preferences_builder(self) -> PreferencesBuilder:
         LOG.debug("provide Gtk.Builder")
-        builder = Gtk.Builder()
+        builder = PreferencesBuilder(Gtk.Builder())
         builder.set_translation_domain(APP_PACKAGE_NAME)
         builder.add_from_resource(_UI_RESOURCE_PATH.format(APP_PREFERENCES_UI_NAME))
         return builder
@@ -105,17 +106,17 @@ class ProviderModule(Module):
     @singleton
     @provider
     def provide_speed_step_changed_subject(self) -> SpeedStepChangedSubject:
-        return Subject()
+        return SpeedStepChangedSubject(Subject())
 
     @singleton
     @provider
     def provide_fan_profile_changed_subject(self) -> FanProfileChangedSubject:
-        return Subject()
+        return FanProfileChangedSubject(Subject())
 
     @singleton
     @provider
     def provide_overclock_profile_changed_subject(self) -> OverclockProfileChangedSubject:
-        return Subject()
+        return OverclockProfileChangedSubject(Subject())
 
 
 INJECTOR = Injector(ProviderModule)
