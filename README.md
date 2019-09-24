@@ -65,7 +65,7 @@ If you have not installed GWE yet:
 git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
 cd gwe
 git checkout release
-sudo pip3 install -r requirements.txt
+sudo -H pip3 install -r requirements.txt
 meson . build --prefix /usr
 ninja -v -C build
 sudo ninja -v -C build install
@@ -80,7 +80,7 @@ git checkout release
 git reset --hard origin/release
 git submodule init
 git submodule update
-sudo pip3 install -r requirements.txt
+sudo -H pip3 install -r requirements.txt
 meson . build --prefix /usr
 ninja -v -C build
 sudo ninja -v -C build install
