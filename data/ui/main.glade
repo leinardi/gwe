@@ -1843,7 +1843,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
     <property name="type_hint">dialog</property>
     <property name="transient_for">application_window</property>
     <property name="program_name">GreenWithEnvy</property>
-    <property name="website">https://gitlab.com/leinardi</property>
+    <property name="website">https://gitlab.com/leinardi/gwe</property>
     <property name="authors">Roberto Leinardi &lt;roberto@leinardi.com&gt;
 Gabriele Musco &lt;emaildigabry@gmail.com&gt;</property>
     <property name="logo_icon_name">com.leinardi.gwe</property>

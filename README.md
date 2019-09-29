@@ -147,7 +147,6 @@ If you don't want to create this custom rule you can run gwe as root
   |--debug                    |Show debug messages                        |    x   |    x    |
   |--hide-window              |Start with the main window hidden          |    x   |    x    |
   |--ctrl-display DISPLAY     |Specify the NV-CONTROL display             |    x   |    x    |
-  |--application-entry        |Add a desktop entry for the application    |    x   |         |
   |--autostart-on             |Enable automatic start of the app on login |    x   |         |
   |--autostart-off            |Disable automatic start of the app on login|    x   |         |
 
@@ -157,7 +156,7 @@ If you don't have Flatpak installed you can find step by step instructions [here
 Make sure to have the Flathub remote added to the current user:
 
 ```bash
-flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepoù
+flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
 ### Clone the repo
@@ -316,7 +315,7 @@ Thanks to:
 ```
 This file is part of gwe.
 
-Copyright (c) 2018 Roberto Leinardi
+Copyright (c) 2019 Roberto Leinardi
 
 gwe is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

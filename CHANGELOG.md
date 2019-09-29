@@ -1,3 +1,10 @@
+Version 0.13.2
+==============
+Released: 2019-09-29
+
+ * Removed parameter to add Application icon (it's done automatically on
+   install already)
+
 Version 0.13.1
 ==============
 Released: 2019-09-01
