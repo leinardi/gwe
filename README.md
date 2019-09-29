@@ -51,7 +51,7 @@ Install the `gwe` package from the AUR using your favourite helper, for example 
 ### Install from source code
 #### Dependencies for (K/X)Ubuntu 18.10 or newer
 ```bash
-sudo apt install git meson python3-pip libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo appstream-util
+sudo apt install git meson python3-pip python3-setuptools libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo appstream-util
 ```
 
 #### Dependencies for Fedora 28 or newer
