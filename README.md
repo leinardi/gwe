@@ -48,6 +48,9 @@ you need to install it from the source code.
 #### Arch Linux
 Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
 
+#### Fedora
+[COPR package](https://copr.fedorainfracloud.org/coprs/atim/gwe/): `sudo dnf copr enable atim/gwe -y && sudo dnf install gwe -y`
+
 ### Install from source code
 #### Dependencies for (K/X)Ubuntu 18.10 or newer
 ```bash
