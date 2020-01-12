@@ -1,9 +1,29 @@
+Version 0.13.3
+==============
+Released: 2020-01-12
+
+ * Updated several dependencies
+
+Version 0.13.2
+==============
+Released: 2019-09-29
+
+ * Removed parameter to add Application icon (it's done automatically on
+   install already)
+
+Version 0.13.1
+==============
+Released: 2019-09-01
+
+ * Fix #82: Quit app with Ctrl+Q
+ * Hide app with Ctrl+H
+
 Version 0.13.0
 ==============
 Released: 2019-09-01
 
  * Fix #77: Give option to minimize to tray when closing from the X button
- * Fix #44: Preferences not saved on flatpak version
+ * Fix #47: Preferences not saved on flatpak version
  * Several library updates (solves issue with RxPY 3.x)
 
 Version 0.12.3

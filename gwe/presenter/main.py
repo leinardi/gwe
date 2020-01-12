@@ -414,7 +414,7 @@ class MainPresenter:
         LOG.exception(f"Err = {ex}")
         self.main_view.set_statusbar_text(str(ex))
         observable = rx.just(None)
-        assert isinstance(operators, Observable)
+        assert isinstance(observable, Observable)
         return observable
 
     def _get_status(self) -> Observable:

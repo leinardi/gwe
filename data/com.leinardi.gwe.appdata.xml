@@ -27,11 +27,33 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+         <release date="2020-01-12" version="0.13.3">
+            <description>
+                <ul>
+                    <li>Updated several dependencies</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2019-09-29" version="0.13.2">
+            <description>
+                <ul>
+                    <li>Removed parameter to add Application icon (it's done automatically on install already)</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2019-09-01" version="0.13.1">
+            <description>
+                <ul>
+                    <li>Fix #82: Quit app with Ctrl+Q</li>
+                    <li>Hide app with Ctrl+H</li>
+                </ul>
+            </description>
+        </release>
         <release date="2019-09-01" version="0.13.0">
             <description>
                 <ul>
                     <li>Fix #77: Give option to minimize to tray when closing from the X button</li>
-                    <li>Fix #44: Preferences not saved on flatpak version</li>
+                    <li>Fix #47: Preferences not saved on flatpak version</li>
                     <li>Several library updates (solves issue with RxPY 3.x)</li>
                 </ul>
             </description>

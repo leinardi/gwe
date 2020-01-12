@@ -25,9 +25,8 @@ from injector import singleton, inject
 from py3nvml import py3nvml
 from py3nvml.py3nvml import NVMLError, NVML_ERROR_NOT_SUPPORTED, NVML_TEMPERATURE_GPU, \
     NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, NVML_CLOCK_SM, NVML_ERROR_UNKNOWN
-
-from gwe.Xlib import display
-from gwe.Xlib.ext.nvcontrol import Gpu, Cooler
+from Xlib import display
+from Xlib.ext.nvcontrol import Gpu, Cooler
 from gwe.model import Status, Info, Power, Temp, Clocks, GpuStatus, Fan, Overclock
 from gwe.util.concurrency import synchronized_with_attr
 from gwe.util.deployment import is_flatpak
@@ -40,23 +39,21 @@ _NVIDIA_SETTINGS_BINARY_NAME = 'nvidia-settings'
 _FLATPAK_COMMAND_PREFIX = ['flatpak-spawn', '--host']
 
 
-def run_and_get_stdout(command: List[str], pipe_command: List[str] = None) -> Tuple[int, str]:
+def run_and_get_stdout(command: List[str], pipe_command: List[str] = None) -> Tuple[int, str, str]:
     if pipe_command is None:
         if is_flatpak():
             command = _FLATPAK_COMMAND_PREFIX + command
         process1 = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-        output = process1.communicate()[0]
-        output = output.decode(encoding='UTF-8')
-        return process1.returncode, output
+        output, error = process1.communicate()
+        return process1.returncode, output.decode(encoding='UTF-8').strip(), error.decode(encoding='UTF-8').strip()
     if is_flatpak():
         command = _FLATPAK_COMMAND_PREFIX + command
         pipe_command = _FLATPAK_COMMAND_PREFIX + pipe_command
     process1 = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     process2 = subprocess.Popen(pipe_command, stdin=process1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     process1.stdout.close()
-    output = process2.communicate()[0]
-    output = output.decode(encoding='UTF-8')
-    return process2.returncode, output
+    output, error = process1.communicate()
+    return process2.returncode, output.decode(encoding='UTF-8').strip(), error.decode(encoding='UTF-8').strip()
 
 
 @singleton
@@ -224,7 +221,7 @@ class NvidiaRepository:
                '-pl',
                str(limit)]
         result = run_and_get_stdout(cmd)
-        LOG.info(f"Exit code: {result[0]}. {result[1]}")
+        LOG.info(f"Exit code: {result[0]}. {result[1]}\n{result[1]}")
         return result[0] == 0
 
     def set_all_gpus_fan_to_auto(self) -> None:

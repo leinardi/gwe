@@ -104,11 +104,6 @@ class Application(Gtk.Application):
             LOG.debug(f"Option {_Options.HIDE_WINDOW.value} selected")
             self._start_hidden = True
 
-        if _Options.APPLICATION_ENTRY.value in options:
-            LOG.debug(f"Option {_Options.APPLICATION_ENTRY.value} selected")
-            add_application_entry()
-            start_app = False
-
         if _Options.AUTOSTART_ON.value in options:
             LOG.debug(f"Option {_Options.AUTOSTART_ON.value} selected")
             set_autostart_entry(True)
@@ -144,8 +139,6 @@ class Application(Gtk.Application):
                                           "and start GWE with optirun)"),
         ]
         if not is_flatpak():
-            options.append(build_glib_option(_Options.APPLICATION_ENTRY.value,
-                                             description="Add a desktop entry for the application"))
             options.append(build_glib_option(_Options.AUTOSTART_ON.value,
                                              description="Enable automatic start of the app on login"))
             options.append(build_glib_option(_Options.AUTOSTART_OFF.value,
@@ -158,6 +151,5 @@ class _Options(Enum):
     VERSION = 'version'
     HIDE_WINDOW = 'hide-window'
     CTRL_DISPLAY = 'ctrl-display'
-    APPLICATION_ENTRY = 'application-entry'
     AUTOSTART_ON = 'autostart-on'
     AUTOSTART_OFF = 'autostart-off'

@@ -149,9 +149,9 @@ class CheckNewVersionInteractor:
 
     def execute(self) -> Observable:
         LOG.debug("CheckNewVersionInteractor.execute()")
-        return rx.defer(lambda _: rx.just(self.__check_new_version()))
+        return rx.defer(lambda _: rx.just(self._check_new_version()))
 
-    def __check_new_version(self) -> Optional[LooseVersion]:
+    def _check_new_version(self) -> Optional[LooseVersion]:
         req = requests.get(self.URL_PATTERN.format(package=APP_ID))
         version = LooseVersion("0")
         if req.status_code == requests.codes.ok:
