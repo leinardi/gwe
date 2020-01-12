@@ -25,9 +25,8 @@ from injector import singleton, inject
 from py3nvml import py3nvml
 from py3nvml.py3nvml import NVMLError, NVML_ERROR_NOT_SUPPORTED, NVML_TEMPERATURE_GPU, \
     NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, NVML_CLOCK_SM, NVML_ERROR_UNKNOWN
-
-from gwe.Xlib import display
-from gwe.Xlib.ext.nvcontrol import Gpu, Cooler
+from Xlib import display
+from Xlib.ext.nvcontrol import Gpu, Cooler
 from gwe.model import Status, Info, Power, Temp, Clocks, GpuStatus, Fan, Overclock
 from gwe.util.concurrency import synchronized_with_attr
 from gwe.util.deployment import is_flatpak
