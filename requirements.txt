@@ -3,6 +3,7 @@ matplotlib==3.1.1
 peewee==3.9.6
 py3nvml==0.2.3
 pygobject
+python-xlib==0.26
 pyxdg==0.26
 requests
 Rx==3.0.1
