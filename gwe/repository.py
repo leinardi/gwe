@@ -207,8 +207,10 @@ class NvidiaRepository:
     def set_overclock(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> bool:
         xlib_display = display.Display(self._ctrl_display)
         gpu = Gpu(gpu_index)
-        gpu_result = xlib_display.nvcontrol_set_gpu_nvclock_offset(gpu, perf, gpu_offset)
-        mem_result = xlib_display.nvcontrol_set_mem_transfer_rate_offset(gpu, perf, memory_offset * 2)
+        gpu_result = (xlib_display.nvcontrol_set_gpu_nvclock_offset(gpu, perf, gpu_offset) or
+                      xlib_display.nvcontrol_set_gpu_nvclock_offset_all_levels(gpu, gpu_offset))
+        mem_result = (xlib_display.nvcontrol_set_mem_transfer_rate_offset(gpu, perf, memory_offset * 2) or
+                      xlib_display.nvcontrol_set_mem_transfer_rate_offset_all_levels(gpu, memory_offset * 2))
         xlib_display.close()
         return gpu_result is True and mem_result is True
 
