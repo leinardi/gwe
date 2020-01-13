@@ -1,3 +1,10 @@
+Version next
+============
+Released: 2020-01-13
+
+ * Pascal+ workaround for rootless Xorg distributions (e.g. Fedora). More info
+   on !45.
+
 Version 0.13.3
 ==============
 Released: 2020-01-12
