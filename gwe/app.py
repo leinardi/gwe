@@ -25,7 +25,9 @@ from injector import inject, singleton
 
 from gwe.conf import APP_NAME, APP_ID, APP_VERSION, APP_ICON_NAME
 from gwe.di import MainBuilder
-from gwe.model import FanProfile, load_fan_db_default_data, OverclockProfile, load_overclock_db_default_data
+from gwe.model import load_fan_db_default_data, load_overclock_db_default_data
+from gwe.model.fan_profile import FanProfile
+from gwe.model.overclock_profile import OverclockProfile
 from gwe.presenter.main_presenter import MainPresenter
 from gwe.repository import NvidiaRepository
 from gwe.util.deployment import is_flatpak

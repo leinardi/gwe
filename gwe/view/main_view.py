@@ -24,6 +24,9 @@ from gi.repository import Gtk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 
+from gwe.model.status import Status
+from gwe.model.fan_profile import FanProfile
+
 try:  # AppIndicator3 may not be installed
     import gi
 
@@ -38,7 +41,6 @@ from gwe.interactor import SettingsInteractor
 from gwe.view.edit_overclock_profile_view import EditOverclockProfileView
 from gwe.view.historical_data_view import HistoricalDataView
 from gwe.view.preferences_view import PreferencesView
-from gwe.model import Status, FanProfile
 from gwe.conf import APP_PACKAGE_NAME, APP_ID, APP_NAME, APP_VERSION, APP_SOURCE_URL, APP_ICON_NAME_SYMBOLIC
 from gwe.presenter.main_presenter import MainPresenter, MainViewInterface
 

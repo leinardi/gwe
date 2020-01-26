@@ -20,8 +20,10 @@ from gi.repository import Gtk
 from injector import singleton, inject
 
 from gwe.di import EditOverclockProfileBuilder
-from gwe.model import OverclockProfile, Overclock
-from gwe.presenter.edit_overclock_profile_presenter import EditOverclockProfileViewInterface, EditOverclockProfilePresenter
+from gwe.model.overclock_profile import OverclockProfile
+from gwe.model.overclock import Overclock
+from gwe.presenter.edit_overclock_profile_presenter import EditOverclockProfileViewInterface, \
+    EditOverclockProfilePresenter
 
 LOG = logging.getLogger(__name__)
 

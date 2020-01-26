@@ -22,7 +22,7 @@ from gi.repository import Gtk, GLib
 from injector import singleton, inject
 
 from gwe.interactor import SettingsInteractor
-from gwe.model import Status
+from gwe.model.status import Status
 from gwe.util.view import hide_on_delete, is_dazzle_version_supported
 
 LOG = logging.getLogger(__name__)

@@ -27,7 +27,15 @@ from py3nvml.py3nvml import NVMLError, NVML_ERROR_NOT_SUPPORTED, NVML_TEMPERATUR
     NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, NVML_CLOCK_SM, NVML_ERROR_UNKNOWN
 from Xlib import display
 from Xlib.ext.nvcontrol import Gpu, Cooler
-from gwe.model import Status, Info, Power, Temp, Clocks, GpuStatus, Fan, Overclock
+
+from gwe.model.clocks import Clocks
+from gwe.model.fan import Fan
+from gwe.model.gpu_status import GpuStatus
+from gwe.model.info import Info
+from gwe.model.overclock import Overclock
+from gwe.model.power import Power
+from gwe.model.status import Status
+from gwe.model.temp import Temp
 from gwe.util.concurrency import synchronized_with_attr
 from gwe.util.deployment import is_flatpak
 

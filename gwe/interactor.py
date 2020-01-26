@@ -25,7 +25,7 @@ from injector import singleton, inject
 from rx import Observable
 
 from gwe.conf import SETTINGS_DEFAULTS, APP_VERSION, APP_ID
-from gwe.model import Setting
+from gwe.model.setting import Setting
 from gwe.repository import NvidiaRepository
 
 LOG = logging.getLogger(__name__)

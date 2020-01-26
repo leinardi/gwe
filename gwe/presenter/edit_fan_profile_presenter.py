@@ -21,8 +21,9 @@ from gi.repository import Gtk
 from injector import singleton, inject
 
 from gwe.conf import MIN_TEMP, FAN_MIN_DUTY
-from gwe.model import FanProfile, SpeedStep
 from gwe.util.view import hide_on_delete
+from gwe.model.fan_profile import FanProfile
+from gwe.model.speed_step import SpeedStep
 
 LOG = logging.getLogger(__name__)
 

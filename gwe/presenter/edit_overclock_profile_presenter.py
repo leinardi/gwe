@@ -26,7 +26,8 @@ from rx.scheduler import ThreadPoolScheduler
 from rx.scheduler.mainloop import GtkScheduler
 
 from gwe.interactor import SetOverclockInteractor
-from gwe.model import OverclockProfile, Overclock
+from gwe.model.overclock_profile import OverclockProfile
+from gwe.model.overclock import Overclock
 from gwe.util.view import hide_on_delete
 
 LOG = logging.getLogger(__name__)

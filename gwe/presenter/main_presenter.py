@@ -18,7 +18,7 @@
 
 import logging
 import multiprocessing
-from typing import Optional, Any, List, Tuple, Callable
+from typing import Optional, Any, List, Tuple
 
 import rx
 from gi.repository import GLib
@@ -29,11 +29,16 @@ from rx.scheduler import ThreadPoolScheduler
 from rx.scheduler.mainloop import GtkScheduler
 
 from gwe.conf import APP_NAME, APP_SOURCE_URL, APP_VERSION, APP_ID
-from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject, INJECTOR
+from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject
 from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
     CheckNewVersionInteractor, SetOverclockInteractor, SetPowerLimitInteractor, SetFanSpeedInteractor
-from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfileType, GpuStatus, \
-    CurrentOverclockProfile, OverclockProfile
+from gwe.model.cb_change import DbChange
+from gwe.model.current_fan_profile import CurrentFanProfile
+from gwe.model.current_overclock_profile import CurrentOverclockProfile
+from gwe.model.status import Status
+from gwe.model.overclock_profile import OverclockProfile
+from gwe.model.fan_profile import FanProfile
+from gwe.model.fan_profile_type import FanProfileType
 from gwe.presenter.edit_fan_profile_presenter import EditFanProfilePresenter
 from gwe.presenter.edit_overclock_profile_presenter import EditOverclockProfilePresenter
 from gwe.presenter.historical_data_presenter import HistoricalDataPresenter
@@ -452,10 +457,10 @@ class MainPresenter:
     def _handle_new_version_response(self, version: Optional[str]) -> None:
         if version is not None:
             message = f"{APP_NAME} version <b>{version}</b> is available! " \
-                f"Click <a href=\"{self._get_changelog_uri(version)}\"><b>here</b></a> to see what's new."
+                      f"Click <a href=\"{self._get_changelog_uri(version)}\"><b>here</b></a> to see what's new."
             self.main_view.show_main_infobar_message(message, True)
             message = f"Version {version} is available! " \
-                f"Click here to see what's new: {self._get_changelog_uri(version)}"
+                      f"Click here to see what's new: {self._get_changelog_uri(version)}"
             show_notification("GWE update available!", message, APP_ID)
 
     @staticmethod

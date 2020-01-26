@@ -24,12 +24,18 @@ import sys
 from types import TracebackType
 from typing import Type
 from os.path import abspath, join, dirname
+
 from peewee import SqliteDatabase
 from gi.repository import GLib
 from rx.disposable import CompositeDisposable
 
 from gwe.conf import APP_PACKAGE_NAME
-from gwe.model import SpeedStep, FanProfile, CurrentFanProfile, OverclockProfile, CurrentOverclockProfile, Setting
+from gwe.model.current_fan_profile import CurrentFanProfile
+from gwe.model.current_overclock_profile import CurrentOverclockProfile
+from gwe.model.fan_profile import FanProfile
+from gwe.model.overclock_profile import OverclockProfile
+from gwe.model.setting import Setting
+from gwe.model.speed_step import SpeedStep
 from gwe.util.log import set_log_level
 from gwe.di import INJECTOR
 from gwe.app import Application
