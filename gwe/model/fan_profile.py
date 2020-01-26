@@ -25,7 +25,7 @@ from gwe.di import INJECTOR, FanProfileChangedSubject
 from gwe.model.cb_change import DbChange
 from gwe.model.fan_profile_type import FanProfileType
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 FAN_PROFILE_CHANGED_SUBJECT = INJECTOR.get(FanProfileChangedSubject)
 
 
@@ -45,11 +45,11 @@ class FanProfile(Model):
 
 @post_save(sender=FanProfile)
 def on_fan_profile_added(_: Any, profile: FanProfile, created: bool) -> None:
-    LOG.debug("Fan added")
+    _LOG.debug("Fan added")
     FAN_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.INSERT if created else DbChange.UPDATE))
 
 
 @post_delete(sender=FanProfile)
 def on_fan_profile_deleted(_: Any, profile: FanProfile) -> None:
-    LOG.debug("Fan deleted")
+    _LOG.debug("Fan deleted")
     FAN_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.DELETE))

@@ -37,7 +37,7 @@ from gwe.model.temp import Temp
 from gwe.repository import run_and_get_stdout
 from gwe.util.concurrency import synchronized_with_attr
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 _NVIDIA_SMI_BINARY_NAME = 'nvidia-smi'
 _NVIDIA_SETTINGS_BINARY_NAME = 'nvidia-settings'
 
@@ -177,17 +177,17 @@ class NvidiaRepository:
                 # )
                 gpu_status_list.append(gpu_status)
             time2 = time.time()
-            LOG.debug(f'Fetching new data took {((time2 - time1) * 1000.0):.3f} ms')
+            _LOG.debug(f'Fetching new data took {((time2 - time1) * 1000.0):.3f} ms')
             return Status(gpu_status_list)
         except:
-            LOG.exception("Error while getting status")
+            _LOG.exception("Error while getting status")
         finally:
             try:
                 if xlib_display:
                     xlib_display.close()
                 py3nvml.nvmlShutdown()
             except:
-                LOG.exception("Error while getting status")
+                _LOG.exception("Error while getting status")
         return None
 
     def set_overclock(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> bool:
@@ -209,7 +209,7 @@ class NvidiaRepository:
                '-pl',
                str(limit)]
         result = run_and_get_stdout(cmd)
-        LOG.info(f"Exit code: {result[0]}. {result[1]}\n{result[1]}")
+        _LOG.info(f"Exit code: {result[0]}. {result[1]}\n{result[1]}")
         return result[0] == 0
 
     def set_all_gpus_fan_to_auto(self) -> None:
@@ -238,12 +238,12 @@ class NvidiaRepository:
             return a_function(*args)
         except NVMLError as err:
             if err.value == NVML_ERROR_NOT_SUPPORTED:
-                LOG.debug(f"Function {a_function.__name__} not supported")
+                _LOG.debug(f"Function {a_function.__name__} not supported")
                 return None
             if err.value == NVML_ERROR_UNKNOWN:
-                LOG.warning(f"Unknown error while executing function {a_function.__name__}")
+                _LOG.warning(f"Unknown error while executing function {a_function.__name__}")
                 return None
-            LOG.error(f"Error value = {err.value}")
+            _LOG.error(f"Error value = {err.value}")
             raise err
 
     def _get_power_from_py3nvml(self, handle: Any) -> Power:

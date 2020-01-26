@@ -30,24 +30,24 @@ UDEV_RULE_FILE_NAME = '60-gwe.rules'
 def add_udev_rule() -> int:
     if os.geteuid() == 0:
         if not os.path.isdir(UDEV_RULES_DIR):
-            LOG.error(f"Udev rules have not been added ({UDEV_RULES_DIR} is not a directory)")
+            _LOG.error(f"Udev rules have not been added ({UDEV_RULES_DIR} is not a directory)")
             return 1
         try:
             shutil.copy(get_data_path(UDEV_RULE_FILE_NAME), UDEV_RULES_DIR)
         except IOError:
-            LOG.exception("Unable to add udev rule")
+            _LOG.exception("Unable to add udev rule")
             return 1
         try:
             subprocess.call(["udevadm", "control", "--reload-rules"])
             subprocess.call(["udevadm", "trigger", "--subsystem-match=usb", "--attr-match=idVendor=1e71",
                              "--action=add"])
         except OSError:
-            LOG.exception("unable to update udev rules (to apply the new rule a reboot may be needed)")
+            _LOG.exception("unable to update udev rules (to apply the new rule a reboot may be needed)")
             return 1
-        LOG.info("Rule added")
+        _LOG.info("Rule added")
         return 0
 
-    LOG.error("You must have root privileges to modify udev rules. Run this command again using sudo.")
+    _LOG.error("You must have root privileges to modify udev rules. Run this command again using sudo.")
     return 1
 
 
@@ -55,22 +55,22 @@ def remove_udev_rule() -> int:
     if os.geteuid() == 0:
         path = Path(UDEV_RULES_DIR).joinpath(UDEV_RULE_FILE_NAME)
         if not path.is_file():
-            LOG.error(f"Unable to add udev rule (file {str(path)} not found)")
+            _LOG.error(f"Unable to add udev rule (file {str(path)} not found)")
             return 1
         try:
             path.unlink()
         except IOError:
-            LOG.exception("Unable to add udev rule")
+            _LOG.exception("Unable to add udev rule")
             return 1
         try:
             subprocess.call(["udevadm", "control", "--reload-rules"])
             subprocess.call(["udevadm", "trigger", "--subsystem-match=usb", "--attr-match=idVendor=1e71",
                              "--action=add"])
         except OSError:
-            LOG.exception("unable to update udev rules (to apply the new rule a reboot may be needed)")
+            _LOG.exception("unable to update udev rules (to apply the new rule a reboot may be needed)")
             return 1
-        LOG.info("Rule removed")
+        _LOG.info("Rule removed")
         return 0
 
-    LOG.error("You must have root privileges to modify udev rules. Run this command again using sudo.")
+    _LOG.error("You must have root privileges to modify udev rules. Run this command again using sudo.")
     return 1

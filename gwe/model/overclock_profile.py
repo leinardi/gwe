@@ -25,7 +25,7 @@ from gwe.di import INJECTOR, OverclockProfileChangedSubject
 from gwe.model.cb_change import DbChange
 from gwe.model.overclock_profile_type import OverclockProfileType
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 OVERCLOCK_PROFILE_CHANGED_SUBJECT = INJECTOR.get(OverclockProfileChangedSubject)
 
 
@@ -48,11 +48,11 @@ class OverclockProfile(Model):
 
 @post_save(sender=OverclockProfile)
 def on_overclock_profile_added(_: Any, profile: OverclockProfile, created: bool) -> None:
-    LOG.debug("Overclock added")
+    _LOG.debug("Overclock added")
     OVERCLOCK_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.INSERT if created else DbChange.UPDATE))
 
 
 @post_delete(sender=OverclockProfile)
 def on_overclock_profile_deleted(_: Any, profile: OverclockProfile) -> None:
-    LOG.debug("Overclock deleted")
+    _LOG.debug("Overclock deleted")
     OVERCLOCK_PROFILE_CHANGED_SUBJECT.on_next(DbChange(profile, DbChange.DELETE))

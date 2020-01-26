@@ -22,7 +22,7 @@ from rx import Observable
 
 from gwe.repository.nvidia_repository import NvidiaRepository
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 @singleton
@@ -32,6 +32,6 @@ class SetOverclockInteractor:
         self._nvidia_repository = nvidia_repository
 
     def execute(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> Observable:
-        LOG.debug("SetOverclockInteractor.execute()")
+        _LOG.debug("SetOverclockInteractor.execute()")
         return rx.defer(
             lambda _: rx.just(self._nvidia_repository.set_overclock(gpu_index, perf, gpu_offset, memory_offset)))

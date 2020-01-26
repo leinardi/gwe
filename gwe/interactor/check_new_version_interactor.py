@@ -26,7 +26,7 @@ from rx import Observable
 
 from gwe.conf import APP_ID, APP_VERSION
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 @singleton
@@ -38,7 +38,7 @@ class CheckNewVersionInteractor:
         pass
 
     def execute(self) -> Observable:
-        LOG.debug("CheckNewVersionInteractor.execute()")
+        _LOG.debug("CheckNewVersionInteractor.execute()")
         return rx.defer(lambda _: rx.just(self._check_new_version()))
 
     def _check_new_version(self) -> Optional[LooseVersion]:

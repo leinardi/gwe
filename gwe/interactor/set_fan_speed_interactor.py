@@ -22,7 +22,7 @@ from rx import Observable
 
 from gwe.repository.nvidia_repository import NvidiaRepository
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 @singleton
@@ -32,6 +32,6 @@ class SetFanSpeedInteractor:
         self._nvidia_repository = nvidia_repository
 
     def execute(self, gpu_index: int, speed: int = 100, manual_control: bool = True) -> Observable:
-        LOG.debug("SetSpeedProfileInteractor.execute()")
+        _LOG.debug("SetSpeedProfileInteractor.execute()")
         return rx.defer(
             lambda _: rx.just(self._nvidia_repository.set_fan_speed(gpu_index, speed, manual_control)))

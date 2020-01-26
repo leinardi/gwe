@@ -25,7 +25,7 @@ from gwe.interactor.settings_interactor import SettingsInteractor
 from gwe.model.status import Status
 from gwe.util.view import hide_on_delete, is_dazzle_version_supported
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 MONITORING_INTERVAL = 300
 
@@ -62,7 +62,7 @@ class HistoricalDataPresenter:
     def __init__(self,
                  settings_interactor: SettingsInteractor,
                  ) -> None:
-        LOG.debug("init HistoricalDataPresenter ")
+        _LOG.debug("init HistoricalDataPresenter ")
         self._settings_interactor = settings_interactor
         self.view: HistoricalDataViewInterface = HistoricalDataViewInterface()
         self._gpu_index: int = 0

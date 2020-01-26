@@ -44,9 +44,9 @@ from gwe.view.preferences_view import PreferencesView
 from gwe.conf import APP_PACKAGE_NAME, APP_ID, APP_NAME, APP_VERSION, APP_SOURCE_URL, APP_ICON_NAME_SYMBOLIC
 from gwe.presenter.main_presenter import MainPresenter, MainViewInterface
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 if AppIndicator3 is None:
-    LOG.warning("AppIndicator3 is not installed. The app indicator will not be shown.")
+    _LOG.warning("AppIndicator3 is not installed. The app indicator will not be shown.")
 
 
 @singleton
@@ -62,7 +62,7 @@ class MainView(MainViewInterface):
                  builder: MainBuilder,
                  settings_interactor: SettingsInteractor,
                  ) -> None:
-        LOG.debug('init MainView')
+        _LOG.debug('init MainView')
         self._presenter: MainPresenter = presenter
         self._edit_fan_profile_view = edit_fan_profile_view
         self._edit_overclock_profile_view = edit_overclock_profile_view
@@ -212,7 +212,7 @@ class MainView(MainViewInterface):
         self._statusbar.push(self._context, text)
 
     def refresh_status(self, status: Optional[Status], gpu_index: int) -> None:
-        LOG.debug('view status')
+        _LOG.debug('view status')
         if status:
             gpu_status = status.gpu_status_list[gpu_index]
             if self._first_refresh:

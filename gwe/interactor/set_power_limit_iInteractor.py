@@ -22,7 +22,7 @@ from rx import Observable
 
 from gwe.repository.nvidia_repository import NvidiaRepository
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 @singleton
@@ -32,5 +32,5 @@ class SetPowerLimitInteractor:
         self._nvidia_repository = nvidia_repository
 
     def execute(self, gpu_index: int, limit: int) -> Observable:
-        LOG.debug("SetPowerLimitInteractor.execute()")
+        _LOG.debug("SetPowerLimitInteractor.execute()")
         return rx.defer(lambda _: rx.just(self._nvidia_repository.set_power_limit(gpu_index, limit)))

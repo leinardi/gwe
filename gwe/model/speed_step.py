@@ -24,7 +24,7 @@ from gwe.di import INJECTOR, SpeedStepChangedSubject
 from gwe.model.cb_change import DbChange
 from gwe.model.fan_profile import FanProfile
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 class SpeedStep(Model):
@@ -40,13 +40,13 @@ class SpeedStep(Model):
 
 @post_save(sender=SpeedStep)
 def on_speed_step_added(_: Any, step: SpeedStep, created: bool) -> None:
-    LOG.debug("Step added")
+    _LOG.debug("Step added")
     SPEED_STEP_CHANGED_SUBJECT.on_next(DbChange(step, DbChange.INSERT if created else DbChange.UPDATE))
 
 
 @post_delete(sender=SpeedStep)
 def on_speed_step_deleted(_: Any, step: SpeedStep) -> None:
-    LOG.debug("Step deleted")
+    _LOG.debug("Step deleted")
     SPEED_STEP_CHANGED_SUBJECT.on_next(DbChange(step, DbChange.DELETE))
 
 

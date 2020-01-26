@@ -25,7 +25,7 @@ from gwe.util.view import hide_on_delete
 from gwe.model.fan_profile import FanProfile
 from gwe.model.speed_step import SpeedStep
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 class EditFanProfileViewInterface:
@@ -58,7 +58,7 @@ class EditFanProfileViewInterface:
 class EditFanProfilePresenter:
     @inject
     def __init__(self) -> None:
-        LOG.debug("init EditFanProfilePresenter ")
+        _LOG.debug("init EditFanProfilePresenter ")
         self.view: EditFanProfileViewInterface = EditFanProfileViewInterface()
         self._profile = FanProfile()
         self._selected_step: Optional[SpeedStep] = None
@@ -86,7 +86,7 @@ class EditFanProfilePresenter:
         self.view.refresh_controls(step, deselect_list)
 
     def on_step_selected(self, tree_selection: Gtk.TreeSelection) -> None:
-        LOG.debug("selected")
+        _LOG.debug("selected")
         list_store, tree_iter = tree_selection.get_selected()
         step = None if tree_iter is None else SpeedStep.get_or_none(id=list_store.get_value(tree_iter, 0))
         self.refresh_controls(step)

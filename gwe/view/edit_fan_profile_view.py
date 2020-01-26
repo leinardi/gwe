@@ -30,7 +30,7 @@ from gwe.util.view import init_plot_chart, get_fan_profile_data
 from gwe.model.fan_profile import FanProfile
 from gwe.model.speed_step import SpeedStep
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 @singleton
@@ -40,7 +40,7 @@ class EditFanProfileView(EditFanProfileViewInterface):
                  presenter: EditFanProfilePresenter,
                  builder: EditFanProfileBuilder,
                  ) -> None:
-        LOG.debug('init EditFanProfileView')
+        _LOG.debug('init EditFanProfileView')
         self._presenter: EditFanProfilePresenter = presenter
         self._presenter.view = self
         self._builder: Gtk.Builder = builder
@@ -152,7 +152,7 @@ class EditFanProfileView(EditFanProfileViewInterface):
                 self._temperature_adjustment.set_lower(MIN_TEMP)
                 self._duty_adjustment.set_lower(FAN_MIN_DUTY)
             else:
-                LOG.debug(f"prev = {prev_steps[0].temperature}")
+                _LOG.debug(f"prev = {prev_steps[0].temperature}")
                 self._temperature_adjustment.set_lower(prev_steps[0].temperature + 1)
                 self._duty_adjustment.set_lower(prev_steps[0].duty)
 
