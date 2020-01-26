@@ -24,6 +24,7 @@ from gi.repository import Gtk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 
+from gwe.interactor.settings_interactor import SettingsInteractor
 from gwe.model.status import Status
 from gwe.model.fan_profile import FanProfile
 
@@ -37,7 +38,6 @@ except (ImportError, ValueError):
 from gwe.di import MainBuilder
 from gwe.view.edit_fan_profile_view import EditFanProfileView
 from gwe.util.view import hide_on_delete, init_plot_chart, get_fan_profile_data, is_dazzle_version_supported
-from gwe.interactor import SettingsInteractor
 from gwe.view.edit_overclock_profile_view import EditOverclockProfileView
 from gwe.view.historical_data_view import HistoricalDataView
 from gwe.view.preferences_view import PreferencesView

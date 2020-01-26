@@ -30,8 +30,12 @@ from rx.scheduler.mainloop import GtkScheduler
 
 from gwe.conf import APP_NAME, APP_SOURCE_URL, APP_VERSION, APP_ID
 from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject
-from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
-    CheckNewVersionInteractor, SetOverclockInteractor, SetPowerLimitInteractor, SetFanSpeedInteractor
+from gwe.interactor.check_new_version_interactor import CheckNewVersionInteractor
+from gwe.interactor.get_status_interactor import GetStatusInteractor
+from gwe.interactor.set_fan_speed_interactor import SetFanSpeedInteractor
+from gwe.interactor.set_overclock_interactor import SetOverclockInteractor
+from gwe.interactor.set_power_limit_iInteractor import SetPowerLimitInteractor
+from gwe.interactor.settings_interactor import SettingsInteractor
 from gwe.model.cb_change import DbChange
 from gwe.model.current_fan_profile import CurrentFanProfile
 from gwe.model.current_overclock_profile import CurrentOverclockProfile

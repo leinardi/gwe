@@ -21,7 +21,7 @@ from typing import Any, Tuple, Dict
 from gi.repository import Gtk, GLib
 from injector import singleton, inject
 
-from gwe.interactor import SettingsInteractor
+from gwe.interactor.settings_interactor import SettingsInteractor
 from gwe.model.status import Status
 from gwe.util.view import hide_on_delete, is_dazzle_version_supported
 

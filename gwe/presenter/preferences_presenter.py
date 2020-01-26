@@ -22,7 +22,7 @@ from gi.repository import Gtk
 from injector import singleton, inject
 
 from gwe.conf import SETTINGS_DEFAULTS
-from gwe.interactor import SettingsInteractor
+from gwe.interactor.settings_interactor import SettingsInteractor
 from gwe.util.deployment import is_flatpak
 from gwe.util.desktop_entry import set_autostart_entry, AUTOSTART_FILE_PATH
 
