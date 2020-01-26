@@ -6,7 +6,7 @@ Put an x inside the [] like this: [x] to mark the checkbox.
 -->
 ### Step 1: Are you in the right place?
 - [ ] I have verified there are no duplicate active or recent bugs, questions, or requests
-- [ ] I have verified that I am using the latest version of GreenWIthEnvy (GWE)
+- [ ] I have verified that I am using the latest version of GreenWithEnvy (GWE)
 
 ### Step 2: Describe your environment
  - GWE version: `?`
@@ -43,7 +43,7 @@ What did you expect to happen?
 Start GWE from a terminal and paste the output here.
 -->
 ```
-<PASTE CONSOLE OUTPUT HEREA>
+<PASTE CONSOLE OUTPUT HERE>
 ```
 #### Screenshot of the issue
 <!--
