@@ -21,7 +21,7 @@ from gi.repository import Gtk
 from injector import singleton, inject
 
 from gwe.di import PreferencesBuilder
-from gwe.presenter.preferences import PreferencesViewInterface, PreferencesPresenter
+from gwe.presenter.preferences_presenter import PreferencesViewInterface, PreferencesPresenter
 from gwe.util.deployment import is_flatpak
 from gwe.util.view import hide_on_delete
 

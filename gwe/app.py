@@ -26,13 +26,13 @@ from injector import inject, singleton
 from gwe.conf import APP_NAME, APP_ID, APP_VERSION, APP_ICON_NAME
 from gwe.di import MainBuilder
 from gwe.model import FanProfile, load_fan_db_default_data, OverclockProfile, load_overclock_db_default_data
-from gwe.presenter.main import MainPresenter
+from gwe.presenter.main_presenter import MainPresenter
 from gwe.repository import NvidiaRepository
 from gwe.util.deployment import is_flatpak
 from gwe.util.desktop_entry import set_autostart_entry, add_application_entry
 from gwe.util.log import LOG_DEBUG_FORMAT
 from gwe.util.view import build_glib_option
-from gwe.view.main import MainView
+from gwe.view.main_view import MainView
 
 LOG = logging.getLogger(__name__)
 

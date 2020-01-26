@@ -26,7 +26,7 @@ from matplotlib.figure import Figure
 from gwe.conf import MIN_TEMP, FAN_MIN_DUTY, MAX_TEMP, FAN_MAX_DUTY
 from gwe.di import EditFanProfileBuilder
 from gwe.model import FanProfile, SpeedStep
-from gwe.presenter.edit_fan_profile import EditFanProfileViewInterface, EditFanProfilePresenter
+from gwe.presenter.edit_fan_profile_presenter import EditFanProfileViewInterface, EditFanProfilePresenter
 from gwe.util.view import init_plot_chart, get_fan_profile_data
 
 LOG = logging.getLogger(__name__)

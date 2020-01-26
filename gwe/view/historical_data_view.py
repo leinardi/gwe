@@ -24,10 +24,10 @@ from injector import singleton, inject
 
 from gwe.conf import GRAPH_COLOR_HEX
 from gwe.di import HistoricalDataBuilder
-from gwe.presenter.historical_data import HistoricalDataViewInterface, HistoricalDataPresenter, MONITORING_INTERVAL, \
+from gwe.presenter.historical_data_presenter import HistoricalDataViewInterface, HistoricalDataPresenter, MONITORING_INTERVAL, \
     GraphType
 from gwe.util.view import is_dazzle_version_supported
-from gwe.view.graph_stacked_renderer import GraphStackedRenderer
+from gwe.view.graph_stacked_renderer_view import GraphStackedRenderer
 
 LOG = logging.getLogger(__name__)
 

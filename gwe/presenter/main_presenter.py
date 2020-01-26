@@ -34,10 +34,10 @@ from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
     CheckNewVersionInteractor, SetOverclockInteractor, SetPowerLimitInteractor, SetFanSpeedInteractor
 from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfileType, GpuStatus, \
     CurrentOverclockProfile, OverclockProfile
-from gwe.presenter.edit_fan_profile import EditFanProfilePresenter
-from gwe.presenter.edit_overclock_profile import EditOverclockProfilePresenter
-from gwe.presenter.historical_data import HistoricalDataPresenter
-from gwe.presenter.preferences import PreferencesPresenter
+from gwe.presenter.edit_fan_profile_presenter import EditFanProfilePresenter
+from gwe.presenter.edit_overclock_profile_presenter import EditOverclockProfilePresenter
+from gwe.presenter.historical_data_presenter import HistoricalDataPresenter
+from gwe.presenter.preferences_presenter import PreferencesPresenter
 from gwe.util.view import show_notification, open_uri, get_default_application
 
 LOG = logging.getLogger(__name__)
