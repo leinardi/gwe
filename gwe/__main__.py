@@ -39,7 +39,7 @@ from gwe.model.speed_step import SpeedStep
 from gwe.util.log import set_log_level
 from gwe.di import INJECTOR
 from gwe.app import Application
-from gwe.repository import NvidiaRepository
+from gwe.repository.nvidia_repository import NvidiaRepository
 
 WHERE_AM_I = abspath(dirname(__file__))
 LOCALE_DIR = join(WHERE_AM_I, 'mo')

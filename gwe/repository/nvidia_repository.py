@@ -1,32 +1,30 @@
 # This file is part of gwe.
 #
-# Copyright (c) 2018 Roberto Leinardi
+# Copyright (c) 2020 Roberto Leinardi
 #
-# gwe is free software: you can redistribute it and/or modify
+# gst is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# gwe is distributed in the hope that it will be useful,
+# gst is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with gwe.  If not, see <http://www.gnu.org/licenses/>.
-
+# along with gst.  If not, see <http://www.gnu.org/licenses/>.
 import logging
-import subprocess
 import threading
 import time
-from typing import Optional, List, Tuple, Dict, Callable, Any
+from typing import List, Dict, Optional, Tuple, Callable, Any
 
-from injector import singleton, inject
-from py3nvml import py3nvml
-from py3nvml.py3nvml import NVMLError, NVML_ERROR_NOT_SUPPORTED, NVML_TEMPERATURE_GPU, \
-    NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, NVML_CLOCK_SM, NVML_ERROR_UNKNOWN
 from Xlib import display
 from Xlib.ext.nvcontrol import Gpu, Cooler
+from injector import singleton, inject
+from py3nvml import py3nvml
+from py3nvml.py3nvml import NVML_CLOCK_SM, NVMLError, NVML_ERROR_NOT_SUPPORTED, NVML_ERROR_UNKNOWN, \
+    NVML_TEMPERATURE_GPU, NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN
 
 from gwe.model.clocks import Clocks
 from gwe.model.fan import Fan
@@ -36,32 +34,12 @@ from gwe.model.overclock import Overclock
 from gwe.model.power import Power
 from gwe.model.status import Status
 from gwe.model.temp import Temp
+from gwe.repository import run_and_get_stdout
 from gwe.util.concurrency import synchronized_with_attr
-from gwe.util.deployment import is_flatpak
 
 LOG = logging.getLogger(__name__)
-
-NOT_AVAILABLE_STRING = 'N/A'
 _NVIDIA_SMI_BINARY_NAME = 'nvidia-smi'
 _NVIDIA_SETTINGS_BINARY_NAME = 'nvidia-settings'
-_FLATPAK_COMMAND_PREFIX = ['flatpak-spawn', '--host']
-
-
-def run_and_get_stdout(command: List[str], pipe_command: List[str] = None) -> Tuple[int, str, str]:
-    if pipe_command is None:
-        if is_flatpak():
-            command = _FLATPAK_COMMAND_PREFIX + command
-        process1 = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-        output, error = process1.communicate()
-        return process1.returncode, output.decode(encoding='UTF-8').strip(), error.decode(encoding='UTF-8').strip()
-    if is_flatpak():
-        command = _FLATPAK_COMMAND_PREFIX + command
-        pipe_command = _FLATPAK_COMMAND_PREFIX + pipe_command
-    process1 = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-    process2 = subprocess.Popen(pipe_command, stdin=process1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    process1.stdout.close()
-    output, error = process1.communicate()
-    return process2.returncode, output.decode(encoding='UTF-8').strip(), error.decode(encoding='UTF-8').strip()
 
 
 @singleton

@@ -29,7 +29,7 @@ from gwe.model import load_fan_db_default_data, load_overclock_db_default_data
 from gwe.model.fan_profile import FanProfile
 from gwe.model.overclock_profile import OverclockProfile
 from gwe.presenter.main_presenter import MainPresenter
-from gwe.repository import NvidiaRepository
+from gwe.repository.nvidia_repository import NvidiaRepository
 from gwe.util.deployment import is_flatpak
 from gwe.util.desktop_entry import set_autostart_entry, add_application_entry
 from gwe.util.log import LOG_DEBUG_FORMAT

@@ -20,7 +20,7 @@ import rx
 from injector import singleton, inject
 from rx import Observable
 
-from gwe.repository import NvidiaRepository
+from gwe.repository.nvidia_repository import NvidiaRepository
 
 LOG = logging.getLogger(__name__)
 
