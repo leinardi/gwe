@@ -261,7 +261,7 @@ Nvidia is meant to be pronounced "invidia", which means envy in Latin (and Itali
 Knowing Python will be also very helpful but not strictly necessary.
 
 ### Discord server
-If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/YjPdNff  
+If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/xBybdRt  
 Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
 
 
