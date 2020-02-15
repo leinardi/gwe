@@ -307,7 +307,8 @@ rm -rf ~/.config/gwe
 Thanks to:
 
  - GabMus and TingPing for the huge help with Flatpak
- - The999eagle for maintaining the [AUR package](https://aur.archlinux.org/packages/gwe/)
+ - @999eagle for maintaining the [AUR package](https://aur.archlinux.org/packages/gwe/)
+ - @tim74 for maintaining the [COPR package](https://copr.fedorainfracloud.org/coprs/atim/gwe/)
  - Lighty for moderating the [Discord](https://discord.gg/YjPdNff) server
  - fbcotter for the [py3nvml](https://github.com/fbcotter/py3nvml/) library
  - all the devs of the [python-xlib](https://github.com/python-xlib/python-xlib/) library
