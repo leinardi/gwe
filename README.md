@@ -54,15 +54,25 @@ GWE avaliable in official Fedora [repos](https://src.fedoraproject.org/rpms/gwe)
 For older Fedora releases you can use [COPR package](https://copr.fedorainfracloud.org/coprs/atim/gwe/): `sudo dnf copr enable atim/gwe -y && sudo dnf install gwe`
 
 ### Install from source code
-#### Dependencies for (K/X)Ubuntu 18.10 or newer
-```bash
-sudo apt install git meson python3-pip python3-setuptools libcairo2-dev libgirepository1.0-dev libglib2.0-dev libdazzle-1.0-dev gir1.2-gtksource-3.0 gir1.2-appindicator3-0.1 python3-gi-cairo appstream-util
-```
+#### Dependencies build time
+| Dependency            | Arch Linux            | Fedora                      | Ubuntu                 |
+| --------------------- | --------------------- | --------------------------- | ---------------------- |
+| Python 3.6+           | python                | python3                     | python3                |
+| gobject-introspection | gobject-introspection | gobject-introspection-devel | libgirepository1.0-dev |
+| appstream-util        | appstream-glib        | appstream-util              | appstream-util         |
+| meson                 | meson                 | meson                       | meson                  |
+| pkg-config            | pkg-config            | pkgconf-pkg-config          | pkg-config             |
+| pip                   | python-pip            | python3-pip                 | python3-pip            |
 
-#### Dependencies for Fedora 28 or newer
-```bash
-dnf install desktop-file-utils git gobject-introspection-devel gtk3-devel libappstream-glib libdazzle libnotify meson python3-cairocffi python3-devel python3-pip redhat-rpm-config
-```
+#### Dependencies run time
+| Dependency            | Arch Linux            | Fedora                      | Ubuntu                   |
+| --------------------- | --------------------- | --------------------------- | ------------------------ |
+| Python 3.6+           | python                | python3                     | python3                  |
+| gobject-introspection | gobject-introspection | gobject-introspection-devel | libgirepository1.0-dev   |
+| libappindicator       | libappindicator3      | libappindicator             | gir1.2-appindicator3-0.1 |
+| libdazzle             | libdazzle             | libdazzle                   | gir1.2-dazzle-1.0        |
+
+plus all the Python dependencies listed in [requirements.txt](requirements.txt)
 
 #### Clone project and install
 If you have not installed GWE yet:
