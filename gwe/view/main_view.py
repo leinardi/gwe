@@ -204,12 +204,18 @@ class MainView(MainViewInterface):
     def get_power_limit(self) -> Tuple[int, int]:
         return 0, self._power_limit_adjustment.get_value()
 
-    def show_about_dialog(self) -> None:
-        self._about_dialog.show()
-
     def set_statusbar_text(self, text: str) -> None:
         self._statusbar.remove_all(self._context)
         self._statusbar.push(self._context, text)
+
+    def show_about_dialog(self) -> None:
+        self._about_dialog.show()
+
+    def show_error_message_dialog(self, title: str, message: str) -> None:
+        dialog = Gtk.MessageDialog(self._window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, title)
+        dialog.format_secondary_text(message)
+        dialog.run()
+        dialog.destroy()
 
     def refresh_status(self, status: Optional[Status], gpu_index: int) -> None:
         _LOG.debug('view status')

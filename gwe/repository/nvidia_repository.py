@@ -59,6 +59,32 @@ class NvidiaRepository:
         self._ctrl_display = ctrl_display
 
     @synchronized_with_attr("_lock")
+    def has_nv_control_extension(self) -> bool:
+        xlib_display = None
+        try:
+            xlib_display = display.Display(self._ctrl_display)
+            return bool(xlib_display.has_extension('NV-CONTROL'))
+        except:
+            _LOG.exception("Error while checking NV-CONTROL extension")
+        finally:
+            try:
+                if xlib_display:
+                    xlib_display.close()
+            except:
+                _LOG.exception("Error while checking NV-CONTROL extension")
+        return False
+
+    @synchronized_with_attr("_lock")
+    def has_nvml_shared_library(self) -> bool:
+        try:
+            py3nvml.nvmlInit()
+            py3nvml.nvmlShutdown()
+            return True
+        except:
+            _LOG.exception("Error while checking NVML Shared Library")
+        return False
+
+    @synchronized_with_attr("_lock")
     def get_status(self) -> Optional[Status]:
         xlib_display = None
         try:

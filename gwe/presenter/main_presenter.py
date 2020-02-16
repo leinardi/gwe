@@ -32,6 +32,7 @@ from gwe.conf import APP_NAME, APP_SOURCE_URL, APP_VERSION, APP_ID
 from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject
 from gwe.interactor.check_new_version_interactor import CheckNewVersionInteractor
 from gwe.interactor.get_status_interactor import GetStatusInteractor
+from gwe.interactor.has_nvidia_driver_interactor import HasNvidiaDriverInteractor, HasNvidiaDriverResult
 from gwe.interactor.set_fan_speed_interactor import SetFanSpeedInteractor
 from gwe.interactor.set_overclock_interactor import SetOverclockInteractor
 from gwe.interactor.set_power_limit_iInteractor import SetPowerLimitInteractor
@@ -47,6 +48,7 @@ from gwe.presenter.edit_fan_profile_presenter import EditFanProfilePresenter
 from gwe.presenter.edit_overclock_profile_presenter import EditOverclockProfilePresenter
 from gwe.presenter.historical_data_presenter import HistoricalDataPresenter
 from gwe.presenter.preferences_presenter import PreferencesPresenter
+from gwe.util.deployment import is_flatpak
 from gwe.util.view import show_notification, open_uri, get_default_application
 
 _LOG = logging.getLogger(__name__)
@@ -93,6 +95,9 @@ class MainViewInterface:
     def show_about_dialog(self) -> None:
         raise NotImplementedError()
 
+    def show_error_message_dialog(self, title: str, message: str) -> None:
+        raise NotImplementedError()
+
 
 @singleton
 class MainPresenter:
@@ -102,6 +107,7 @@ class MainPresenter:
                  edit_overclock_profile_presenter: EditOverclockProfilePresenter,
                  historical_data_presenter: HistoricalDataPresenter,
                  preferences_presenter: PreferencesPresenter,
+                 has_nvidia_driver_interactor: HasNvidiaDriverInteractor,
                  get_status_interactor: GetStatusInteractor,
                  set_power_limit_interactor: SetPowerLimitInteractor,
                  set_overclock_interactor: SetOverclockInteractor,
@@ -120,6 +126,7 @@ class MainPresenter:
         self._historical_data_presenter = historical_data_presenter
         self._preferences_presenter = preferences_presenter
         self._scheduler = ThreadPoolScheduler(multiprocessing.cpu_count())
+        self._has_nvidia_driver_interactor = has_nvidia_driver_interactor
         self._get_status_interactor: GetStatusInteractor = get_status_interactor
         self._set_power_limit_interactor = set_power_limit_interactor
         self._set_overclock_interactor = set_overclock_interactor
@@ -140,7 +147,7 @@ class MainPresenter:
     def on_start(self) -> None:
         self._refresh_fan_profile_ui(True)
         self._register_db_listeners()
-        self._start_refresh()
+        self._check_nvidia_driver()
         self._check_new_version()
 
     def on_application_window_delete_event(self, *_: Any) -> bool:
@@ -225,6 +232,35 @@ class MainPresenter:
 
     def on_toggle_app_window_clicked(self, *_: Any) -> None:
         self.main_view.toggle_window_visibility()
+
+    def _check_nvidia_driver(self) -> None:
+        self._composite_disposable.add(self._has_nvidia_driver_interactor.execute().pipe(
+            operators.subscribe_on(self._scheduler),
+            operators.observe_on(GtkScheduler(GLib)),
+        ).subscribe(on_next=self._handle_has_nvidia_driver_result))
+
+    def _handle_has_nvidia_driver_result(self, result: HasNvidiaDriverResult) -> None:
+        if result == HasNvidiaDriverResult.NV_CONTROL_MISSING:
+            _LOG.error("NV-CONTROL missing!")
+            self.main_view.show_error_message_dialog(
+                "NV-CONTROL X extension not found",
+                "It was not possible to find the NVIDIA NV-CONTROL X extension on the current Display device.\n"
+                "Please make sure that the NVIDIA proprietary display drivers are installed and they support the your "
+                "current GPU"
+            )
+            get_default_application().quit()
+        elif result == HasNvidiaDriverResult.NVML_MISSING:
+            _LOG.error("NVML missing!")
+            message = "It was not possible to find the NVML Shared Library.\n" \
+                      "Please make sure that the NVIDIA proprietary display drivers are installed and they support " \
+                      "the your current GPU."
+            if is_flatpak():
+                message += f"\n\nIf you installed {APP_NAME} via Flathub, make sure to run \"flatpak update\" " \
+                          "to fetch the latest version of org.freedesktop.Platform.GL.nvidia."
+            self.main_view.show_error_message_dialog("NVML Shared Library not found", message)
+            get_default_application().quit()
+        else:
+            self._start_refresh()
 
     def _register_db_listeners(self) -> None:
         self._speed_step_changed_subject.subscribe(on_next=self._on_speed_step_list_changed,
