@@ -32,6 +32,7 @@
                 <ul>
                     <li>Pascal+ workaround for rootless Xorg distributions (e.g. Fedora). More info on !45.</li>
                     <li>Fix #101: Add notification dialog if proprietary NVIDIA driver not installed</li>
+                    <li>Fix #10: Window too big to fit into the 1366x768 resolution</li>
                 </ul>
             </description>
         </release>
