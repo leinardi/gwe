@@ -49,7 +49,9 @@ you need to install it from the source code.
 Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
 
 #### Fedora
-[COPR package](https://copr.fedorainfracloud.org/coprs/atim/gwe/): `sudo dnf copr enable atim/gwe -y && sudo dnf install gwe -y`
+GWE avaliable in official Fedora [repos](https://src.fedoraproject.org/rpms/gwe) for F31+: `sudo dnf install gwe`
+
+For older Fedora releases you can use [COPR package](https://copr.fedorainfracloud.org/coprs/atim/gwe/): `sudo dnf copr enable atim/gwe -y && sudo dnf install gwe`
 
 ### Install from source code
 #### Dependencies for (K/X)Ubuntu 18.10 or newer
