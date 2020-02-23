@@ -57,20 +57,22 @@ For older Fedora releases you can use [COPR package](https://copr.fedorainfraclo
 #### Dependencies build time
 | Dependency            | Arch Linux            | Fedora                      | Ubuntu                 |
 | --------------------- | --------------------- | --------------------------- | ---------------------- |
+| pkg-config            | pkg-config            | pkgconf-pkg-config          | pkg-config             |
 | Python 3.6+           | python                | python3                     | python3                |
 | gobject-introspection | gobject-introspection | gobject-introspection-devel | libgirepository1.0-dev |
-| appstream-util        | appstream-glib        | appstream-util              | appstream-util         |
 | meson                 | meson                 | meson                       | meson                  |
-| pkg-config            | pkg-config            | pkgconf-pkg-config          | pkg-config             |
-| pip                   | python-pip            | python3-pip                 | python3-pip            |
+| ninja-build           | ninja                 | ninja-build                 | ninja-build            |
+| appstream-util        | appstream-glib        | appstream-util              | appstream-util         |
 
 #### Dependencies run time
-| Dependency            | Arch Linux            | Fedora                      | Ubuntu                   |
-| --------------------- | --------------------- | --------------------------- | ------------------------ |
-| Python 3.6+           | python                | python3                     | python3                  |
-| gobject-introspection | gobject-introspection | gobject-introspection-devel | libgirepository1.0-dev   |
-| libappindicator       | libappindicator3      | libappindicator             | gir1.2-appindicator3-0.1 |
-| libdazzle             | libdazzle             | libdazzle                   | gir1.2-dazzle-1.0        |
+| Dependency                         | Arch Linux                         | Fedora                             | Ubuntu                             |
+| ---------------------------------- | ---------------------------------- | -----------------------------------| ---------------------------------- |
+| Python 3.6+                        | python                             | python3                            | python3                            |
+| pip                                | python-pip                         | python3-pip                        | python3-pip                        |
+| gobject-introspection              | gobject-introspection              | gobject-introspection-devel        | libgirepository1.0-dev             |
+| libappindicator                    | libappindicator3                   | libappindicator-gtk3               | gir1.2-appindicator3-0.1           |
+| gnome-shell-extension-appindicator | gnome-shell-extension-appindicator | gnome-shell-extension-appindicator | gnome-shell-extension-appindicator |
+| libdazzle                          | libdazzle                          | libdazzle                          | gir1.2-dazzle-1.0                  |
 
 plus all the Python dependencies listed in [requirements.txt](requirements.txt)
 
