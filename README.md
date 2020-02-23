@@ -54,7 +54,7 @@ GWE avaliable in official Fedora [repos](https://src.fedoraproject.org/rpms/gwe)
 For older Fedora releases you can use [COPR package](https://copr.fedorainfracloud.org/coprs/atim/gwe/): `sudo dnf copr enable atim/gwe -y && sudo dnf install gwe`
 
 ### Install from source code
-#### Dependencies build time
+#### Build time dependencies
 | Dependency            | Arch Linux            | Fedora                      | Ubuntu                 |
 | --------------------- | --------------------- | --------------------------- | ---------------------- |
 | pkg-config            | pkg-config            | pkgconf-pkg-config          | pkg-config             |
@@ -64,7 +64,7 @@ For older Fedora releases you can use [COPR package](https://copr.fedorainfraclo
 | ninja-build           | ninja                 | ninja-build                 | ninja-build            |
 | appstream-util        | appstream-glib        | appstream-util              | appstream-util         |
 
-#### Dependencies run time
+#### Run time dependencies
 | Dependency                         | Arch Linux                         | Fedora                             | Ubuntu                             |
 | ---------------------------------- | ---------------------------------- | -----------------------------------| ---------------------------------- |
 | Python 3.6+                        | python                             | python3                            | python3                            |
@@ -142,7 +142,7 @@ optirun gwe --ctrl-display ":8"
 - [x] Distributing with Flatpak
 - [x] Publishing on Flathub
 - [ ] Distributing with Snap
-- [ ] Check if NV-CONTROL is available and tell the user if is not
+- [x] Check if NV-CONTROL is available and tell the user if is not
 - [ ] Add support for multi-GPU
 - [ ] Allow to select profiles from app indicator
 - [ ] Add support for i18n (internationalization and localization)
@@ -194,31 +194,6 @@ It is possible to build the local source or the remote one (the same that Flathu
 flatpak run com.leinardi.gwe --debug
 ```
 
-## 🖥️ How to build and run the source code
-If you want to clone the project and run directly from the source you need to manually install all the needed
-dependencies.
- 
-### (K/X)Ubuntu 18.04 or newer
-See [Install from source](https://gitlab.com/leinardi/gwe#kxubuntu-1810-or-newer-dependencies)
-
-### Fedora 28+ (outdated, please let me know if new dependencies are needed)
-Install [(K)StatusNotifierItem/AppIndicator Support](https://extensions.gnome.org/extension/615/appindicator-support/)
-
-### Arch Linux
-The list of all the dependencies is available here: https://aur.archlinux.org/packages/gwe/
-
-### Python dependencies
-```bash
-git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
-cd gwe
-pip3 install -r requirements.txt
-```
-
-### Build and Run
-```bash
-./run.sh
-```
-
 ## ❓ FAQ
 ### I see some message about CoolBits in the Overclock/Fan profile section, what's that?
 Coolbits was a Windows registry hack for Nvidia graphics cards Windows drivers, that allows 
@@ -227,12 +202,10 @@ Something similar is available also on Linux and is the only way to enable Overc
 To know more about Coolbits and how to enable them click 
 [here](https://wiki.archlinux.org/index.php/NVIDIA/Tips_and_tricks#Enabling_overclocking) 
 (to enable both OC and Fan control you need to set it to `12`).
+
 ### The Flatpak version of GWE is not using my theme, how can I fix it?
-Due to sandboxing, Flatpak applications use the default Gnome theme (Adwaita), 
-and not whatever Gtk theme you're currently using.  
-The fix for this issue is to install your current Gtk theme from Flathub. 
-This way, Flatpak applications will automatically pick the installed Gtk theme 
-and use that instead of Adwaita.
+To fix this issue install a Gtk theme from Flathub. This way, Flatpak applications will automatically pick the 
+installed Gtk theme and use that instead of Adwaita.
 
 Use this command to get a list of all the available Gtk themes on Flathub:
 ```bash
@@ -265,14 +238,10 @@ The name comes from the slogan of the GeForce 8 series, that was "Green with env
 Nvidia is meant to be pronounced "invidia", which means envy in Latin (and Italian). And their logo is green so, GreenWithEnvy
 
 ## 💚 How to help the project
-
-### We need people with experience in at least one of these topics:
- - **Icon/Logo design** (see [#43](https://gitlab.com/leinardi/gwe/issues/43))
+### Help is needed for the following topics
  - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
  - Getting current GTK theme text color (see [#36](https://gitlab.com/leinardi/gwe/issues/36))
  - Making Bumblebee work with Flatpak (see [#35](https://gitlab.com/leinardi/gwe/issues/35))
-
-Knowing Python will be also very helpful but not strictly necessary.
 
 ### Discord server
 If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/xBybdRt  
