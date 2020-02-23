@@ -23,8 +23,7 @@ from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCan
 from matplotlib.figure import Figure
 
 from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY, GRAPH_COLOR_HEX
-from gwe.di import INJECTOR
-from gwe.model import FanProfile
+from gwe.model.fan_profile import FanProfile
 
 
 def build_glib_option(long_name: str,

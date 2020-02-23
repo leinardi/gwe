@@ -24,12 +24,12 @@ from injector import singleton, inject
 
 from gwe.conf import GRAPH_COLOR_HEX
 from gwe.di import HistoricalDataBuilder
-from gwe.presenter.historical_data import HistoricalDataViewInterface, HistoricalDataPresenter, MONITORING_INTERVAL, \
+from gwe.presenter.historical_data_presenter import HistoricalDataViewInterface, HistoricalDataPresenter, MONITORING_INTERVAL, \
     GraphType
 from gwe.util.view import is_dazzle_version_supported
-from gwe.view.graph_stacked_renderer import GraphStackedRenderer
+from gwe.view.graph_stacked_renderer_view import GraphStackedRenderer
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 @singleton
@@ -39,7 +39,7 @@ class HistoricalDataView(HistoricalDataViewInterface):
                  presenter: HistoricalDataPresenter,
                  builder: HistoricalDataBuilder,
                  ) -> None:
-        LOG.debug('init HistoricalDataView')
+        _LOG.debug('init HistoricalDataView')
         self._presenter: HistoricalDataPresenter = presenter
         self._presenter.view = self
         self._builder: Gtk.Builder = builder
@@ -121,7 +121,7 @@ class HistoricalDataView(HistoricalDataViewInterface):
                 self._graph_views[graph_type][1].set_text(f"{max_value:.0f}")
                 self._graph_models[graph_type].props.value_max = max(data_tuple[4], max_value)
         time2 = time.time()
-        LOG.debug(f'Refresh graph took {((time2 - time1) * 1000.0):.3f} ms')
+        _LOG.debug(f'Refresh graph took {((time2 - time1) * 1000.0):.3f} ms')
 
     def show(self) -> None:
         self._dialog.show_all()

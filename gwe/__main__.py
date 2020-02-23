@@ -24,23 +24,29 @@ import sys
 from types import TracebackType
 from typing import Type
 from os.path import abspath, join, dirname
+
 from peewee import SqliteDatabase
 from gi.repository import GLib
 from rx.disposable import CompositeDisposable
 
 from gwe.conf import APP_PACKAGE_NAME
-from gwe.model import SpeedStep, FanProfile, CurrentFanProfile, OverclockProfile, CurrentOverclockProfile, Setting
+from gwe.model.current_fan_profile import CurrentFanProfile
+from gwe.model.current_overclock_profile import CurrentOverclockProfile
+from gwe.model.fan_profile import FanProfile
+from gwe.model.overclock_profile import OverclockProfile
+from gwe.model.setting import Setting
+from gwe.model.speed_step import SpeedStep
 from gwe.util.log import set_log_level
 from gwe.di import INJECTOR
 from gwe.app import Application
-from gwe.repository import NvidiaRepository
+from gwe.repository.nvidia_repository import NvidiaRepository
 
 WHERE_AM_I = abspath(dirname(__file__))
 LOCALE_DIR = join(WHERE_AM_I, 'mo')
 
 set_log_level(logging.INFO)
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 # POSIX locale settings
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -52,7 +58,7 @@ gettext.textdomain(APP_PACKAGE_NAME)
 
 def _cleanup() -> None:
     try:
-        LOG.debug("cleanup")
+        _LOG.debug("cleanup")
         composite_disposable = INJECTOR.get(CompositeDisposable)
         composite_disposable.dispose()
         nvidia_repository = INJECTOR.get(NvidiaRepository)
@@ -61,7 +67,7 @@ def _cleanup() -> None:
         database.close()
         # futures.thread._threads_queues.clear()
     except:
-        LOG.exception("Error during cleanup!")
+        _LOG.exception("Error during cleanup!")
 
 
 def handle_exception(type_: Type[BaseException], value: BaseException, traceback: TracebackType) -> None:
@@ -69,7 +75,7 @@ def handle_exception(type_: Type[BaseException], value: BaseException, traceback
         sys.__excepthook__(type_, value, traceback)
         return
 
-    LOG.critical("Uncaught exception", exc_info=(type_, value, traceback))
+    _LOG.critical("Uncaught exception", exc_info=(type_, value, traceback))
     _cleanup()
     sys.exit(1)
 
@@ -90,7 +96,7 @@ def _init_database() -> None:
 
 
 def main() -> int:
-    LOG.debug("main")
+    _LOG.debug("main")
     _init_database()
     application: Application = INJECTOR.get(Application)
     GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, application.quit)

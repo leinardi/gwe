@@ -25,11 +25,12 @@ from rx.disposable import CompositeDisposable
 from rx.scheduler import ThreadPoolScheduler
 from rx.scheduler.mainloop import GtkScheduler
 
-from gwe.interactor import SetOverclockInteractor
-from gwe.model import OverclockProfile, Overclock
+from gwe.interactor.set_overclock_interactor import SetOverclockInteractor
+from gwe.model.overclock_profile import OverclockProfile
+from gwe.model.overclock import Overclock
 from gwe.util.view import hide_on_delete
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 class EditOverclockProfileViewInterface:
@@ -56,7 +57,7 @@ class EditOverclockProfilePresenter:
                  set_overclock_interactor: SetOverclockInteractor,
                  composite_disposable: CompositeDisposable
                  ) -> None:
-        LOG.debug("init EditOverclockProfilePresenter")
+        _LOG.debug("init EditOverclockProfilePresenter")
         self._set_overclock_interactor = set_overclock_interactor
         self._composite_disposable: CompositeDisposable = composite_disposable
         self.view: EditOverclockProfileViewInterface = EditOverclockProfileViewInterface()
@@ -113,4 +114,4 @@ class EditOverclockProfilePresenter:
     @staticmethod
     def _handle_set_overclock_result(result: Optional[Any]) -> None:
         if not isinstance(result, bool) or not result:
-            LOG.exception(f"Set overclock error: {str(result)}")
+            _LOG.exception(f"Set overclock error: {str(result)}")

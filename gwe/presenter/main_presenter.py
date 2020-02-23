@@ -18,7 +18,7 @@
 
 import logging
 import multiprocessing
-from typing import Optional, Any, List, Tuple, Callable
+from typing import Optional, Any, List, Tuple
 
 import rx
 from gi.repository import GLib
@@ -29,18 +29,29 @@ from rx.scheduler import ThreadPoolScheduler
 from rx.scheduler.mainloop import GtkScheduler
 
 from gwe.conf import APP_NAME, APP_SOURCE_URL, APP_VERSION, APP_ID
-from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject, INJECTOR
-from gwe.interactor import GetStatusInteractor, SettingsInteractor, \
-    CheckNewVersionInteractor, SetOverclockInteractor, SetPowerLimitInteractor, SetFanSpeedInteractor
-from gwe.model import Status, FanProfile, CurrentFanProfile, DbChange, FanProfileType, GpuStatus, \
-    CurrentOverclockProfile, OverclockProfile
-from gwe.presenter.edit_fan_profile import EditFanProfilePresenter
-from gwe.presenter.edit_overclock_profile import EditOverclockProfilePresenter
-from gwe.presenter.historical_data import HistoricalDataPresenter
-from gwe.presenter.preferences import PreferencesPresenter
+from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject
+from gwe.interactor.check_new_version_interactor import CheckNewVersionInteractor
+from gwe.interactor.get_status_interactor import GetStatusInteractor
+from gwe.interactor.has_nvidia_driver_interactor import HasNvidiaDriverInteractor, HasNvidiaDriverResult
+from gwe.interactor.set_fan_speed_interactor import SetFanSpeedInteractor
+from gwe.interactor.set_overclock_interactor import SetOverclockInteractor
+from gwe.interactor.set_power_limit_iInteractor import SetPowerLimitInteractor
+from gwe.interactor.settings_interactor import SettingsInteractor
+from gwe.model.cb_change import DbChange
+from gwe.model.current_fan_profile import CurrentFanProfile
+from gwe.model.current_overclock_profile import CurrentOverclockProfile
+from gwe.model.status import Status
+from gwe.model.overclock_profile import OverclockProfile
+from gwe.model.fan_profile import FanProfile
+from gwe.model.fan_profile_type import FanProfileType
+from gwe.presenter.edit_fan_profile_presenter import EditFanProfilePresenter
+from gwe.presenter.edit_overclock_profile_presenter import EditOverclockProfilePresenter
+from gwe.presenter.historical_data_presenter import HistoricalDataPresenter
+from gwe.presenter.preferences_presenter import PreferencesPresenter
+from gwe.util.deployment import is_flatpak
 from gwe.util.view import show_notification, open_uri, get_default_application
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 _ADD_NEW_PROFILE_INDEX = -10
 
 
@@ -84,6 +95,9 @@ class MainViewInterface:
     def show_about_dialog(self) -> None:
         raise NotImplementedError()
 
+    def show_error_message_dialog(self, title: str, message: str) -> None:
+        raise NotImplementedError()
+
 
 @singleton
 class MainPresenter:
@@ -93,6 +107,7 @@ class MainPresenter:
                  edit_overclock_profile_presenter: EditOverclockProfilePresenter,
                  historical_data_presenter: HistoricalDataPresenter,
                  preferences_presenter: PreferencesPresenter,
+                 has_nvidia_driver_interactor: HasNvidiaDriverInteractor,
                  get_status_interactor: GetStatusInteractor,
                  set_power_limit_interactor: SetPowerLimitInteractor,
                  set_overclock_interactor: SetOverclockInteractor,
@@ -104,13 +119,14 @@ class MainPresenter:
                  overclock_profile_changed_subject: OverclockProfileChangedSubject,
                  composite_disposable: CompositeDisposable,
                  ) -> None:
-        LOG.debug("init MainPresenter ")
+        _LOG.debug("init MainPresenter ")
         self.main_view: MainViewInterface = MainViewInterface()
         self._edit_fan_profile_presenter = edit_fan_profile_presenter
         self._edit_overclock_profile_presenter = edit_overclock_profile_presenter
         self._historical_data_presenter = historical_data_presenter
         self._preferences_presenter = preferences_presenter
         self._scheduler = ThreadPoolScheduler(multiprocessing.cpu_count())
+        self._has_nvidia_driver_interactor = has_nvidia_driver_interactor
         self._get_status_interactor: GetStatusInteractor = get_status_interactor
         self._set_power_limit_interactor = set_power_limit_interactor
         self._set_overclock_interactor = set_overclock_interactor
@@ -131,7 +147,7 @@ class MainPresenter:
     def on_start(self) -> None:
         self._refresh_fan_profile_ui(True)
         self._register_db_listeners()
-        self._start_refresh()
+        self._check_nvidia_driver()
         self._check_new_version()
 
     def on_application_window_delete_event(self, *_: Any) -> bool:
@@ -155,7 +171,7 @@ class MainPresenter:
         if profile:
             self._edit_fan_profile_presenter.show_edit(profile)
         else:
-            LOG.error('Profile is None!')
+            _LOG.error('Profile is None!')
 
     def on_fan_apply_button_clicked(self, *_: Any) -> None:
         if self._fan_profile_selected:
@@ -172,7 +188,7 @@ class MainPresenter:
         if profile:
             self._edit_overclock_profile_presenter.show_edit(profile, overclock, self._gpu_index)
         else:
-            LOG.error('Profile is None!')
+            _LOG.error('Profile is None!')
 
     def on_overclock_apply_button_clicked(self, *_: Any) -> None:
         if self._overclock_profile_selected:
@@ -217,13 +233,42 @@ class MainPresenter:
     def on_toggle_app_window_clicked(self, *_: Any) -> None:
         self.main_view.toggle_window_visibility()
 
+    def _check_nvidia_driver(self) -> None:
+        self._composite_disposable.add(self._has_nvidia_driver_interactor.execute().pipe(
+            operators.subscribe_on(self._scheduler),
+            operators.observe_on(GtkScheduler(GLib)),
+        ).subscribe(on_next=self._handle_has_nvidia_driver_result))
+
+    def _handle_has_nvidia_driver_result(self, result: HasNvidiaDriverResult) -> None:
+        if result == HasNvidiaDriverResult.NV_CONTROL_MISSING:
+            _LOG.error("NV-CONTROL missing!")
+            self.main_view.show_error_message_dialog(
+                "NV-CONTROL X extension not found",
+                "It was not possible to find the NVIDIA NV-CONTROL X extension on the current Display device.\n"
+                "Please make sure that the NVIDIA proprietary display drivers are installed and they support the your "
+                "current GPU"
+            )
+            get_default_application().quit()
+        elif result == HasNvidiaDriverResult.NVML_MISSING:
+            _LOG.error("NVML missing!")
+            message = "It was not possible to find the NVML Shared Library.\n" \
+                      "Please make sure that the NVIDIA proprietary display drivers are installed and they support " \
+                      "the your current GPU."
+            if is_flatpak():
+                message += f"\n\nIf you installed {APP_NAME} via Flathub, make sure to run \"flatpak update\" " \
+                          "to fetch the latest version of org.freedesktop.Platform.GL.nvidia."
+            self.main_view.show_error_message_dialog("NVML Shared Library not found", message)
+            get_default_application().quit()
+        else:
+            self._start_refresh()
+
     def _register_db_listeners(self) -> None:
         self._speed_step_changed_subject.subscribe(on_next=self._on_speed_step_list_changed,
-                                                   on_error=lambda e: LOG.exception(f"Db signal error: {str(e)}"))
+                                                   on_error=lambda e: _LOG.exception(f"Db signal error: {str(e)}"))
         self._fan_profile_changed_subject.subscribe(on_next=self._on_fan_profile_list_changed,
-                                                    on_error=lambda e: LOG.exception(f"Db signal error: {str(e)}"))
+                                                    on_error=lambda e: _LOG.exception(f"Db signal error: {str(e)}"))
         self._overclock_profile_changed_subject.subscribe(on_next=self._on_overclock_profile_list_changed,
-                                                          on_error=lambda e: LOG.exception(
+                                                          on_error=lambda e: _LOG.exception(
                                                               f"Db signal error: {str(e)}"))
 
     def _on_speed_step_list_changed(self, db_change: DbChange) -> None:
@@ -250,7 +295,7 @@ class MainPresenter:
             self._refresh_overclock_profile_ui(profile_id=profile.id)
 
     def _start_refresh(self) -> None:
-        LOG.debug("start refresh")
+        _LOG.debug("start refresh")
         refresh_interval = self._settings_interactor.get_int('settings_refresh_interval')
         self._composite_disposable.add(rx.interval(refresh_interval, scheduler=self._scheduler).pipe(
             operators.start_with(0),
@@ -258,7 +303,7 @@ class MainPresenter:
             operators.flat_map(lambda _: self._get_status()),
             operators.observe_on(GtkScheduler(GLib)),
         ).subscribe(on_next=self._on_status_updated,
-                    on_error=lambda e: LOG.exception(f"Refresh error: {str(e)}")))
+                    on_error=lambda e: _LOG.exception(f"Refresh error: {str(e)}")))
 
     def _on_status_updated(self, status: Optional[Status]) -> None:
         if status is not None:
@@ -289,7 +334,7 @@ class MainPresenter:
                         if fan.fan_list and fan.fan_list[0][0] != speed:
                             self._set_fan_speed(gpu_status.index, round(speed))
                     except ValueError:
-                        LOG.exception(f'Unable to parse temperature {gpu_status.temp.gpu}')
+                        _LOG.exception(f'Unable to parse temperature {gpu_status.temp.gpu}')
 
     @staticmethod
     def _get_fan_duty(profile: FanProfile, gpu_temperature: float) -> float:
@@ -345,7 +390,7 @@ class MainPresenter:
         self._composite_disposable.add(self._set_fan_speed_interactor.execute(gpu_index, speed, manual_control).pipe(
             operators.subscribe_on(self._scheduler),
             operators.observe_on(GtkScheduler(GLib)),
-        ).subscribe(on_error=lambda e: (LOG.exception(f"Set cooling error: {str(e)}"),
+        ).subscribe(on_error=lambda e: (_LOG.exception(f"Set cooling error: {str(e)}"),
                                         self.main_view.set_statusbar_text('Error applying fan profile!'))))
 
     def _update_current_fan_profile(self, profile: FanProfile) -> None:
@@ -411,7 +456,7 @@ class MainPresenter:
         self.main_view.set_statusbar_text(f'{profile.name} overclock profile selected')
 
     def _log_exception_return_empty_observable(self, ex: Exception, _: Observable) -> Observable:
-        LOG.exception(f"Err = {ex}")
+        _LOG.exception(f"Err = {ex}")
         self.main_view.set_statusbar_text(str(ex))
         observable = rx.just(None)
         assert isinstance(observable, Observable)
@@ -429,7 +474,7 @@ class MainPresenter:
             operators.subscribe_on(self._scheduler),
             operators.observe_on(GtkScheduler(GLib)),
         ).subscribe(on_next=self._handle_new_version_response,
-                    on_error=lambda e: LOG.exception(f"Check new version error: {str(e)}")))
+                    on_error=lambda e: _LOG.exception(f"Check new version error: {str(e)}")))
 
     def _handle_set_power_limit_result(self, result: Any) -> None:
         self._handle_generic_set_result(result, "power limit")
@@ -440,7 +485,7 @@ class MainPresenter:
 
     def _handle_generic_set_result(self, result: Any, name: str) -> bool:
         if not isinstance(result, bool):
-            LOG.exception(f"Set overclock error: {str(result)}")
+            _LOG.exception(f"Set overclock error: {str(result)}")
             self.main_view.set_statusbar_text(f'Error applying {name}! {str(result)}')
             return False
         if not result:
@@ -452,10 +497,10 @@ class MainPresenter:
     def _handle_new_version_response(self, version: Optional[str]) -> None:
         if version is not None:
             message = f"{APP_NAME} version <b>{version}</b> is available! " \
-                f"Click <a href=\"{self._get_changelog_uri(version)}\"><b>here</b></a> to see what's new."
+                      f"Click <a href=\"{self._get_changelog_uri(version)}\"><b>here</b></a> to see what's new."
             self.main_view.show_main_infobar_message(message, True)
             message = f"Version {version} is available! " \
-                f"Click here to see what's new: {self._get_changelog_uri(version)}"
+                      f"Click here to see what's new: {self._get_changelog_uri(version)}"
             show_notification("GWE update available!", message, APP_ID)
 
     @staticmethod

@@ -17,7 +17,7 @@
     <launchable type="desktop-id">com.leinardi.gwe.desktop</launchable>
     <screenshots>
         <screenshot type="default">
-            <image>https://gitlab.com/leinardi/gwe/raw/master/art/screenshot-1.png</image>
+            <image>https://gitlab.com/leinardi/gwe/raw/release/art/screenshot-1.png</image>
         </screenshot>
     </screenshots>
     <categories>
@@ -27,7 +27,15 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
-         <release date="2020-01-12" version="0.13.3">
+        <release date="2020-02-16" version="0.14.0">
+            <description>
+                <ul>
+                    <li>Fix #101: Add notification dialog if proprietary NVIDIA driver not installed</li>
+                    <li>Fix #10: Window too big to fit into the 1366x768 resolution</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2020-01-12" version="0.13.3">
             <description>
                 <ul>
                     <li>Updated several dependencies</li>

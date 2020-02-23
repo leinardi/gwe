@@ -20,10 +20,12 @@ from gi.repository import Gtk
 from injector import singleton, inject
 
 from gwe.di import EditOverclockProfileBuilder
-from gwe.model import OverclockProfile, Overclock
-from gwe.presenter.edit_overclock_profile import EditOverclockProfileViewInterface, EditOverclockProfilePresenter
+from gwe.model.overclock_profile import OverclockProfile
+from gwe.model.overclock import Overclock
+from gwe.presenter.edit_overclock_profile_presenter import EditOverclockProfileViewInterface, \
+    EditOverclockProfilePresenter
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 @singleton
@@ -33,7 +35,7 @@ class EditOverclockProfileView(EditOverclockProfileViewInterface):
                  presenter: EditOverclockProfilePresenter,
                  builder: EditOverclockProfileBuilder,
                  ) -> None:
-        LOG.debug('init EditOverclockProfileView')
+        _LOG.debug('init EditOverclockProfileView')
         self._presenter: EditOverclockProfilePresenter = presenter
         self._presenter.view = self
         self._builder: Gtk.Builder = builder

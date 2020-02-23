@@ -24,6 +24,10 @@ from gi.repository import Gtk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 
+from gwe.interactor.settings_interactor import SettingsInteractor
+from gwe.model.status import Status
+from gwe.model.fan_profile import FanProfile
+
 try:  # AppIndicator3 may not be installed
     import gi
 
@@ -32,19 +36,17 @@ try:  # AppIndicator3 may not be installed
 except (ImportError, ValueError):
     AppIndicator3 = None
 from gwe.di import MainBuilder
-from gwe.view.edit_fan_profile import EditFanProfileView
+from gwe.view.edit_fan_profile_view import EditFanProfileView
 from gwe.util.view import hide_on_delete, init_plot_chart, get_fan_profile_data, is_dazzle_version_supported
-from gwe.interactor import SettingsInteractor
-from gwe.view.edit_overclock_profile import EditOverclockProfileView
-from gwe.view.historical_data import HistoricalDataView
-from gwe.view.preferences import PreferencesView
-from gwe.model import Status, FanProfile
+from gwe.view.edit_overclock_profile_view import EditOverclockProfileView
+from gwe.view.historical_data_view import HistoricalDataView
+from gwe.view.preferences_view import PreferencesView
 from gwe.conf import APP_PACKAGE_NAME, APP_ID, APP_NAME, APP_VERSION, APP_SOURCE_URL, APP_ICON_NAME_SYMBOLIC
-from gwe.presenter.main import MainPresenter, MainViewInterface
+from gwe.presenter.main_presenter import MainPresenter, MainViewInterface
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 if AppIndicator3 is None:
-    LOG.warning("AppIndicator3 is not installed. The app indicator will not be shown.")
+    _LOG.warning("AppIndicator3 is not installed. The app indicator will not be shown.")
 
 
 @singleton
@@ -60,7 +62,7 @@ class MainView(MainViewInterface):
                  builder: MainBuilder,
                  settings_interactor: SettingsInteractor,
                  ) -> None:
-        LOG.debug('init MainView')
+        _LOG.debug('init MainView')
         self._presenter: MainPresenter = presenter
         self._edit_fan_profile_view = edit_fan_profile_view
         self._edit_overclock_profile_view = edit_overclock_profile_view
@@ -202,15 +204,21 @@ class MainView(MainViewInterface):
     def get_power_limit(self) -> Tuple[int, int]:
         return 0, self._power_limit_adjustment.get_value()
 
-    def show_about_dialog(self) -> None:
-        self._about_dialog.show()
-
     def set_statusbar_text(self, text: str) -> None:
         self._statusbar.remove_all(self._context)
         self._statusbar.push(self._context, text)
 
+    def show_about_dialog(self) -> None:
+        self._about_dialog.show()
+
+    def show_error_message_dialog(self, title: str, message: str) -> None:
+        dialog = Gtk.MessageDialog(self._window, 0, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, title)
+        dialog.format_secondary_text(message)
+        dialog.run()
+        dialog.destroy()
+
     def refresh_status(self, status: Optional[Status], gpu_index: int) -> None:
-        LOG.debug('view status')
+        _LOG.debug('view status')
         if status:
             gpu_status = status.gpu_status_list[gpu_index]
             if self._first_refresh:

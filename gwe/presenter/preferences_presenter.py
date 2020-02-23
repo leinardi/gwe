@@ -22,11 +22,11 @@ from gi.repository import Gtk
 from injector import singleton, inject
 
 from gwe.conf import SETTINGS_DEFAULTS
-from gwe.interactor import SettingsInteractor
+from gwe.interactor.settings_interactor import SettingsInteractor
 from gwe.util.deployment import is_flatpak
 from gwe.util.desktop_entry import set_autostart_entry, AUTOSTART_FILE_PATH
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 class PreferencesViewInterface:
@@ -46,7 +46,7 @@ class PreferencesPresenter:
     def __init__(self,
                  settings_interactor: SettingsInteractor,
                  ) -> None:
-        LOG.debug("init PreferencesPresenter ")
+        _LOG.debug("init PreferencesPresenter ")
         self.view: PreferencesViewInterface = PreferencesViewInterface()
         self._settings_interactor = settings_interactor
 

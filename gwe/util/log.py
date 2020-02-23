@@ -17,7 +17,7 @@
 
 import logging
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 LOG_DEBUG_FORMAT = '%(filename)15s:%(lineno)-4d %(asctime)-15s: %(levelname)s/%(threadName)s(%(process)d) %(message)s'
 LOG_INFO_FORMAT = '%(levelname)s: %(message)s'
 LOG_WARNING_FORMAT = '%(message)s'

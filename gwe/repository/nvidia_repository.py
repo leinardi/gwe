@@ -1,59 +1,45 @@
 # This file is part of gwe.
 #
-# Copyright (c) 2018 Roberto Leinardi
+# Copyright (c) 2020 Roberto Leinardi
 #
-# gwe is free software: you can redistribute it and/or modify
+# gst is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# gwe is distributed in the hope that it will be useful,
+# gst is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with gwe.  If not, see <http://www.gnu.org/licenses/>.
-
+# along with gst.  If not, see <http://www.gnu.org/licenses/>.
 import logging
-import subprocess
 import threading
 import time
-from typing import Optional, List, Tuple, Dict, Callable, Any
+from typing import List, Dict, Optional, Tuple, Callable, Any
 
-from injector import singleton, inject
-from py3nvml import py3nvml
-from py3nvml.py3nvml import NVMLError, NVML_ERROR_NOT_SUPPORTED, NVML_TEMPERATURE_GPU, \
-    NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN, NVML_CLOCK_SM, NVML_ERROR_UNKNOWN
 from Xlib import display
 from Xlib.ext.nvcontrol import Gpu, Cooler
-from gwe.model import Status, Info, Power, Temp, Clocks, GpuStatus, Fan, Overclock
+from injector import singleton, inject
+from py3nvml import py3nvml
+from py3nvml.py3nvml import NVML_CLOCK_SM, NVMLError, NVML_ERROR_NOT_SUPPORTED, NVML_ERROR_UNKNOWN, \
+    NVML_TEMPERATURE_GPU, NVML_TEMPERATURE_THRESHOLD_SLOWDOWN, NVML_TEMPERATURE_THRESHOLD_SHUTDOWN
+
+from gwe.model.clocks import Clocks
+from gwe.model.fan import Fan
+from gwe.model.gpu_status import GpuStatus
+from gwe.model.info import Info
+from gwe.model.overclock import Overclock
+from gwe.model.power import Power
+from gwe.model.status import Status
+from gwe.model.temp import Temp
+from gwe.repository import run_and_get_stdout
 from gwe.util.concurrency import synchronized_with_attr
-from gwe.util.deployment import is_flatpak
 
-LOG = logging.getLogger(__name__)
-
-NOT_AVAILABLE_STRING = 'N/A'
+_LOG = logging.getLogger(__name__)
 _NVIDIA_SMI_BINARY_NAME = 'nvidia-smi'
 _NVIDIA_SETTINGS_BINARY_NAME = 'nvidia-settings'
-_FLATPAK_COMMAND_PREFIX = ['flatpak-spawn', '--host']
-
-
-def run_and_get_stdout(command: List[str], pipe_command: List[str] = None) -> Tuple[int, str, str]:
-    if pipe_command is None:
-        if is_flatpak():
-            command = _FLATPAK_COMMAND_PREFIX + command
-        process1 = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-        output, error = process1.communicate()
-        return process1.returncode, output.decode(encoding='UTF-8').strip(), error.decode(encoding='UTF-8').strip()
-    if is_flatpak():
-        command = _FLATPAK_COMMAND_PREFIX + command
-        pipe_command = _FLATPAK_COMMAND_PREFIX + pipe_command
-    process1 = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-    process2 = subprocess.Popen(pipe_command, stdin=process1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    process1.stdout.close()
-    output, error = process1.communicate()
-    return process2.returncode, output.decode(encoding='UTF-8').strip(), error.decode(encoding='UTF-8').strip()
 
 
 @singleton
@@ -71,6 +57,32 @@ class NvidiaRepository:
 
     def set_ctrl_display(self, ctrl_display: str) -> None:
         self._ctrl_display = ctrl_display
+
+    @synchronized_with_attr("_lock")
+    def has_nv_control_extension(self) -> bool:
+        xlib_display = None
+        try:
+            xlib_display = display.Display(self._ctrl_display)
+            return bool(xlib_display.has_extension('NV-CONTROL'))
+        except:
+            _LOG.exception("Error while checking NV-CONTROL extension")
+        finally:
+            try:
+                if xlib_display:
+                    xlib_display.close()
+            except:
+                _LOG.exception("Error while checking NV-CONTROL extension")
+        return False
+
+    @synchronized_with_attr("_lock")
+    def has_nvml_shared_library(self) -> bool:
+        try:
+            py3nvml.nvmlInit()
+            py3nvml.nvmlShutdown()
+            return True
+        except:
+            _LOG.exception("Error while checking NVML Shared Library")
+        return False
 
     @synchronized_with_attr("_lock")
     def get_status(self) -> Optional[Status]:
@@ -191,24 +203,26 @@ class NvidiaRepository:
                 # )
                 gpu_status_list.append(gpu_status)
             time2 = time.time()
-            LOG.debug(f'Fetching new data took {((time2 - time1) * 1000.0):.3f} ms')
+            _LOG.debug(f'Fetching new data took {((time2 - time1) * 1000.0):.3f} ms')
             return Status(gpu_status_list)
         except:
-            LOG.exception("Error while getting status")
+            _LOG.exception("Error while getting status")
         finally:
             try:
                 if xlib_display:
                     xlib_display.close()
                 py3nvml.nvmlShutdown()
             except:
-                LOG.exception("Error while getting status")
+                _LOG.exception("Error while getting status")
         return None
 
     def set_overclock(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> bool:
         xlib_display = display.Display(self._ctrl_display)
         gpu = Gpu(gpu_index)
-        gpu_result = xlib_display.nvcontrol_set_gpu_nvclock_offset(gpu, perf, gpu_offset)
-        mem_result = xlib_display.nvcontrol_set_mem_transfer_rate_offset(gpu, perf, memory_offset * 2)
+        gpu_result = (xlib_display.nvcontrol_set_gpu_nvclock_offset(gpu, perf, gpu_offset) or
+                      xlib_display.nvcontrol_set_gpu_nvclock_offset_all_levels(gpu, gpu_offset))
+        mem_result = (xlib_display.nvcontrol_set_mem_transfer_rate_offset(gpu, perf, memory_offset * 2) or
+                      xlib_display.nvcontrol_set_mem_transfer_rate_offset_all_levels(gpu, memory_offset * 2))
         xlib_display.close()
         return gpu_result is True and mem_result is True
 
@@ -221,7 +235,7 @@ class NvidiaRepository:
                '-pl',
                str(limit)]
         result = run_and_get_stdout(cmd)
-        LOG.info(f"Exit code: {result[0]}. {result[1]}\n{result[1]}")
+        _LOG.info(f"Exit code: {result[0]}. {result[1]}\n{result[1]}")
         return result[0] == 0
 
     def set_all_gpus_fan_to_auto(self) -> None:
@@ -250,12 +264,12 @@ class NvidiaRepository:
             return a_function(*args)
         except NVMLError as err:
             if err.value == NVML_ERROR_NOT_SUPPORTED:
-                LOG.debug(f"Function {a_function.__name__} not supported")
+                _LOG.debug(f"Function {a_function.__name__} not supported")
                 return None
             if err.value == NVML_ERROR_UNKNOWN:
-                LOG.warning(f"Unknown error while executing function {a_function.__name__}")
+                _LOG.warning(f"Unknown error while executing function {a_function.__name__}")
                 return None
-            LOG.error(f"Error value = {err.value}")
+            _LOG.error(f"Error value = {err.value}")
             raise err
 
     def _get_power_from_py3nvml(self, handle: Any) -> Power:

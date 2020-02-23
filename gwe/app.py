@@ -25,16 +25,18 @@ from injector import inject, singleton
 
 from gwe.conf import APP_NAME, APP_ID, APP_VERSION, APP_ICON_NAME
 from gwe.di import MainBuilder
-from gwe.model import FanProfile, load_fan_db_default_data, OverclockProfile, load_overclock_db_default_data
-from gwe.presenter.main import MainPresenter
-from gwe.repository import NvidiaRepository
+from gwe.model import load_fan_db_default_data, load_overclock_db_default_data
+from gwe.model.fan_profile import FanProfile
+from gwe.model.overclock_profile import OverclockProfile
+from gwe.presenter.main_presenter import MainPresenter
+from gwe.repository.nvidia_repository import NvidiaRepository
 from gwe.util.deployment import is_flatpak
 from gwe.util.desktop_entry import set_autostart_entry, add_application_entry
 from gwe.util.log import LOG_DEBUG_FORMAT
 from gwe.util.view import build_glib_option
-from gwe.view.main import MainView
+from gwe.view.main_view import MainView
 
-LOG = logging.getLogger(__name__)
+_LOG = logging.getLogger(__name__)
 
 
 @singleton
@@ -47,7 +49,7 @@ class Application(Gtk.Application):
                  nvidia_repository: NvidiaRepository,
                  *args: Any,
                  **kwargs: Any) -> None:
-        LOG.debug("init Application")
+        _LOG.debug("init Application")
         GLib.set_application_name(_(APP_NAME))
         super().__init__(*args, application_id=APP_ID,
                          flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
@@ -93,30 +95,30 @@ class Application(Gtk.Application):
             logging.getLogger().setLevel(logging.DEBUG)
             for handler in logging.getLogger().handlers:
                 handler.formatter = logging.Formatter(LOG_DEBUG_FORMAT)
-            LOG.debug(f"Option {_Options.DEBUG.value} selected")
+            _LOG.debug(f"Option {_Options.DEBUG.value} selected")
 
         if _Options.VERSION.value in options:
-            LOG.debug(f"Option {_Options.VERSION.value} selected")
+            _LOG.debug(f"Option {_Options.VERSION.value} selected")
             print(APP_VERSION)
             start_app = False
 
         if _Options.HIDE_WINDOW.value in options:
-            LOG.debug(f"Option {_Options.HIDE_WINDOW.value} selected")
+            _LOG.debug(f"Option {_Options.HIDE_WINDOW.value} selected")
             self._start_hidden = True
 
         if _Options.AUTOSTART_ON.value in options:
-            LOG.debug(f"Option {_Options.AUTOSTART_ON.value} selected")
+            _LOG.debug(f"Option {_Options.AUTOSTART_ON.value} selected")
             set_autostart_entry(True)
             start_app = False
 
         if _Options.AUTOSTART_OFF.value in options:
-            LOG.debug(f"Option {_Options.AUTOSTART_OFF.value} selected")
+            _LOG.debug(f"Option {_Options.AUTOSTART_OFF.value} selected")
             set_autostart_entry(True)
             start_app = False
 
         if _Options.CTRL_DISPLAY.value in options:
             param = options[_Options.CTRL_DISPLAY.value]
-            LOG.debug(f"Option {_Options.CTRL_DISPLAY.value} selected: {param}")
+            _LOG.debug(f"Option {_Options.CTRL_DISPLAY.value} selected: {param}")
             self._nvidia_repository.set_ctrl_display(param)
 
         if start_app:

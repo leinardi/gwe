@@ -1,3 +1,10 @@
+Version 0.14.0
+==============
+Released: 2020-02-16
+
+ * Fix #101: Add notification dialog if proprietary NVIDIA driver not installed
+ * Fix #10: Window too big to fit into the 1366x768 resolution
+
 Version 0.13.3
 ==============
 Released: 2020-01-12
