@@ -245,7 +245,7 @@ class MainPresenter:
             self.main_view.show_error_message_dialog(
                 "NV-CONTROL X extension not found",
                 "It was not possible to find the NVIDIA NV-CONTROL X extension on the current Display device.\n"
-                "Please make sure that the NVIDIA proprietary display drivers are installed and they support the your "
+                "Please make sure that the NVIDIA proprietary display drivers are installed and they support your "
                 "current GPU"
             )
             get_default_application().quit()
@@ -253,7 +253,7 @@ class MainPresenter:
             _LOG.error("NVML missing!")
             message = "It was not possible to find the NVML Shared Library.\n" \
                       "Please make sure that the NVIDIA proprietary display drivers are installed and they support " \
-                      "the your current GPU."
+                      "your current GPU."
             if is_flatpak():
                 message += f"\n\nIf you installed {APP_NAME} via Flathub, make sure to run \"flatpak update\" " \
                           "to fetch the latest version of org.freedesktop.Platform.GL.nvidia."
