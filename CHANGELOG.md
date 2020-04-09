@@ -1,3 +1,11 @@
+Version 0.14.1
+==============
+Released: 2020-04-09
+
+ * Fix #108: GWE not showing the apply button with some themes
+ * Updated several dependencies, including python-xlib: this should fix GWE for
+   rootless Xorg.
+
 Version 0.14.0
 ==============
 Released: 2020-02-16
