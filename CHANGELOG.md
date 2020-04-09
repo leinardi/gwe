@@ -1,3 +1,9 @@
+Version next
+============
+Released: 2020-02-16
+
+ * Fix #108: GWE not showing the apply button with some themes
+
 Version 0.14.0
 ==============
 Released: 2020-02-16
