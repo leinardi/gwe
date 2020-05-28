@@ -14,6 +14,11 @@ and graphics processor.
 <img src="/art/screenshot-1.png" width="800" align="middle"/>
 
 ## 📦 How to get GWE
+If you don't like to read and you don't know what the Nvidia CoolBits are, 
+you can watch the following How To made by [Intelligent Gaming](https://www.youtube.com/channel/UCH4d4o0Otxa7BNYs5Z5UEjg):
+
+[![How To Overclock And Control Fans On An nVidia Graphic Card In Linux - Green With Envy / GWE](https://img.youtube.com/vi/HAKe9ladLvc/0.jpg)](https://www.youtube.com/watch?v=HAKe9ladLvc)
+
 ### Install from Flathub
 This is the preferred way to get GWE on any major distribution (Arch, Fedora, Linux Mint, openSUSE, Ubuntu, etc).
 
