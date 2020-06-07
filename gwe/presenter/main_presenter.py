@@ -29,7 +29,8 @@ from rx.scheduler import ThreadPoolScheduler
 from rx.scheduler.mainloop import GtkScheduler
 
 from gwe.conf import APP_NAME, APP_SOURCE_URL, APP_VERSION, APP_ID
-from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject
+from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject, \
+    SettingChangedSubject
 from gwe.interactor.check_new_version_interactor import CheckNewVersionInteractor
 from gwe.interactor.get_status_interactor import GetStatusInteractor
 from gwe.interactor.has_nvidia_driver_interactor import HasNvidiaDriverInteractor, HasNvidiaDriverResult
@@ -37,9 +38,11 @@ from gwe.interactor.set_fan_speed_interactor import SetFanSpeedInteractor
 from gwe.interactor.set_overclock_interactor import SetOverclockInteractor
 from gwe.interactor.set_power_limit_iInteractor import SetPowerLimitInteractor
 from gwe.interactor.settings_interactor import SettingsInteractor
+from gwe.model import SpeedStep
 from gwe.model.cb_change import DbChange
 from gwe.model.current_fan_profile import CurrentFanProfile
 from gwe.model.current_overclock_profile import CurrentOverclockProfile
+from gwe.model.setting import Setting
 from gwe.model.status import Status
 from gwe.model.overclock_profile import OverclockProfile
 from gwe.model.fan_profile import FanProfile
@@ -117,6 +120,7 @@ class MainPresenter:
                  speed_step_changed_subject: SpeedStepChangedSubject,
                  fan_profile_changed_subject: FanProfileChangedSubject,
                  overclock_profile_changed_subject: OverclockProfileChangedSubject,
+                 setting_changed_subject: SettingChangedSubject,
                  composite_disposable: CompositeDisposable,
                  ) -> None:
         _LOG.debug("init MainPresenter ")
@@ -136,12 +140,14 @@ class MainPresenter:
         self._speed_step_changed_subject = speed_step_changed_subject
         self._fan_profile_changed_subject = fan_profile_changed_subject
         self._overclock_profile_changed_subject = overclock_profile_changed_subject
+        self._setting_changed_subject = setting_changed_subject
         self._composite_disposable: CompositeDisposable = composite_disposable
         self._fan_profile_selected: Optional[FanProfile] = None
         self._fan_profile_applied: Optional[FanProfile] = None
         self._overclock_profile_selected: Optional[OverclockProfile] = None
         self._overclock_profile_applied: Optional[OverclockProfile] = None
         self._latest_status: Optional[Status] = None
+        self._previous_status: Optional[Status] = None
         self._gpu_index: int = 0
 
     def on_start(self) -> None:
@@ -256,7 +262,7 @@ class MainPresenter:
                       "your current GPU."
             if is_flatpak():
                 message += f"\n\nIf you installed {APP_NAME} via Flathub, make sure to run \"flatpak update\" " \
-                          "to fetch the latest version of org.freedesktop.Platform.GL.nvidia."
+                           "to fetch the latest version of org.freedesktop.Platform.GL.nvidia."
             self.main_view.show_error_message_dialog("NVML Shared Library not found", message)
             get_default_application().quit()
         else:
@@ -270,14 +276,16 @@ class MainPresenter:
         self._overclock_profile_changed_subject.subscribe(on_next=self._on_overclock_profile_list_changed,
                                                           on_error=lambda e: _LOG.exception(
                                                               f"Db signal error: {str(e)}"))
+        self._setting_changed_subject.subscribe(on_next=self._on_setting_list_changed,
+                                                on_error=lambda e: _LOG.exception(f"Db signal error: {str(e)}"))
 
     def _on_speed_step_list_changed(self, db_change: DbChange) -> None:
-        profile = db_change.entry.profile
+        profile: SpeedStep = db_change.entry.profile
         if self._fan_profile_selected and self._fan_profile_selected.id == profile.id:
             self.main_view.refresh_chart(profile)
 
     def _on_fan_profile_list_changed(self, db_change: DbChange) -> None:
-        profile = db_change.entry
+        profile: FanProfile = db_change.entry
         if db_change.type == DbChange.DELETE:
             self._refresh_fan_profile_ui()
             self._fan_profile_selected = None
@@ -286,13 +294,17 @@ class MainPresenter:
             self._refresh_fan_profile_ui(profile_id=profile.id)
 
     def _on_overclock_profile_list_changed(self, db_change: DbChange) -> None:
-        profile = db_change.entry
+        profile: OverclockProfile = db_change.entry
         if db_change.type == DbChange.DELETE:
             self._refresh_overclock_profile_ui()
             self._overclock_profile_selected = None
             self._overclock_profile_applied = None
         elif db_change.type == DbChange.INSERT or db_change.type == DbChange.UPDATE:
             self._refresh_overclock_profile_ui(profile_id=profile.id)
+
+    def _on_setting_list_changed(self, db_change: DbChange) -> None:
+        if db_change.entry.key == 'settings_hysteresis' and self._fan_profile_applied:
+            self.main_view.refresh_chart(self._fan_profile_applied)
 
     def _start_refresh(self) -> None:
         _LOG.debug("start refresh")
@@ -308,33 +320,51 @@ class MainPresenter:
     def _on_status_updated(self, status: Optional[Status]) -> None:
         if status is not None:
             was_latest_status_none = self._latest_status is None
+            self._previous_status = self._latest_status
             self._latest_status = status
             if was_latest_status_none:
                 self._refresh_overclock_profile_ui(True)
-            self._update_fan(status)
+            self._update_fan()
             self.main_view.refresh_status(status, self._gpu_index)
             self._historical_data_presenter.add_status(status, self._gpu_index)
         else:
             self._set_fan_speed(self._gpu_index, manual_control=False)
 
-    def _update_fan(self, status: Status) -> None:
-        fan = status.gpu_status_list[self._gpu_index].fan
+    def _update_fan(self) -> None:
+        fan = self._latest_status.gpu_status_list[self._gpu_index].fan
         if fan.control_allowed:
             if self._fan_profile_selected is None and not fan.manual_control:
                 fan_profile = FanProfile.get(FanProfile.type == FanProfileType.AUTO.value)
                 self._fan_profile_applied = fan_profile
                 self._refresh_fan_profile_ui(profile_id=fan_profile.id)
             elif self._fan_profile_applied and self._fan_profile_applied.type != FanProfileType.AUTO.value:
-                gpu_status = status.gpu_status_list[self._gpu_index]
+                gpu_status = self._latest_status.gpu_status_list[self._gpu_index]
                 if not self._fan_profile_applied.steps:
                     self._set_fan_speed(gpu_status.index, manual_control=False)
                 elif gpu_status.temp.gpu:
                     try:
                         speed = round(self._get_fan_duty(self._fan_profile_applied, gpu_status.temp.gpu))
-                        if fan.fan_list and fan.fan_list[0][0] != speed:
+                        if self._should_update_fan_duty(speed):
                             self._set_fan_speed(gpu_status.index, round(speed))
                     except ValueError:
                         _LOG.exception(f'Unable to parse temperature {gpu_status.temp.gpu}')
+
+    def _should_update_fan_duty(self, speed: int) -> bool:
+        fan = self._latest_status.gpu_status_list[self._gpu_index].fan
+        if not fan.fan_list or fan.fan_list[0][0] == speed:
+            return False
+        # The hysteresis value is used to avoid fan fluctuations. In a few words, when the temperature rises, the new
+        # fan duty value is applied immediately. When it lowers, the last applied fan duty value is kept until the
+        # current temperature is hysteresis degrees lower than the temperature that caused the current fan duty to be
+        # applied.
+        hysteresis = self._settings_interactor.get_int('settings_hysteresis')
+        if self._previous_status is not None and self._latest_status is not None and hysteresis != 0:
+            current_temp = self._latest_status.gpu_status_list[self._gpu_index].temp.gpu
+            previous_temp = self._previous_status.gpu_status_list[self._gpu_index].temp.gpu
+            temp_delta = current_temp - previous_temp
+            if -hysteresis <= temp_delta <= 0:
+                return False
+        return True
 
     @staticmethod
     def _get_fan_duty(profile: FanProfile, gpu_temperature: float) -> float:
@@ -387,6 +417,7 @@ class MainPresenter:
             self.main_view.refresh_chart(profile)
 
     def _set_fan_speed(self, gpu_index: int, speed: int = 100, manual_control: bool = True) -> None:
+        _LOG.debug(f"Setting fan speed to {speed}")
         self._composite_disposable.add(self._set_fan_speed_interactor.execute(gpu_index, speed, manual_control).pipe(
             operators.subscribe_on(self._scheduler),
             operators.observe_on(GtkScheduler(GLib)),

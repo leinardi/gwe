@@ -25,6 +25,7 @@ from matplotlib.figure import Figure
 
 from gwe.conf import MIN_TEMP, FAN_MIN_DUTY, MAX_TEMP, FAN_MAX_DUTY
 from gwe.di import EditFanProfileBuilder
+from gwe.interactor.settings_interactor import SettingsInteractor
 from gwe.presenter.edit_fan_profile_presenter import EditFanProfileViewInterface, EditFanProfilePresenter
 from gwe.util.view import init_plot_chart, get_fan_profile_data
 from gwe.model.fan_profile import FanProfile
@@ -39,12 +40,14 @@ class EditFanProfileView(EditFanProfileViewInterface):
     def __init__(self,
                  presenter: EditFanProfilePresenter,
                  builder: EditFanProfileBuilder,
+                 settings_interactor: SettingsInteractor
                  ) -> None:
         _LOG.debug('init EditFanProfileView')
         self._presenter: EditFanProfilePresenter = presenter
         self._presenter.view = self
         self._builder: Gtk.Builder = builder
         self._builder.connect_signals(self._presenter)
+        self._settings_interactor = settings_interactor
         self._init_widgets()
 
     def _init_widgets(self) -> None:
@@ -80,7 +83,7 @@ class EditFanProfileView(EditFanProfileViewInterface):
         self._chart_figure = Figure(figsize=(8, 6), dpi=72, facecolor='#00000000')
         self._chart_canvas = FigureCanvas(self._chart_figure)  # a Gtk.DrawingArea+
         self._chart_axis = self._chart_figure.add_subplot(111)
-        self._chart_line, = init_plot_chart(
+        self._growing_line, self._decreasing_line = init_plot_chart(
             self._builder.get_object('scrolled_window'),
             self._chart_figure,
             self._chart_canvas,
@@ -89,10 +92,13 @@ class EditFanProfileView(EditFanProfileViewInterface):
 
     def _plot_chart(self, data: Dict[int, int]) -> None:
         sorted_data = OrderedDict(sorted(data.items()))
-        temperature = list(sorted_data.keys())
-        duty = list(sorted_data.values())
-        self._chart_line.set_xdata(temperature)
-        self._chart_line.set_ydata(duty)
+        temperature_list = list(sorted_data.keys())
+        duty_list = list(sorted_data.values())
+        hysteresis = self._settings_interactor.get_int('settings_hysteresis')
+        self._growing_line.set_xdata(temperature_list)
+        self._growing_line.set_ydata(duty_list)
+        self._decreasing_line.set_xdata([t - hysteresis for t in temperature_list])
+        self._decreasing_line.set_ydata(duty_list)
         self._chart_canvas.draw()
         self._chart_canvas.flush_events()
 

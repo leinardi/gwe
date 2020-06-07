@@ -15,9 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with gwe.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, Any, Dict
-from gi.repository import Gio
-from gi.repository import GLib, Gtk, Gdk
+from typing import Optional, Any, Dict, Tuple
+from gi.repository import Gio, GLib, Gtk, Gdk
 from matplotlib.axes import Axes
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 from matplotlib.figure import Figure
@@ -60,7 +59,7 @@ def rgba_to_hex(color: Gdk.RGBA) -> str:
 def init_plot_chart(scrolled_window: Gtk.ScrolledWindow,
                     figure: Figure,
                     canvas: FigureCanvas,
-                    axis: Axes) -> Any:
+                    axis: Axes) -> Tuple:
     axis.grid(True, linestyle=':')
     axis.margins(x=0, y=0.05)
 
@@ -79,7 +78,7 @@ def init_plot_chart(scrolled_window: Gtk.ScrolledWindow,
     canvas.set_size_request(400, 300)
     scrolled_window.add_with_viewport(canvas)
     # Returns a tuple of line objects, thus the comma
-    lines = axis.plot(
+    growing_line = axis.plot(
         [],
         [],
         'o-',
@@ -88,10 +87,19 @@ def init_plot_chart(scrolled_window: Gtk.ScrolledWindow,
         antialiased=True,
         color=GRAPH_COLOR_HEX
     )
+    decreasing_line = axis.plot(
+        [],
+        [],
+        ':',
+        linewidth=2.0,
+        antialiased=True,
+        color=GRAPH_COLOR_HEX,
+        alpha=0.66
+    )
     axis.set_ybound(lower=-5, upper=105)
     axis.set_xbound(MIN_TEMP, MAX_TEMP)
     figure.canvas.draw()
-    return lines
+    return growing_line[0], decreasing_line[0]
 
 
 def get_fan_profile_data(profile: FanProfile) -> Dict[int, int]:

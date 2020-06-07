@@ -21,6 +21,8 @@ from gi.repository import Gtk
 from injector import singleton, inject
 
 from gwe.conf import MIN_TEMP, FAN_MIN_DUTY
+from gwe.di import SettingChangedSubject
+from gwe.model.cb_change import DbChange
 from gwe.util.view import hide_on_delete
 from gwe.model.fan_profile import FanProfile
 from gwe.model.speed_step import SpeedStep
@@ -57,11 +59,15 @@ class EditFanProfileViewInterface:
 @singleton
 class EditFanProfilePresenter:
     @inject
-    def __init__(self) -> None:
+    def __init__(self,
+                 setting_changed_subject: SettingChangedSubject
+                 ) -> None:
         _LOG.debug("init EditFanProfilePresenter ")
         self.view: EditFanProfileViewInterface = EditFanProfileViewInterface()
+        self._setting_changed_subject = setting_changed_subject
         self._profile = FanProfile()
         self._selected_step: Optional[SpeedStep] = None
+        self._register_db_listeners()
 
     def show_add(self) -> None:
         profile = FanProfile()
@@ -125,3 +131,11 @@ class EditFanProfilePresenter:
         self.view.refresh_liststore(self._profile)
         if not self.view.has_a_step_selected():
             self.refresh_controls()
+
+    def _register_db_listeners(self) -> None:
+        self._setting_changed_subject.subscribe(on_next=self._on_setting_list_changed,
+                                                on_error=lambda e: _LOG.exception(f"Db signal error: {str(e)}"))
+
+    def _on_setting_list_changed(self, db_change: DbChange) -> None:
+        if db_change.entry.key == 'settings_hysteresis':
+            self.view.refresh_liststore(self._profile)
