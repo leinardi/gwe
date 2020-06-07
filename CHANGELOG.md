@@ -1,5 +1,5 @@
-Version next
-============
+Version 0.15.0
+==============
 Released: 2020-06-07
 
  * Fixes #74: Fan control hysteresis
