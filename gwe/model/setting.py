@@ -14,10 +14,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with gst.  If not, see <http://www.gnu.org/licenses/>.
-from peewee import CharField, BlobField, SqliteDatabase
-from playhouse.signals import Model
+from typing import Any
 
-from gwe.di import INJECTOR
+from peewee import CharField, BlobField, SqliteDatabase
+from playhouse.signals import Model, post_save, post_delete
+
+from gwe.di import INJECTOR, SettingChangedSubject
+from gwe.model.cb_change import DbChange
 
 
 class Setting(Model):
@@ -27,3 +30,16 @@ class Setting(Model):
     class Meta:
         legacy_table_names = False
         database = INJECTOR.get(SqliteDatabase)
+
+
+@post_save(sender=Setting)
+def on_speed_step_added(_: Any, step: Setting, created: bool) -> None:
+    SPEED_STEP_CHANGED_SUBJECT.on_next(DbChange(step, DbChange.INSERT if created else DbChange.UPDATE))
+
+
+@post_delete(sender=Setting)
+def on_speed_step_deleted(_: Any, step: Setting) -> None:
+    SPEED_STEP_CHANGED_SUBJECT.on_next(DbChange(step, DbChange.DELETE))
+
+
+SPEED_STEP_CHANGED_SUBJECT = INJECTOR.get(SettingChangedSubject)

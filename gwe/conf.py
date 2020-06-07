@@ -46,6 +46,7 @@ SETTINGS_DEFAULTS: Dict[str, Any] = {
     'settings_load_last_profile': True,
     'settings_minimize_to_tray': True,
     'settings_refresh_interval': 3,
+    'settings_hysteresis': 2,
     'settings_show_app_indicator': True,
     'settings_app_indicator_show_gpu_temp': True,
 }

@@ -394,7 +394,7 @@ class MainView(MainViewInterface):
         self._fan_figure = Figure(figsize=(8, 6), dpi=72, facecolor='#00000000')
         self._fan_canvas = FigureCanvas(self._fan_figure)  # a Gtk.DrawingArea+
         self._fan_axis = self._fan_figure.add_subplot(111)
-        self._fan_line, = init_plot_chart(
+        self._fan_growing_line, self._fan_decreasing_line = init_plot_chart(
             fan_scrolled_window,
             self._fan_figure,
             self._fan_canvas,
@@ -403,9 +403,12 @@ class MainView(MainViewInterface):
 
     def _plot_chart(self, data: Dict[int, int]) -> None:
         sorted_data = OrderedDict(sorted(data.items()))
-        temperature = list(sorted_data.keys())
-        duty = list(sorted_data.values())
-        self._fan_line.set_xdata(temperature)
-        self._fan_line.set_ydata(duty)
+        temperature_list = list(sorted_data.keys())
+        duty_list = list(sorted_data.values())
+        hysteresis = self._settings_interactor.get_int('settings_hysteresis')
+        self._fan_growing_line.set_xdata(temperature_list)
+        self._fan_growing_line.set_ydata(duty_list)
+        self._fan_decreasing_line.set_xdata([t - hysteresis for t in temperature_list])
+        self._fan_decreasing_line.set_ydata(duty_list)
         self._fan_canvas.draw()
         self._fan_canvas.flush_events()
