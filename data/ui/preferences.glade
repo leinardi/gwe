@@ -210,6 +210,75 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                         <property name="activatable">False</property>
                                         <property name="selectable">False</property>
                                         <child>
+                                          <object class="GtkGrid" id="settings_check_new_version_on_launch_grid">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="valign">center</property>
+                                            <property name="margin_left">20</property>
+                                            <property name="margin_right">20</property>
+                                            <property name="margin_top">6</property>
+                                            <property name="margin_bottom">6</property>
+                                            <property name="row_spacing">2</property>
+                                            <property name="column_spacing">24</property>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="label" translatable="yes" comments="Translators: This switch reverses the scrolling direction for mices. The term used comes from OS X so use the same translation if possible.">Check for new app version on launch</property>
+                                                <property name="use_underline">True</property>
+                                                <property name="xalign">0</property>
+                                              </object>
+                                              <packing>
+                                                <property name="left_attach">0</property>
+                                                <property name="top_attach">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="settings_check_new_version_on_launch_description_label">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="label" translatable="yes">Automatically check for a new app version on launch</property>
+                                                <property name="xalign">0</property>
+                                                <attributes>
+                                                  <attribute name="scale" value="0.90000000000000002"/>
+                                                </attributes>
+                                                <style>
+                                                  <class name="dim-label"/>
+                                                </style>
+                                              </object>
+                                              <packing>
+                                                <property name="left_attach">0</property>
+                                                <property name="top_attach">1</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkSwitch" id="settings_check_new_version_on_launch_switch">
+                                                <property name="name">settings_check_new_version_on_launch_switch</property>
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="halign">end</property>
+                                                <property name="valign">center</property>
+                                                <signal name="state-set" handler="on_setting_changed" swapped="no"/>
+                                              </object>
+                                              <packing>
+                                                <property name="left_attach">1</property>
+                                                <property name="top_attach">0</property>
+                                                <property name="height">2</property>
+                                              </packing>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkListBoxRow">
+                                        <property name="height_request">52</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="activatable">False</property>
+                                        <property name="selectable">False</property>
+                                        <child>
                                           <object class="GtkGrid">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>

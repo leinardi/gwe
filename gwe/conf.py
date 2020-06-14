@@ -43,6 +43,7 @@ FAN_MAX_DUTY = 100
 
 SETTINGS_DEFAULTS: Dict[str, Any] = {
     'settings_launch_on_login': False,
+    'settings_check_new_version_on_launch': True,
     'settings_load_last_profile': True,
     'settings_minimize_to_tray': True,
     'settings_refresh_interval': 3,

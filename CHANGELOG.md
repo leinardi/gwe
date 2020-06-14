@@ -1,8 +1,14 @@
+Version next
+============
+Released: 2020-06-15
+
+ * Fix #116: Add preference to check for new app version on launch
+
 Version 0.15.0
 ==============
 Released: 2020-06-07
 
- * Fixes #74: Fan control hysteresis
+ * Fix #74: Fan control hysteresis
 
 Version 0.14.1
 ==============
