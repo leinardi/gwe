@@ -154,7 +154,7 @@ class MainPresenter:
         self._refresh_fan_profile_ui(True)
         self._register_db_listeners()
         self._check_nvidia_driver()
-        if self._settings_interactor.get_int('settings_check_new_version_on_launch'):
+        if self._settings_interactor.get_int('settings_check_new_version'):
             self._check_new_version()
 
     def on_application_window_delete_event(self, *_: Any) -> bool:

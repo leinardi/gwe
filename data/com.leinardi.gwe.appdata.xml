@@ -30,6 +30,7 @@
         <release date="2020-06-15" version="next">
             <description>
                 <ul>
+                    <li>Disabled check for new app version on launch (it's now opt-in)</li>
                     <li>Fix #116: Add preference to check for new app version on launch</li>
                 </ul>
             </description>

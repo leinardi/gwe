@@ -210,7 +210,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                         <property name="activatable">False</property>
                                         <property name="selectable">False</property>
                                         <child>
-                                          <object class="GtkGrid" id="settings_check_new_version_on_launch_grid">
+                                          <object class="GtkGrid" id="settings_check_new_version_grid">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="valign">center</property>
@@ -235,7 +235,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkLabel" id="settings_check_new_version_on_launch_description_label">
+                                              <object class="GtkLabel" id="settings_check_new_version_description_label">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="label" translatable="yes">Automatically check for a new app version on launch</property>
@@ -253,8 +253,8 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkSwitch" id="settings_check_new_version_on_launch_switch">
-                                                <property name="name">settings_check_new_version_on_launch_switch</property>
+                                              <object class="GtkSwitch" id="settings_check_new_version_switch">
+                                                <property name="name">settings_check_new_version_switch</property>
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="halign">end</property>
