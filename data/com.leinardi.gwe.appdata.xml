@@ -30,8 +30,8 @@
         <release date="2020-06-15" version="next">
             <description>
                 <ul>
-                    <li>Disabled check for new app version on launch (it's now opt-in)</li>
-                    <li>Fix #116: Add preference to check for new app version on launch</li>
+                    <li>Disabled check for new App version on launch (it's now opt-in)</li>
+                    <li>Fix #116: Add preference to check for new App version on launch</li>
                 </ul>
             </description>
         </release>
@@ -75,8 +75,8 @@
         <release date="2019-09-01" version="0.13.1">
             <description>
                 <ul>
-                    <li>Fix #82: Quit app with Ctrl+Q</li>
-                    <li>Hide app with Ctrl+H</li>
+                    <li>Fix #82: Quit App with Ctrl+Q</li>
+                    <li>Hide App with Ctrl+H</li>
                 </ul>
             </description>
         </release>
@@ -113,7 +113,7 @@
                     <li>Using NV-CONTROL instead of NVML, when possible, to provide better compatibility with older
                         cards
                     </li>
-                    <li>Added changelog link to app menu</li>
+                    <li>Added changelog link to App menu</li>
                     <li>Fix #9: The Close button in the About dialog box does not work on KDE</li>
                     <li>Fix #11: Power limit Apply should check exit code</li>
                     <li>Fix #34: Graph max sample based on refresh interval</li>
@@ -190,7 +190,7 @@
                         dependencies section of the readme)
                     </li>
                     <li>Highlighting currently applied profile</li>
-                    <li>Distributing the app via Flatpak (not published on Flathub yet)</li>
+                    <li>Distributing the App via Flatpak (not published on Flathub yet)</li>
                     <li>Dropped support for PyPI</li>
                 </ul>
             </description>
@@ -199,7 +199,7 @@
             <description>
                 <ul>
                     <li>Min duty changed from 25 to 0</li>
-                    <li>Slightly bigger app indicator icon</li>
+                    <li>Slightly bigger App indicator icon</li>
                 </ul>
             </description>
         </release>
@@ -207,8 +207,8 @@
             <description>
                 <ul>
                     <li>Implemented Fan curve profile!</li>
-                    <li>Added GPU temperature to app indicator</li>
-                    <li>Changed app indicator icon (again)</li>
+                    <li>Added GPU temperature to App indicator</li>
+                    <li>Changed App indicator icon (again)</li>
                     <li>Other minor UI improvements</li>
                 </ul>
             </description>
@@ -233,7 +233,7 @@
                     <li>Enabled version check on startup</li>
                     <li>Added ability to overclock GPU and Memory (requires coolbits to be set!)</li>
                     <li>Added ability to change Power Limit</li>
-                    <li>Changed app indicator icon</li>
+                    <li>Changed App indicator icon</li>
                     <li>Other minor UI improvements</li>
                 </ul>
             </description>

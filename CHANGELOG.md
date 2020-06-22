@@ -2,8 +2,8 @@ Version next
 ============
 Released: 2020-06-15
 
- * Disabled check for new app version on launch (it's now opt-in)
- * Fix #116: Add preference to check for new app version on launch
+ * Disabled check for new App version on launch (it's now opt-in)
+ * Fix #116: Add preference to check for new App version on launch
 
 Version 0.15.0
 ==============
@@ -43,8 +43,8 @@ Version 0.13.1
 ==============
 Released: 2019-09-01
 
- * Fix #82: Quit app with Ctrl+Q
- * Hide app with Ctrl+H
+ * Fix #82: Quit App with Ctrl+Q
+ * Hide App with Ctrl+H
 
 Version 0.13.0
 ==============
@@ -75,7 +75,7 @@ Released: 2019-02-17
 
  * Using NV-CONTROL instead of NVML, when possible, to provide better
    compatibility with older cards
- * Added changelog link to app menu
+ * Added changelog link to App menu
  * Fix #9: The Close button in the About dialog box does not work on KDE
  * Fix #11: Power limit Apply should check exit code
  * Fix #34: Graph max sample based on refresh interval
@@ -143,7 +143,7 @@ Released: 2019-01-13
  * Historical data dialog! (Requires GNOME 3.30+. New dependency necessary,
    check the Distribution dependencies section of the readme)
  * Highlighting currently applied profile
- * Distributing the app via Flatpak (not published on Flathub yet)
+ * Distributing the App via Flatpak (not published on Flathub yet)
  * Dropped support for PyPI
 
 Version 0.5.1
@@ -151,15 +151,15 @@ Version 0.5.1
 Released: 2019-01-03
 
  * Min duty changed from 25 to 0
- * Slightly bigger app indicator icon
+ * Slightly bigger App indicator icon
 
 Version 0.5.0
 =============
 Released: 2019-01-03
 
  * Implemented Fan curve profile!
- * Added GPU temperature to app indicator
- * Changed app indicator icon (again)
+ * Added GPU temperature to App indicator
+ * Changed App indicator icon (again)
  * Other minor UI improvements
 
 Version 0.3.2
@@ -181,7 +181,7 @@ Released: 2019-01-01
  * Enabled version check on startup
  * Added ability to overclock GPU and Memory (requires coolbits to be set!)
  * Added ability to change Power Limit
- * Changed app indicator icon
+ * Changed App indicator icon
  * Other minor UI improvements
 
 Version 0.1.0

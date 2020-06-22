@@ -43,7 +43,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
       <object class="GtkMenuItem">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Show/Hide app window</property>
+        <property name="label" translatable="yes">Show/Hide App window</property>
         <property name="use_underline">True</property>
         <signal name="activate" handler="on_toggle_app_window_clicked" swapped="no"/>
         <accelerator key="h" signal="activate" modifiers="GDK_CONTROL_MASK"/>

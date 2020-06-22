@@ -132,7 +132,7 @@ class Application(Gtk.Application):
                               description="Show debug messages"),
             build_glib_option(_Options.VERSION.value,
                               short_name='v',
-                              description="Show the app version"),
+                              description="Show the App version"),
             build_glib_option(_Options.HIDE_WINDOW.value,
                               description="Start with the main window hidden"),
             build_glib_option(_Options.CTRL_DISPLAY.value,
@@ -142,9 +142,9 @@ class Application(Gtk.Application):
         ]
         if not is_flatpak():
             options.append(build_glib_option(_Options.AUTOSTART_ON.value,
-                                             description="Enable automatic start of the app on login"))
+                                             description="Enable automatic start of the App on login"))
             options.append(build_glib_option(_Options.AUTOSTART_OFF.value,
-                                             description="Disable automatic start of the app on login"))
+                                             description="Disable automatic start of the App on login"))
         return options
 
 

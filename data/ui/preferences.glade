@@ -169,7 +169,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                               <object class="GtkLabel" id="settings_launch_on_login_description_label">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="label" translatable="yes">Automatically start the app hidden on login</property>
+                                                <property name="label" translatable="yes">Automatically start the App hidden on login</property>
                                                 <property name="xalign">0</property>
                                                 <attributes>
                                                   <attribute name="scale" value="0.90000000000000002"/>
@@ -225,7 +225,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes" comments="Translators: This switch reverses the scrolling direction for mices. The term used comes from OS X so use the same translation if possible.">Check for new app version on launch</property>
+                                                <property name="label" translatable="yes" comments="Translators: This switch reverses the scrolling direction for mices. The term used comes from OS X so use the same translation if possible.">Check for new App version on launch</property>
                                                 <property name="use_underline">True</property>
                                                 <property name="xalign">0</property>
                                               </object>
@@ -238,7 +238,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                               <object class="GtkLabel" id="settings_check_new_version_description_label">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="label" translatable="yes">Automatically check for a new app version on launch</property>
+                                                <property name="label" translatable="yes">Automatically check for a new App version on launch</property>
                                                 <property name="xalign">0</property>
                                                 <attributes>
                                                   <attribute name="scale" value="0.90000000000000002"/>
@@ -307,7 +307,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="label" translatable="yes">Automatically apply last used fan and overclock profile when the app starts</property>
+                                                <property name="label" translatable="yes">Automatically apply last used fan and overclock profile when the App starts</property>
                                                 <property name="xalign">0</property>
                                                 <attributes>
                                                   <attribute name="scale" value="0.90000000000000002"/>
@@ -376,7 +376,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="label" translatable="yes">The app will be minimized to the tray and it will keep running on background</property>
+                                                <property name="label" translatable="yes">The App will be minimized to the tray and it will keep running on background</property>
                                                 <property name="xalign">0</property>
                                                 <attributes>
                                                   <attribute name="scale" value="0.90000000000000002"/>
@@ -571,7 +571,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes" comments="Translators: This switch reverses the scrolling direction for mices. The term used comes from OS X so use the same translation if possible.">Show app indicator</property>
+                                                <property name="label" translatable="yes" comments="Translators: This switch reverses the scrolling direction for mices. The term used comes from OS X so use the same translation if possible.">Show App indicator</property>
                                                 <property name="use_underline">True</property>
                                                 <property name="xalign">0</property>
                                               </object>
