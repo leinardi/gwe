@@ -123,7 +123,7 @@ class NvidiaRepository:
                     decoder_usage=xlib_display.nvcontrol_get_decoder_utilization(gpu)
                 )
 
-                power = self._get_power_from_py3nvml(handle)
+                power = Power()
                 temp = self._get_temp_from_py3nvml(handle)
 
                 perf_modes = xlib_display.nvcontrol_get_performance_modes(gpu)
