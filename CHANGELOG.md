@@ -1,9 +1,10 @@
 Version next
 ============
-Released: 2020-06-15
+Released: 2020-06-22
 
  * Disabled check for new App version on launch (it's now opt-in)
  * Fix #116: Add preference to check for new App version on launch
+ * Updated several dependencies
 
 Version 0.15.0
 ==============
