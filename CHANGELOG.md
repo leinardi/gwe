@@ -1,5 +1,5 @@
-Version next
-============
+Version 0.15.1
+==============
 Released: 2020-06-22
 
  * Disabled check for new App version on launch (it's now opt-in)
