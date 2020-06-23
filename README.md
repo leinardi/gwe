@@ -1,5 +1,5 @@
 # GreenWithEnvy (GWE)
-GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video card 
+GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video card
 and graphics processor.
 
 ## 💡 Features
@@ -14,7 +14,7 @@ and graphics processor.
 <img src="/art/screenshot-1.png" width="800" align="middle"/>
 
 ## 📦 How to get GWE
-If you don't like to reading manuals and/or you don't know what the Nvidia CoolBits are, 
+If you don't like to reading manuals and/or you don't know what the Nvidia CoolBits are,
 you can watch the following How To made by [Intelligent Gaming](https://www.youtube.com/channel/UCH4d4o0Otxa7BNYs5Z5UEjg):
 
 [![How To Overclock And Control Fans On An nVidia Graphic Card In Linux - Green With Envy / GWE](https://img.youtube.com/vi/HAKe9ladLvc/0.jpg)](https://www.youtube.com/watch?v=HAKe9ladLvc)
@@ -46,7 +46,7 @@ Currently [Flatpak does not support Nvidia Beta drivers](https://github.com/flat
 like 396.54.09 or 415.22.05.
 
 ##### Bumblebee and Optimus
-Currently [Flatpak does not support Bumblebee](https://github.com/flatpak/flatpak/issues/869). If you want to use GWE with Bumblebee 
+Currently [Flatpak does not support Bumblebee](https://github.com/flatpak/flatpak/issues/869). If you want to use GWE with Bumblebee
 you need to install it from the source code.
 
 ### Distro specific packages
@@ -60,24 +60,19 @@ For older Fedora releases you can use [COPR package](https://copr.fedorainfraclo
 
 ### Install from source code
 #### Build time dependencies
-| Dependency            | Arch Linux            | Fedora                      | Ubuntu                 |
-| --------------------- | --------------------- | --------------------------- | ---------------------- |
-| pkg-config            | pkg-config            | pkgconf-pkg-config          | pkg-config             |
-| Python 3.6+           | python                | python3                     | python3                |
-| gobject-introspection | gobject-introspection | gobject-introspection-devel | libgirepository1.0-dev |
-| meson                 | meson                 | meson                       | meson                  |
-| ninja-build           | ninja                 | ninja-build                 | ninja-build            |
-| appstream-util        | appstream-glib        | appstream-util              | appstream-util         |
+| Distro                | pkg-config         | Python 3.6+ | gobject-introspection       | meson | ninja-build | appstream-util |
+| --------------------- | ------------------ | ----------- | --------------------------- | ----- | ----------- | -------------- |
+| Arch Linux            | pkg-config         | python      | gobject-introspection       | meson | ninja       | appstream-glib |
+| Fedora                | pkgconf-pkg-config | python3     | gobject-introspection-devel | meson | ninja-build | appstream-util |
+| Ubuntu                | pkg-config         | python3     | libgirepository1.0-dev      | meson | ninja-build | appstream-util |
+
 
 #### Run time dependencies
-| Dependency                         | Arch Linux                         | Fedora                             | Ubuntu                             |
-| ---------------------------------- | ---------------------------------- | -----------------------------------| ---------------------------------- |
-| Python 3.6+                        | python                             | python3                            | python3                            |
-| pip                                | python-pip                         | python3-pip                        | python3-pip                        |
-| gobject-introspection              | gobject-introspection              | gobject-introspection-devel        | libgirepository1.0-dev             |
-| libappindicator                    | libappindicator3                   | libappindicator-gtk3               | gir1.2-appindicator3-0.1           |
-| gnome-shell-extension-appindicator | gnome-shell-extension-appindicator | gnome-shell-extension-appindicator | gnome-shell-extension-appindicator |
-| libdazzle                          | libdazzle                          | libdazzle                          | gir1.2-dazzle-1.0                  |
+| Distro                | Python 3.6+ | pip         | gobject-introspection       | libappindicator          | gnome-shell-extension-appindicator | libdazzle |
+| --------------------- | ----------- | ----------- | --------------------------- | ------------------------ | ---------------------------------- | --------- |
+| Arch Linux            | python      | python-pip  | gobject-introspection       | libappindicator3         | gnome-shell-extension-appindicator | libdazzle |
+| Fedora                | python3     | python3-pip | gobject-introspection-devel | libappindicator-gtk3     | gnome-shell-extension-appindicator | libdazzle |
+| Ubuntu                | python3     | python3-pip | libgirepository1.0-dev      | gir1.2-appindicator3-0.1 | gnome-shell-extension-appindicator | libdazzle |
 
 plus all the Python dependencies listed in [requirements.txt](requirements.txt)
 
@@ -130,7 +125,7 @@ optirun gwe --ctrl-display ":8"
 - [x] Show fan info
 - [x] Allow to hide main app window
 - [x] Add command line option to start the app hidden
-- [x] Add Refresh timeout to settings 
+- [x] Add Refresh timeout to settings
 - [x] Add command line option to add desktop entry
 - [x] About dialog
 - [x] Distributing with PyPI
@@ -156,9 +151,9 @@ optirun gwe --ctrl-display ":8"
 ## Application entry
 To add a desktop entry for the application run the following command (not supported by Flatpak):
 ```bash
-gwe --application-entry 
+gwe --application-entry
 ```
-If you don't want to create this custom rule you can run gwe as root 
+If you don't want to create this custom rule you can run gwe as root
 (using sudo) but we advise against this solution.
 -->
 ## ⌨️ Command line options
@@ -201,15 +196,15 @@ flatpak run com.leinardi.gwe --debug
 
 ## ❓ FAQ
 ### I see some message about CoolBits in the Overclock/Fan profile section, what's that?
-Coolbits was a Windows registry hack for Nvidia graphics cards Windows drivers, that allows 
-tweaking features via the Nvidia driver control panel.  
-Something similar is available also on Linux and is the only way to enable Overclock and manual Fan control.  
-To know more about Coolbits and how to enable them click 
-[here](https://wiki.archlinux.org/index.php/NVIDIA/Tips_and_tricks#Enabling_overclocking) 
+Coolbits was a Windows registry hack for Nvidia graphics cards Windows drivers, that allows
+tweaking features via the Nvidia driver control panel.
+Something similar is available also on Linux and is the only way to enable Overclock and manual Fan control.
+To know more about Coolbits and how to enable them click
+[here](https://wiki.archlinux.org/index.php/NVIDIA/Tips_and_tricks#Enabling_overclocking)
 (to enable both OC and Fan control you need to set it to `12`).
 
 ### The Flatpak version of GWE is not using my theme, how can I fix it?
-To fix this issue install a Gtk theme from Flathub. This way, Flatpak applications will automatically pick the 
+To fix this issue install a Gtk theme from Flathub. This way, Flatpak applications will automatically pick the
 installed Gtk theme and use that instead of Adwaita.
 
 Use this command to get a list of all the available Gtk themes on Flathub:
@@ -227,8 +222,8 @@ This is necessary to be sure to have the latest [org.freedesktop.Platform.GL.nvi
 If, after the update, all the fields are still empty, feel free to open a new issue on the project tracker.
 
 ### Why the memory overclock offsets effectively applied does not match the one set in the Nvidia Settings app?
-Because Memory Transfer Rate, what Nvidia Settings reports and changes, 
-is different from the effective Memory Clock, what is actually being 
+Because Memory Transfer Rate, what Nvidia Settings reports and changes,
+is different from the effective Memory Clock, what is actually being
 displayed by GWE. It is also what other Windows applications like MSI Afterburner show.
 The Memory Transfer Rate is simply double the Memory Clock.
 
@@ -239,7 +234,7 @@ The Memory Transfer Rate is simply double the Memory Clock.
 | Source code       | `$XDG_CONFIG_HOME` (usually `$HOME/.config/gwe`) |
 
 ### GreenWithEnvy, why using such name?
-The name comes from the slogan of the GeForce 8 series, that was "Green with envy".  
+The name comes from the slogan of the GeForce 8 series, that was "Green with envy".
 Nvidia is meant to be pronounced "invidia", which means envy in Latin (and Italian). And their logo is green so, GreenWithEnvy
 
 ## 💚 How to help the project
@@ -249,7 +244,7 @@ Nvidia is meant to be pronounced "invidia", which means envy in Latin (and Itali
  - Making Bumblebee work with Flatpak (see [#35](https://gitlab.com/leinardi/gwe/issues/35))
 
 ### Discord server
-If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/xBybdRt  
+If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/xBybdRt
 Just write a message on the general channel saying how you want to help (test, dev, etc) and quoting @leinardi. If you don't use discor but still want to help just open a new issue here.
 
 
@@ -261,10 +256,10 @@ feel free to open an issue on the [issue tracker](https://gitlab.com/leinardi/gw
 
 ## ⚠ Dropped PyPI support
 Development builds were previously distributed using PyPI. This way of distributing the software is simple
-but requires the user to manually install all the non Python dependencies like cairo, glib, appindicator3, etc.  
+but requires the user to manually install all the non Python dependencies like cairo, glib, appindicator3, etc.
 The current implementation of the historical data uses a new library, Dazzle, that requires Gnome 3.30 which is
 available, using Python Object introspection, only starting from Ubuntu 18.10 making the latest Ubuntu LTS, 18.04,
-unsupported.    
+unsupported.
 A solution for all this problems is distributing the app via Flatpak, since with it all the dependencies
 will be bundled and provided automatically, making possible to use Gnome 3.30 features also on distributions
 using an older version of Gnome.
