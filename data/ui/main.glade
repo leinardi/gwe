@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 
+<!-- Generated with glade 3.22.2 
 
 Copyright (C) 
 
@@ -1345,7 +1345,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="tooltip_text" translatable="yes">The current GPU core temperature</property>
-                                            <property name="label" translatable="yes">GPU TEMP</property>
+                                            <property name="label" translatable="yes">CURRENT</property>
                                             <property name="single_line_mode">True</property>
                                             <attributes>
                                               <attribute name="weight" value="light"/>
@@ -1374,7 +1374,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="tooltip_text" translatable="yes">The current GPU core slowdown threshold temperature</property>
-                                            <property name="label" translatable="yes">MAX OP. TEMP</property>
+                                            <property name="label" translatable="yes">CRITICAL</property>
                                             <property name="single_line_mode">True</property>
                                             <attributes>
                                               <attribute name="weight" value="light"/>
@@ -1403,7 +1403,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="tooltip_text" translatable="yes">The default core slowdown threshold temperature</property>
-                                            <property name="label" translatable="yes">SLOWDOWN TEMP</property>
+                                            <property name="label" translatable="yes">SLOWDOWN</property>
                                             <property name="single_line_mode">True</property>
                                             <attributes>
                                               <attribute name="weight" value="light"/>
@@ -1432,7 +1432,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="tooltip_text" translatable="yes">The maximum core slowdown threshold temperature</property>
-                                            <property name="label" translatable="yes">SHUTDOWN TEMP</property>
+                                            <property name="label" translatable="yes">SHUTDOWN</property>
                                             <property name="single_line_mode">True</property>
                                             <attributes>
                                               <attribute name="weight" value="light"/>
@@ -1502,7 +1502,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">FAN DUTY</property>
+                                            <property name="label" translatable="yes">DUTY</property>
                                             <property name="single_line_mode">True</property>
                                             <attributes>
                                               <attribute name="weight" value="light"/>
@@ -1529,7 +1529,7 @@ along with gwe.  If not, see <http://www.gnu.org/licenses/>.
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">FAN RPM</property>
+                                            <property name="label" translatable="yes">RPM</property>
                                             <property name="single_line_mode">True</property>
                                             <attributes>
                                               <attribute name="weight" value="light"/>
