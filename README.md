@@ -60,11 +60,11 @@ For older Fedora releases you can use [COPR package](https://copr.fedorainfraclo
 
 ### Install from source code
 #### Build time dependencies
-| Distro                | pkg-config         | Python 3.6+ | gobject-introspection       | meson | ninja-build | appstream-util |
-| --------------------- | ------------------ | ----------- | --------------------------- | ----- | ----------- | -------------- |
-| Arch Linux            | pkg-config         | python      | gobject-introspection       | meson | ninja       | appstream-glib |
-| Fedora                | pkgconf-pkg-config | python3     | gobject-introspection-devel | meson | ninja-build | appstream-util |
-| Ubuntu                | pkg-config         | python3     | libgirepository1.0-dev      | meson | ninja-build | appstream-util |
+| Distro                | pkg-config         | Python 3.6+   | gobject-introspection       | meson | ninja-build | appstream-util |
+| --------------------- | ------------------ | ------------- | --------------------------- | ----- | ----------- | -------------- |
+| Arch Linux            | pkg-config         | python        | gobject-introspection       | meson | ninja       | appstream-glib |
+| Fedora                | pkgconf-pkg-config | python3-devel | gobject-introspection-devel | meson | ninja-build | appstream-util |
+| Ubuntu                | pkg-config         | python3-dev   | libgirepository1.0-dev      | meson | ninja-build | appstream-util |
 
 
 #### Run time dependencies
