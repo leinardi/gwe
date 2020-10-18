@@ -1,3 +1,10 @@
+Version 0.15.2
+==============
+Released: 2020-10-18
+
+ * Little change of Temp labels
+ * Updated several dependencies
+
 Version 0.15.1
 ==============
 Released: 2020-06-22
