@@ -11,6 +11,6 @@
 9. Update tag and SHA in `flatpak/com.leinardi.gwe.json`
 10. `git push --follow-tags` 
 11. Trigger Flathub build bot `cd flatpak && git commit -am "Release X.Y.Z" && git push` (where X.Y.Z is the version you set in step 1)
-12. Make a PR to the Flathub repository master, test the build and, if OK, merge the PR
+12. Make a PR to the Flathub repository master, test the build and, if OK, merge the PR (https://github.com/flathub/com.leinardi.gwe)
 13. `git commit -am "Release X.X.X" && git push` (where X.Y.Z is the version you set in step 1)
 14. Create a PR from [master](../../tree/master) to [release](../../tree/release)
