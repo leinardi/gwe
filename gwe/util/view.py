@@ -19,6 +19,7 @@ from typing import Optional, Any, Dict, Tuple
 from gi.repository import Gio, GLib, Gtk, Gdk
 from matplotlib.axes import Axes
 from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
+from matplotlib.colors import ColorConverter
 from matplotlib.figure import Figure
 
 from gwe.conf import MIN_TEMP, MAX_TEMP, FAN_MAX_DUTY, GRAPH_COLOR_HEX
@@ -60,6 +61,14 @@ def init_plot_chart(scrolled_window: Gtk.ScrolledWindow,
                     figure: Figure,
                     canvas: FigureCanvas,
                     axis: Axes) -> Tuple:
+    axis.patch.set_visible(False)
+    temp_window = Gtk.Window()
+    style = temp_window.get_style_context()
+    bg_colour = style.get_background_color(Gtk.StateType.NORMAL).to_color().to_floats()
+    cc = ColorConverter()
+    cc.to_rgba(bg_colour)
+    figure.patch.set_facecolor(bg_colour)
+
     axis.grid(True, linestyle=':')
     axis.margins(x=0, y=0.05)
 
@@ -68,7 +77,6 @@ def init_plot_chart(scrolled_window: Gtk.ScrolledWindow,
     text_color = rgba_to_hex(temp_label.get_style_context().get_color(Gtk.StateType.NORMAL))
     text_color_alpha = text_color[:-2] + '80'
     scrolled_window.remove(temp_label)
-    axis.set_facecolor('#00000000')
     axis.set_xlabel('Temperature [°C]', color=text_color)
     axis.set_ylabel('Duty [%]', color=text_color)
     axis.tick_params(colors=text_color, grid_color=text_color_alpha)
