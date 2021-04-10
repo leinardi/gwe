@@ -14,3 +14,5 @@
 12. Make a PR to the Flathub repository master, test the build and, if OK, merge the PR (https://github.com/flathub/com.leinardi.gwe)
 13. `git commit -am "Release X.X.X" && git push` (where X.Y.Z is the version you set in step 1)
 14. Create a PR from [master](../../tree/master) to [release](../../tree/release)
+15. Using the "Edit release note" button, add the changelog items to the newly created tag on GitLab to make it an official Release (https://gitlab.com/leinardi/gkraken/-/tags)
+16. Announce the new release on the App's Discord channel
