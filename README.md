@@ -64,6 +64,7 @@ For older Fedora releases you can use [COPR package](https://copr.fedorainfraclo
 | --------------------- | ------------------ | ------------- | --------------------------- | ----- | ----------- | -------------- |
 | Arch Linux            | pkg-config         | python        | gobject-introspection       | meson | ninja       | appstream-glib |
 | Fedora                | pkgconf-pkg-config | python3-devel | gobject-introspection-devel | meson | ninja-build | appstream-util |
+| OpenSUSE              | pkgconf-pkg-config | python3-devel | gobject-introspection-devel | meson | ninja-build | appstream-glib |
 | Ubuntu                | pkg-config         | python3-dev   | libgirepository1.0-dev      | meson | ninja-build | appstream-util |
 
 
@@ -72,6 +73,7 @@ For older Fedora releases you can use [COPR package](https://copr.fedorainfraclo
 | --------------------- | ----------- | ----------- | --------------------------- | ------------------------ | ---------------------------------- | --------- |
 | Arch Linux            | python      | python-pip  | gobject-introspection       | libappindicator3         | gnome-shell-extension-appindicator | libdazzle |
 | Fedora                | python3     | python3-pip | gobject-introspection-devel | libappindicator-gtk3     | gnome-shell-extension-appindicator | libdazzle |
+| OpenSUSE              | python3     | python3-pip | gobject-introspection       | libappindicator3-1       | gnome-shell-extension-appindicator | typelib-1_0-libdazzle-1_0 |
 | Ubuntu                | python3     | python3-pip | libgirepository1.0-dev      | gir1.2-appindicator3-0.1 | gnome-shell-extension-appindicator | libdazzle |
 
 plus all the Python dependencies listed in [requirements.txt](requirements.txt)
