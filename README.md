@@ -74,7 +74,7 @@ For older Fedora releases you can use [COPR package](https://copr.fedorainfraclo
 | Arch Linux            | python      | python-pip  | gobject-introspection       | libappindicator3         | gnome-shell-extension-appindicator | libdazzle |
 | Fedora                | python3     | python3-pip | gobject-introspection-devel | libappindicator-gtk3     | gnome-shell-extension-appindicator | libdazzle |
 | OpenSUSE              | python3     | python3-pip | gobject-introspection       | libappindicator3-1       | gnome-shell-extension-appindicator | typelib-1_0-libdazzle-1_0 |
-| Ubuntu                | python3     | python3-pip | libgirepository1.0-dev      | gir1.2-appindicator3-0.1 | gnome-shell-extension-appindicator | libdazzle |
+| Ubuntu                | python3     | python3-pip | libgirepository1.0-dev      | gir1.2-appindicator3-0.1 | gnome-shell-extension-appindicator | libdazzle-1.0-dev |
 
 plus all the Python dependencies listed in [requirements.txt](requirements.txt)
 
