@@ -1,3 +1,9 @@
+Version 0.15.5
+==============
+Released: 2022-04-01
+
+ * Updated several dependencies
+
 Version 0.15.4
 ==============
 Released: 2021-08-28

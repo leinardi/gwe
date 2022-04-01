@@ -12,5 +12,6 @@
         </value>
       </option>
     </inspection_tool>
+    <inspection_tool class="Pylint" enabled="true" level="ERROR" enabled_by_default="true" />
   </profile>
 </component>
