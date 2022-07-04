@@ -16,9 +16,9 @@
 # along with gst.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 
-import rx
+import reactivex
 from injector import singleton, inject
-from rx import Observable
+from reactivex import Observable
 
 from gwe.repository.nvidia_repository import NvidiaRepository
 
@@ -33,5 +33,5 @@ class SetFanSpeedInteractor:
 
     def execute(self, gpu_index: int, speed: int = 100, manual_control: bool = True) -> Observable:
         _LOG.debug("SetSpeedProfileInteractor.execute()")
-        return rx.defer(
-            lambda _: rx.just(self._nvidia_repository.set_fan_speed(gpu_index, speed, manual_control)))
+        return reactivex.defer(
+            lambda _: reactivex.just(self._nvidia_repository.set_fan_speed(gpu_index, speed, manual_control)))

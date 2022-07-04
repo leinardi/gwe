@@ -16,9 +16,9 @@
 # along with gst.  If not, see <http://www.gnu.org/licenses/>.
 from enum import Enum, auto
 
-import rx
+import reactivex
 from injector import singleton, inject
-from rx import Observable
+from reactivex import Observable
 
 from gwe.repository.nvidia_repository import NvidiaRepository
 
@@ -36,7 +36,7 @@ class HasNvidiaDriverInteractor:
         self._nvidia_repository = nvidia_repository
 
     def execute(self) -> Observable:
-        return rx.defer(lambda _: rx.just(self._has_nvidia_driver()))
+        return reactivex.defer(lambda _: reactivex.just(self._has_nvidia_driver()))
 
     def _has_nvidia_driver(self) -> HasNvidiaDriverResult:
         if not self._nvidia_repository.has_nv_control_extension():

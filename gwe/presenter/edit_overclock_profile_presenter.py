@@ -20,10 +20,10 @@ from typing import Any, Optional
 
 from gi.repository import Gtk, GLib
 from injector import singleton, inject
-from rx import operators
-from rx.disposable import CompositeDisposable
-from rx.scheduler import ThreadPoolScheduler
-from rx.scheduler.mainloop import GtkScheduler
+from reactivex import operators
+from reactivex.disposable import CompositeDisposable
+from reactivex.scheduler import ThreadPoolScheduler
+from reactivex.scheduler.mainloop import GtkScheduler
 
 from gwe.interactor.set_overclock_interactor import SetOverclockInteractor
 from gwe.model.overclock_profile import OverclockProfile

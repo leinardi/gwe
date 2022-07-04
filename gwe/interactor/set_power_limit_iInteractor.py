@@ -16,9 +16,9 @@
 # along with gst.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 
-import rx
+import reactivex
 from injector import singleton, inject
-from rx import Observable
+from reactivex import Observable
 
 from gwe.repository.nvidia_repository import NvidiaRepository
 
@@ -33,4 +33,4 @@ class SetPowerLimitInteractor:
 
     def execute(self, gpu_index: int, limit: int) -> Observable:
         _LOG.debug("SetPowerLimitInteractor.execute()")
-        return rx.defer(lambda _: rx.just(self._nvidia_repository.set_power_limit(gpu_index, limit)))
+        return reactivex.defer(lambda _: reactivex.just(self._nvidia_repository.set_power_limit(gpu_index, limit)))
