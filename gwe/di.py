@@ -121,7 +121,7 @@ class ProviderModule(Module):
 
     @singleton
     @provider
-    def provide_overclock_profile_changed_subject(self) -> SettingChangedSubject:
+    def provide_setting_changed_subject(self) -> SettingChangedSubject:
         return SettingChangedSubject(Subject())
 
 
