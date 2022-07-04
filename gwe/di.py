@@ -21,8 +21,8 @@ from typing import NewType
 from gi.repository import Gtk
 from injector import Module, provider, singleton, Injector
 from peewee import SqliteDatabase
-from rx.disposable import CompositeDisposable
-from rx.subject import Subject
+from reactivex.disposable import CompositeDisposable
+from reactivex.subject import Subject
 
 from gwe.conf import APP_PACKAGE_NAME, APP_MAIN_UI_NAME, APP_DB_NAME, APP_EDIT_FAN_PROFILE_UI_NAME, \
     APP_PREFERENCES_UI_NAME, APP_HISTORICAL_DATA_UI_NAME, APP_EDIT_OC_PROFILE_UI_NAME
