@@ -205,6 +205,38 @@ To know more about Coolbits and how to enable them click
 [here](https://wiki.archlinux.org/index.php/NVIDIA/Tips_and_tricks#Enabling_overclocking)
 (to enable both OC and Fan control you need to set it to `12`).
 
+### Can I make the power limit survive a reboot?
+GWE cannot set the power limit automatically because, to change this value, root permission is required.  
+If your distribution is using systemd, you can easily set the power limit on boot creating a custom service.
+
+Simply create a new file `/etc/systemd/system/nvidia-tdp.timer` and paste the following text inside:
+```
+[Unit]
+Description=Set NVIDIA power limit on boot
+
+[Timer]
+OnBootSec=5
+
+[Install]
+WantedBy=timers.target
+```
+
+Then create another file `/etc/systemd/system/nvidia-tdp.service` and paste the following text inside (replace `XXX` with the power limit value you want to set):
+```
+[Unit]
+Description=Set NVIDIA power limit
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/nvidia-smi -pm 1
+ExecStart=/usr/bin/nvidia-smi -pl XXX
+```
+
+Finally, run the following command:
+```
+sudo systemctl enable nvidia-tdp.timer
+```
+
 ### The Flatpak version of GWE is not using my theme, how can I fix it?
 To fix this issue install a Gtk theme from Flathub. This way, Flatpak applications will automatically pick the
 installed Gtk theme and use that instead of Adwaita.
