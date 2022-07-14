@@ -1,6 +1,6 @@
-injector==0.20.0
+injector==0.20.1
 matplotlib==3.5.2
-peewee==3.15.0
+peewee==3.15.1
 py3nvml==0.2.7
 PyGObject==3.42.1
 python-xlib==0.31
