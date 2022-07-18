@@ -28,11 +28,10 @@ from reactivex.disposable import CompositeDisposable
 from reactivex.subject import Subject
 
 from gwe.conf import APP_PACKAGE_NAME, APP_MAIN_UI_NAME, APP_DB_NAME, APP_EDIT_FAN_PROFILE_UI_NAME, \
-    APP_PREFERENCES_UI_NAME, APP_HISTORICAL_DATA_UI_NAME, APP_EDIT_OC_PROFILE_UI_NAME
+    APP_PREFERENCES_UI_NAME, APP_HISTORICAL_DATA_UI_NAME, APP_EDIT_OC_PROFILE_UI_NAME, APP_DB_VERSION
 from gwe.util.path import get_config_path
 
 _LOG = logging.getLogger(__name__)
-_CURRENT_DB_VERSION = 1
 
 SpeedStepChangedSubject = NewType('SpeedStepChangedSubject', Subject)
 FanProfileChangedSubject = NewType('FanProfileChangedSubject', Subject)
@@ -100,7 +99,8 @@ class ProviderModule(Module):
         _LOG.debug("provide CompositeDisposable")
         return CompositeDisposable()
 
-    def _create_database(self, path_to_db):
+    @staticmethod
+    def _create_database(path_to_db: str) -> SqliteDatabase:
         database = SqliteDatabase(path_to_db)
 
         if os.path.exists(path_to_db):
@@ -119,7 +119,7 @@ class ProviderModule(Module):
 
                 database.commit()
         else:
-            database.pragma('user_version', _CURRENT_DB_VERSION, permanent=True)
+            database.pragma('user_version', APP_DB_VERSION, permanent=True)
 
         return database
 
