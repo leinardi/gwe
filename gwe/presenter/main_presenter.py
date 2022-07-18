@@ -346,7 +346,7 @@ class MainPresenter:
                     try:
                         speed = round(self._get_fan_duty(self._fan_profile_applied, gpu_status.temp.gpu))
                         if self._fan_profile_applied.vbios_silent_mode and \
-                        gpu_status.temp.gpu < self._fan_profile_applied.steps[0].temperature:
+                                gpu_status.temp.gpu < self._fan_profile_applied.steps[0].temperature:
                             self._set_fan_speed(gpu_status.index, manual_control=False)
                         elif self._should_update_fan_duty(speed):
                             self._set_fan_speed(gpu_status.index, round(speed))

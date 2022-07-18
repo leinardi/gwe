@@ -49,7 +49,10 @@ class EditFanProfileViewInterface:
     def has_a_step_selected(self) -> bool:
         raise NotImplementedError()
 
-    def refresh_controls(self, step: Optional[SpeedStep] = None, unselect_list: bool = False) -> None:
+    def refresh_controls(self,
+                         step: Optional[SpeedStep] = None,
+                         unselect_list: bool = False,
+                         profile: Optional[FanProfile] = None) -> None:
         raise NotImplementedError()
 
     def refresh_liststore(self, profile: FanProfile) -> None:

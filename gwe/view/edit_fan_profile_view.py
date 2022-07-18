@@ -140,7 +140,10 @@ class EditFanProfileView(EditFanProfileViewInterface):
 
         self._plot_chart(get_fan_profile_data(profile))
 
-    def refresh_controls(self, step: Optional[SpeedStep] = None, unselect_list: bool = False, profile: Optional[FanProfile] = None) -> None:
+    def refresh_controls(self,
+                         step: Optional[SpeedStep] = None,
+                         unselect_list: bool = False,
+                         profile: Optional[FanProfile] = None) -> None:
         if profile:
             self._vbios_silent_mode.set_active(profile.vbios_silent_mode)
             self._vbios_silent_mode.set_sensitive(profile.steps)
