@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with gst.  If not, see <http://www.gnu.org/licenses/>.
-from peewee import ForeignKeyField, DateTimeField, SQL, SqliteDatabase
+from peewee import ForeignKeyField, DateTimeField, BooleanField, SQL, SqliteDatabase
 from playhouse.signals import Model
 
 from gwe.di import INJECTOR
@@ -24,6 +24,7 @@ from gwe.model.fan_profile import FanProfile
 class CurrentFanProfile(Model):
     profile = ForeignKeyField(FanProfile, unique=True)
     timestamp = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
+    vbios_silent_mode = BooleanField(default=False)
 
     class Meta:
         legacy_table_names = False
