@@ -37,6 +37,7 @@ class FanProfile(Model):
     name = CharField()
     read_only = BooleanField(default=False)
     timestamp = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
+    vbios_silent_mode = BooleanField(default=False)
 
     class Meta:
         legacy_table_names = False

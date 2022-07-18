@@ -89,7 +89,11 @@ class EditFanProfilePresenter:
 
     def refresh_controls(self, step: Optional[SpeedStep] = None, deselect_list: bool = False) -> None:
         self._selected_step = step
-        self.view.refresh_controls(step, deselect_list)
+        self.view.refresh_controls(step, deselect_list, self._profile)
+
+    def vbios_silent_mode_toggled(self, widget: Gtk.ToggleButton) -> None:
+        self._profile.vbios_silent_mode = widget.get_active()
+        self._profile.save()
 
     def on_step_selected(self, tree_selection: Gtk.TreeSelection) -> None:
         _LOG.debug("selected")
