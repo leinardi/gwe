@@ -36,7 +36,7 @@ def set_autostart_entry(is_enabled: bool) -> None:
         for key, value in DESKTOP_ENTRY.items():
             desktop_parser.set(key, value)
         desktop_parser.set(DESKTOP_ENTRY_ICON, get_data_path(APP_ICON_NAME))
-        desktop_parser.set(DESKTOP_ENTRY_EXEC, f'{APP_PACKAGE_NAME} --hide-window')
+        desktop_parser.set(DESKTOP_ENTRY_EXEC, f'{APP_PACKAGE_NAME} --hide-window --delay')
 
     desktop_parser.set(AUTOSTART_FLAG, str(is_enabled).lower())
     desktop_parser.write()
