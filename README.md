@@ -2,6 +2,11 @@
 GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video card
 and graphics processor.
 
+# 🔴 🔴 Looking for new maintainer(s)! 🔴 🔴
+Most probably my next GPU will be an AMD and, if that happens, I won't be able to provide adequate support for this project anymore. For this reason I'm looking for new maintainer(s).
+If you are interested and have adequate knowledge of Python, please get in touch replying to this issue:
+https://gitlab.com/leinardi/gwe/-/issues/195
+
 ## 💡 Features
 <img src="/data/icons/hicolor/48x48@2x/apps/com.leinardi.gwe.png" width="96" align="right" hspace="0" />
 
