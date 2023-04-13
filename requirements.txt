@@ -1,9 +1,9 @@
 injector==0.20.1
-matplotlib==3.5.2
-peewee==3.15.1
+matplotlib==3.7.1
+peewee==3.16.0
 py3nvml==0.2.7
-PyGObject==3.42.1
-python-xlib==0.31
+PyGObject==3.44.1
+python-xlib==0.33
 pyxdg==0.28
-requests==2.28.1
-reactivex==4.0.3
+requests==2.28.2
+reactivex==4.0.4
