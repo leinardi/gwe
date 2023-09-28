@@ -248,8 +248,10 @@ class MainView(MainViewInterface):
                 minimum = gpu_status.power.minimum
                 maximum = gpu_status.power.maximum
                 default = gpu_status.power.default
-                if minimum is not None and maximum is not None and default is not None and minimum != maximum:
-                    limit = gpu_status.power.limit
+                limit = gpu_status.power.limit
+                if (minimum is not None and maximum is not None
+                        and default is not None and limit is not None
+                        and minimum != maximum):
                     self._power_limit_adjustment.set_lower(minimum)
                     self._power_limit_adjustment.set_upper(maximum)
                     self._power_limit_adjustment.set_value(limit)
