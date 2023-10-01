@@ -30,7 +30,7 @@ def set_log_level(level: int) -> None:
     elif level <= logging.INFO:
         log_format = LOG_INFO_FORMAT
     logging.basicConfig(level=level, format=log_format)
-    logging.getLogger("Rx").setLevel(logging.INFO)
+    logging.getLogger("reactivex").setLevel(logging.INFO)
     logging.getLogger('injector').setLevel(logging.INFO)
     logging.getLogger('peewee').setLevel(logging.INFO)
     logging.getLogger('matplotlib').setLevel(logging.INFO)

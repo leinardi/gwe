@@ -20,13 +20,13 @@ import logging
 import multiprocessing
 from typing import Optional, Any, List, Tuple
 
-import rx
+import reactivex
 from gi.repository import GLib
 from injector import inject, singleton
-from rx import Observable, operators
-from rx.disposable import CompositeDisposable
-from rx.scheduler import ThreadPoolScheduler
-from rx.scheduler.mainloop import GtkScheduler
+from reactivex import Observable, operators
+from reactivex.disposable import CompositeDisposable
+from reactivex.scheduler import ThreadPoolScheduler
+from reactivex.scheduler.mainloop import GtkScheduler
 
 from gwe.conf import APP_NAME, APP_SOURCE_URL, APP_VERSION, APP_ID
 from gwe.di import FanProfileChangedSubject, SpeedStepChangedSubject, OverclockProfileChangedSubject, \
@@ -310,7 +310,7 @@ class MainPresenter:
     def _start_refresh(self) -> None:
         _LOG.debug("start refresh")
         refresh_interval = self._settings_interactor.get_int('settings_refresh_interval')
-        self._composite_disposable.add(rx.interval(refresh_interval, scheduler=self._scheduler).pipe(
+        self._composite_disposable.add(reactivex.interval(refresh_interval, scheduler=self._scheduler).pipe(
             operators.start_with(0),
             operators.subscribe_on(self._scheduler),
             operators.flat_map(lambda _: self._get_status()),
@@ -345,7 +345,10 @@ class MainPresenter:
                 elif gpu_status.temp.gpu:
                     try:
                         speed = round(self._get_fan_duty(self._fan_profile_applied, gpu_status.temp.gpu))
-                        if self._should_update_fan_duty(speed):
+                        if self._fan_profile_applied.vbios_silent_mode and \
+                                gpu_status.temp.gpu < self._fan_profile_applied.steps[0].temperature:
+                            self._set_fan_speed(gpu_status.index, manual_control=False)
+                        elif self._should_update_fan_duty(speed):
                             self._set_fan_speed(gpu_status.index, round(speed))
                     except ValueError:
                         _LOG.exception(f'Unable to parse temperature {gpu_status.temp.gpu}')
@@ -490,7 +493,7 @@ class MainPresenter:
     def _log_exception_return_empty_observable(self, ex: Exception, _: Observable) -> Observable:
         _LOG.exception(f"Err = {ex}")
         self.main_view.set_statusbar_text(str(ex))
-        observable = rx.just(None)
+        observable = reactivex.just(None)
         assert isinstance(observable, Observable)
         return observable
 

@@ -14,9 +14,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with gst.  If not, see <http://www.gnu.org/licenses/>.
-import rx
+import reactivex
 from injector import singleton, inject
-from rx import Observable
+from reactivex import Observable
 
 from gwe.repository.nvidia_repository import NvidiaRepository
 
@@ -29,4 +29,4 @@ class GetStatusInteractor:
 
     def execute(self) -> Observable:
         # _LOG.debug("GetStatusInteractor.execute()")
-        return rx.defer(lambda _: rx.just(self._nvidia_repository.get_status()))
+        return reactivex.defer(lambda _: reactivex.just(self._nvidia_repository.get_status()))

@@ -20,9 +20,9 @@ from distutils.version import LooseVersion
 from typing import Optional
 
 import requests
-import rx
+import reactivex
 from injector import singleton, inject
-from rx import Observable
+from reactivex import Observable
 
 from gwe.conf import APP_ID, APP_VERSION
 
@@ -39,7 +39,7 @@ class CheckNewVersionInteractor:
 
     def execute(self) -> Observable:
         _LOG.debug("CheckNewVersionInteractor.execute()")
-        return rx.defer(lambda _: rx.just(self._check_new_version()))
+        return reactivex.defer(lambda _: reactivex.just(self._check_new_version()))
 
     def _check_new_version(self) -> Optional[LooseVersion]:
         req = requests.get(self.URL_PATTERN.format(package=APP_ID))

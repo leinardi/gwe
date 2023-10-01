@@ -19,10 +19,11 @@ from typing import Dict, Any
 APP_PACKAGE_NAME = "gwe"
 APP_NAME = "GWE"
 APP_ID = "com.leinardi.gwe"
-APP_VERSION = "0.15.5"
+APP_VERSION = "0.15.6"
 APP_ICON_NAME = APP_ID
 APP_ICON_NAME_SYMBOLIC = APP_ID + "-symbolic"
 APP_DB_NAME = APP_PACKAGE_NAME + ".db"
+APP_DB_VERSION = 1
 APP_MAIN_UI_NAME = "main.glade"
 APP_EDIT_FAN_PROFILE_UI_NAME = "edit_fan_profile.glade"
 APP_EDIT_OC_PROFILE_UI_NAME = "edit_oc_profile.glade"

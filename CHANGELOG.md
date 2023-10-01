@@ -1,3 +1,11 @@
+Version 0.15.6
+==============
+Released: 2023-09-29
+
+ * Fix #206: App crash if power limit is not available
+ * VBIOS fan silent mode feature
+ * Updated several dependencies
+
 Version 0.15.5
 ==============
 Released: 2022-04-01

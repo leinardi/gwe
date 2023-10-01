@@ -22,7 +22,12 @@ from gwe.model.speed_step import SpeedStep
 
 
 def load_fan_db_default_data() -> None:
-    FanProfile.create(name="Auto (VBIOS controlled)", type=FanProfileType.AUTO.value, read_only=True)
+    FanProfile.create(
+        name="Auto (VBIOS controlled)",
+        type=FanProfileType.AUTO.value,
+        read_only=True,
+        vbios_silent_mode=False
+    )
     fan_silent = FanProfile.create(name="Custom")
 
     # Fan Silent

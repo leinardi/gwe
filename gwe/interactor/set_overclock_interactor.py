@@ -16,9 +16,9 @@
 # along with gst.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 
-import rx
+import reactivex
 from injector import singleton, inject
-from rx import Observable
+from reactivex import Observable
 
 from gwe.repository.nvidia_repository import NvidiaRepository
 
@@ -33,5 +33,5 @@ class SetOverclockInteractor:
 
     def execute(self, gpu_index: int, perf: int, gpu_offset: int, memory_offset: int) -> Observable:
         _LOG.debug("SetOverclockInteractor.execute()")
-        return rx.defer(
-            lambda _: rx.just(self._nvidia_repository.set_overclock(gpu_index, perf, gpu_offset, memory_offset)))
+        return reactivex.defer(
+            lambda _: reactivex.just(self._nvidia_repository.set_overclock(gpu_index, perf, gpu_offset, memory_offset)))

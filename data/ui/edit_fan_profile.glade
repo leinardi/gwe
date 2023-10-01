@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 
+<!-- Generated with glade 3.22.2 
 
 Copyright (C) 
 
@@ -186,6 +186,22 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkCheckButton" id="vbios_silent_mode">
+                    <property name="label" translatable="yes">VBIOS control on low temps</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="tooltip_text" translatable="yes">Some GPUs (e.g. RTX 3060 Ti) do not allow fan speed to be set below a certain level (e.g. 30%) in manual speed control mode. This option allows you to disable the fans by switching to VBIOS controller mode when the temperature is below the minimum temperature on the chart. May produce undefined behavior. This option is useless on GPUs that allow any fan speed to be set.</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="vbios_silent_mode_toggled" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -345,7 +361,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
               </object>

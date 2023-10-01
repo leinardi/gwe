@@ -27,6 +27,15 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+        <release date="2023-09-29" version="0.15.6">
+            <description>
+                <ul>
+                    <li>Fix #206: App crash if power limit is not available</li>
+                    <li>VBIOS fan silent mode feature</li>
+                    <li>Updated several dependencies</li>
+                </ul>
+            </description>
+        </release>
         <release date="2022-04-01" version="0.15.5">
             <description>
                 <ul>

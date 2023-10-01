@@ -57,6 +57,8 @@ class EditFanProfileView(EditFanProfileViewInterface):
         self._profile_name_entry: Gtk.Entry = self._builder \
             .get_object('profile_name_entry')
         self._liststore: Gtk.ListStore = self._builder.get_object('liststore')
+        self._vbios_silent_mode: Gtk.CheckButton = self._builder \
+            .get_object("vbios_silent_mode")
         self._temperature_adjustment: Gtk.Adjustment = self._builder \
             .get_object('temperature_adjustment')
         self._duty_adjustment: Gtk.Adjustment = self._builder \
@@ -106,7 +108,7 @@ class EditFanProfileView(EditFanProfileViewInterface):
         self._treeselection.unselect_all()
         self._profile_name_entry.set_text(profile.name)
         self.refresh_liststore(profile)
-        self.refresh_controls()
+        self.refresh_controls(profile=profile)
         self._dialog.show_all()
 
     def hide(self) -> None:
@@ -138,7 +140,14 @@ class EditFanProfileView(EditFanProfileViewInterface):
 
         self._plot_chart(get_fan_profile_data(profile))
 
-    def refresh_controls(self, step: Optional[SpeedStep] = None, unselect_list: bool = False) -> None:
+    def refresh_controls(self,
+                         step: Optional[SpeedStep] = None,
+                         unselect_list: bool = False,
+                         profile: Optional[FanProfile] = None) -> None:
+        if profile:
+            self._vbios_silent_mode.set_active(profile.vbios_silent_mode)
+            self._vbios_silent_mode.set_sensitive(profile.steps)
+
         if unselect_list:
             self._treeselection.unselect_all()
         if step is None:
