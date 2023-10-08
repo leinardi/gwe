@@ -72,6 +72,22 @@ For older Fedora releases you can use [COPR package](https://copr.fedorainfraclo
 | OpenSUSE              | pkgconf-pkg-config | python3-devel | gobject-introspection-devel | meson | ninja-build | appstream-glib |
 | Ubuntu                | pkg-config         | python3-dev   | libgirepository1.0-dev      | meson | ninja-build | appstream-util |
 
+Arch Linux:
+```bash
+sudo pacman -S pkg-config python gobject-introspection meson ninja appstream-glib
+```
+Fedora:
+```bash
+sudo dnf install pkgconf-pkg-config python3-devel gobject-introspection-devel meson ninja-build appstream-util
+```
+OpenSUSE:
+```bash
+sudo zypper install pkgconf-pkg-config python3-devel gobject-introspection-devel meson ninja-build appstream-glib
+```
+Ubuntu/Debian:
+```bash
+sudo apt install pkg-config python3-dev libgirepository1.0-dev meson ninja-build appstream-util
+```
 
 #### Run time dependencies
 | Distro      | Python 3.6+ | pip         | gobject-introspection       | libappindicator          | gnome-shell-extension-appindicator | libdazzle |
@@ -82,6 +98,29 @@ For older Fedora releases you can use [COPR package](https://copr.fedorainfraclo
 | Ubuntu      | python3     | python3-pip | libgirepository1.0-dev      | gir1.2-appindicator3-0.1 | gnome-shell-extension-appindicator | libdazzle-1.0-dev |
 | Debian      | python3     | python3-pip | libgirepository1.0-dev      | gir1.2-ayatanaappindicator3-0.1  | gnome-shell-extension-appindicator | libdazzle-1.0-dev |
 [comment]: <> (TODO: confirm if only debian and only KDE-Plasma. Might affect more systems and Desktop Environments)
+
+Arch Linux:
+```bash
+sudo pacman -S python python-pip gobject-introspection libappindicator3 gnome-shell-extension-appindicator libdazzle
+```
+
+Fedora:
+```bash
+sudo dnf install python3 python3-pip gobject-introspection-devel libappindicator-gtk3 gnome-shell-extension-appindicator libdazzle
+```
+OpenSUSE:
+```bash
+sudo zypper install python3 python3-pip gobject-introspection libappindicator3-1 gnome-shell-extension-appindicator typelib-1_0-libdazzle-1_0
+```
+Ubuntu:
+```bash
+sudo apt install python3 python3-pip libgirepository1.0-dev gir1.2-appindicator3-0.1 gnome-shell-extension-appindicator libdazzle-1.0-dev
+```
+
+Debian:
+```bash
+sudo apt install python3 python3-pip libgirepository1.0-dev gir1.2-ayatanaappindicator3-0.1 gnome-shell-extension-appindicator libdazzle-1.0-dev
+```
 
 plus all the Python dependencies listed in [requirements.txt](requirements.txt)
 
