@@ -74,14 +74,20 @@ For older Fedora releases you can use [COPR package](https://copr.fedorainfraclo
 
 
 #### Run time dependencies
-| Distro                | Python 3.6+ | pip         | gobject-introspection       | libappindicator          | gnome-shell-extension-appindicator | libdazzle |
-| --------------------- | ----------- | ----------- | --------------------------- | ------------------------ | ---------------------------------- | --------- |
-| Arch Linux            | python      | python-pip  | gobject-introspection       | libappindicator3         | gnome-shell-extension-appindicator | libdazzle |
-| Fedora                | python3     | python3-pip | gobject-introspection-devel | libappindicator-gtk3     | gnome-shell-extension-appindicator | libdazzle |
-| OpenSUSE              | python3     | python3-pip | gobject-introspection       | libappindicator3-1       | gnome-shell-extension-appindicator | typelib-1_0-libdazzle-1_0 |
-| Ubuntu                | python3     | python3-pip | libgirepository1.0-dev      | gir1.2-appindicator3-0.1 | gnome-shell-extension-appindicator | libdazzle-1.0-dev |
+| Distro      | Python 3.6+ | pip         | gobject-introspection       | libappindicator          | gnome-shell-extension-appindicator | libdazzle |
+|-------------| ----------- | ----------- | --------------------------- | ------------------------ | ---------------------------------- | --------- |
+| Arch Linux  | python      | python-pip  | gobject-introspection       | libappindicator3         | gnome-shell-extension-appindicator | libdazzle |
+| Fedora      | python3     | python3-pip | gobject-introspection-devel | libappindicator-gtk3     | gnome-shell-extension-appindicator | libdazzle |
+| OpenSUSE    | python3     | python3-pip | gobject-introspection       | libappindicator3-1       | gnome-shell-extension-appindicator | typelib-1_0-libdazzle-1_0 |
+| Ubuntu      | python3     | python3-pip | libgirepository1.0-dev      | gir1.2-appindicator3-0.1 | gnome-shell-extension-appindicator | libdazzle-1.0-dev |
+| Debian      | python3     | python3-pip | libgirepository1.0-dev      | gir1.2-ayatanaappindicator3-0.1  | gnome-shell-extension-appindicator | libdazzle-1.0-dev |
+[comment]: <> (TODO: confirm if only debian and only KDE-Plasma. Might affect more systems and Desktop Environments)
 
 plus all the Python dependencies listed in [requirements.txt](requirements.txt)
+
+For Debian (with KDE-Plasma) we have to use `--break-system-packages`. However, this will break things. Currently only matplotlib.
+Then we have to use `sudo pip3 uninstall matplotlib` and then `sudo apt reinstall python3-matplotlib`
+#### It is recommended to use the flatpak version for Debian.
 
 #### Clone project and install
 If you have not installed GWE yet:
