@@ -30,9 +30,14 @@ from gwe.model.fan_profile import FanProfile
 
 try:  # AppIndicator3 may not be installed
     import gi
-
     gi.require_version('AppIndicator3', '0.1')
     from gi.repository import AppIndicator3
+except (ImportError, ValueError):
+    AppIndicator3 = None
+try:  # AyatanaAppIndicator3 may not be installed
+    import gi
+    gi.require_version("AyatanaAppIndicator3", "0.1")
+    from gi.repository import AyatanaAppIndicator3 as AppIndicator3
 except (ImportError, ValueError):
     AppIndicator3 = None
 from gwe.di import MainBuilder
