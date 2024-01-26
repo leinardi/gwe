@@ -27,6 +27,15 @@
     <url type="bugtracker">https://gitlab.com/leinardi/gwe/issues</url>
     <update_contact>roberto@leinardi.com</update_contact>
     <releases>
+        <release date="2024-01-26" version="0.15.7">
+            <description>
+                <ul>
+                    <li>Fixes #123: Fixed hysteresis calculation (thank you @m.schababerle!)</li>
+                    <li>Fixed appIndicator for Debian KDE Plasma (thank you @johanno!)</li>
+                    <li>Updated some dependencies</li>
+                </ul>
+            </description>
+        </release>
         <release date="2023-09-29" version="0.15.6">
             <description>
                 <ul>

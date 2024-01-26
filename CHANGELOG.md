@@ -1,3 +1,11 @@
+Version 0.15.7
+==============
+Released: 2024-01-26
+
+ * Fixes #123: Fixed hysteresis calculation (thank you @m.schababerle!)
+ * Fixed appIndicator for Debian KDE Plasma (thank you @johanno!)
+ * Updated some dependencies
+
 Version 0.15.6
 ==============
 Released: 2023-09-29
