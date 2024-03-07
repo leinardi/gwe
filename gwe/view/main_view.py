@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with gwe.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import logging
 from collections import OrderedDict
 from typing import Optional, Dict, List, Tuple, Any
@@ -238,9 +239,9 @@ class MainView(MainViewInterface):
                 self._set_label_markup(self._temp_shutdown_value,
                                        "<span size=\"large\">{}</span> °C", gpu_status.temp.shutdown)
                 self._overclock_frame.set_sensitive(gpu_status.overclock.available)
-                self._overclock_warning_label.set_visible(not gpu_status.overclock.available)
+                self._overclock_warning_label.set_visible(not gpu_status.overclock.available and not os.environ['WAYLAND_DISPLAY'])
                 self._fan_profile_frame.set_sensitive(gpu_status.fan.control_allowed)
-                self._fan_warning_label.set_visible(not gpu_status.fan.control_allowed)
+                self._fan_warning_label.set_visible(not gpu_status.fan.control_allowed and not os.environ['WAYLAND_DISPLAY'])
                 self._remove_level_bar_offsets(self._info_gpu_usage_levelbar)
                 self._remove_level_bar_offsets(self._info_memory_usage_levelbar)
                 self._remove_level_bar_offsets(self._info_encoder_usage_levelbar)
