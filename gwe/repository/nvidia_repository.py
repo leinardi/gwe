@@ -85,6 +85,18 @@ class NvidiaRepository:
         return False
 
     @synchronized_with_attr("_lock")
+    def has_min_driver_version(self) -> bool:
+        try:
+            py3nvml.nvmlInit()
+            driver = self._nvml_get_val(py3nvml.nvmlSystemGetDriverVersion)
+            py3nvml.nvmlShutdown()
+        except:
+            _LOG.exception("Error while checking NVML Shared Library")
+            return False
+        if int(driver.split(".", 1)[0]) >= 535:
+            return True
+
+    @synchronized_with_attr("_lock")
     def get_status(self) -> Optional[Status]:
         xlib_display = None
         try:

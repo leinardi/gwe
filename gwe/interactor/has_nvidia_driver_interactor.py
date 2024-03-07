@@ -14,6 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with gst.  If not, see <http://www.gnu.org/licenses/>.
+import os
 from enum import Enum, auto
 
 import reactivex
@@ -27,6 +28,7 @@ class HasNvidiaDriverResult(Enum):
     POSITIVE = auto()
     NV_CONTROL_MISSING = auto()
     NVML_MISSING = auto()
+    DRIVER_VERSION_ERROR = auto()
 
 
 @singleton
@@ -39,8 +41,10 @@ class HasNvidiaDriverInteractor:
         return reactivex.defer(lambda _: reactivex.just(self._has_nvidia_driver()))
 
     def _has_nvidia_driver(self) -> HasNvidiaDriverResult:
-        if not self._nvidia_repository.has_nv_control_extension():
-            return HasNvidiaDriverResult.NV_CONTROL_MISSING
         if not self._nvidia_repository.has_nvml_shared_library():
             return HasNvidiaDriverResult.NVML_MISSING
+        if not self._nvidia_repository.has_nv_control_extension() and not os.environ['WAYLAND_DISPLAY']:
+            return HasNvidiaDriverResult.NV_CONTROL_MISSING
+        if not self._nvidia_repository.has_min_driver_version():
+            return HasNvidiaDriverResult.DRIVER_VERSION_ERROR
         return HasNvidiaDriverResult.POSITIVE

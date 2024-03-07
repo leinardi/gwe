@@ -16,6 +16,7 @@
 # along with gwe.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import os
 import logging
 import multiprocessing
 from typing import Optional, Any, List, Tuple
@@ -247,16 +248,7 @@ class MainPresenter:
         ).subscribe(on_next=self._handle_has_nvidia_driver_result))
 
     def _handle_has_nvidia_driver_result(self, result: HasNvidiaDriverResult) -> None:
-        if result == HasNvidiaDriverResult.NV_CONTROL_MISSING:
-            _LOG.error("NV-CONTROL missing!")
-            self.main_view.show_error_message_dialog(
-                "NV-CONTROL X extension not found",
-                "It was not possible to find the NVIDIA NV-CONTROL X extension on the current Display device.\n"
-                "Please make sure that the NVIDIA proprietary display drivers are installed and they support your "
-                "current GPU"
-            )
-            get_default_application().quit()
-        elif result == HasNvidiaDriverResult.NVML_MISSING:
+        if result == HasNvidiaDriverResult.NVML_MISSING:
             _LOG.error("NVML missing!")
             message = "It was not possible to find the NVML Shared Library.\n" \
                       "Please make sure that the NVIDIA proprietary display drivers are installed and they support " \
@@ -266,8 +258,23 @@ class MainPresenter:
                            "to fetch the latest version of org.freedesktop.Platform.GL.nvidia."
             self.main_view.show_error_message_dialog("NVML Shared Library not found", message)
             get_default_application().quit()
-        else:
-            self._start_refresh()
+        elif result == HasNvidiaDriverResult.NV_CONTROL_MISSING and not os.environ['WAYLAND_DISPLAY']:
+            _LOG.error("NV-CONTROL missing!")
+            self.main_view.show_error_message_dialog(
+                "NV-CONTROL X extension not found",
+                "It was not possible to find the NVIDIA NV-CONTROL X extension on the current Display device.\n"
+                "Please make sure that the NVIDIA proprietary display drivers are installed and they support your "
+                "current GPU"
+            )
+            get_default_application().quit()
+        elif result == HasNvidiaDriverResult.DRIVER_VERSION_ERROR and os.environ['WAYLAND_DISPLAY']:
+            _LOG.error("Driver version too old!")
+            self.main_view.show_error_message_dialog(
+                "Driver version too old",
+                "Please make sure to have at least the 535 series of drivers installed."
+            )
+            get_default_application().quit()
+        self._start_refresh()
 
     def _register_db_listeners(self) -> None:
         self._speed_step_changed_subject.subscribe(on_next=self._on_speed_step_list_changed,
