@@ -24,36 +24,6 @@ you can watch the following How To made by [Intelligent Gaming](https://www.yout
 
 [![How To Overclock And Control Fans On An nVidia Graphic Card In Linux - Green With Envy / GWE](https://img.youtube.com/vi/HAKe9ladLvc/0.jpg)](https://www.youtube.com/watch?v=HAKe9ladLvc)
 
-### Install from Flathub
-This is the preferred way to get GWE on any major distribution (Arch, Fedora, Linux Mint, openSUSE, Ubuntu, etc).
-
-If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
-
-Make sure to have the Flathub remote added to the current user:
-
-```bash
-flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-```
-
-#### Install
-```bash
-flatpak --user install flathub com.leinardi.gwe
-flatpak update # needed to be sure to have the latest org.freedesktop.Platform.GL.nvidia
-```
-
-#### Run
-```bash
-flatpak run com.leinardi.gwe
-```
-#### ⚠ Flatpak limitations
-##### Beta Drivers
-Currently [Flatpak does not support Nvidia Beta drivers](https://github.com/flathub/org.freedesktop.Platform.GL.nvidia/issues/1)
-like 396.54.09 or 415.22.05.
-
-##### Bumblebee and Optimus
-Currently [Flatpak does not support Bumblebee](https://github.com/flatpak/flatpak/issues/869). If you want to use GWE with Bumblebee
-you need to install it from the source code.
-
 ### Distro specific packages
 #### Arch Linux
 Install the `gwe` package from the AUR using your favourite helper, for example `yay -S gwe`.
@@ -135,7 +105,6 @@ optirun gwe --ctrl-display ":8"
 - [x] Add Refresh timeout to settings
 - [x] Add command line option to add desktop entry
 - [x] About dialog
-- [x] Distributing with PyPI
 - [x] Show chart of selected fan profile
 - [x] Allow to select and apply a fan profile
 - [x] Add/Delete/Edit multi speed fan profiles (fan curve)
@@ -146,9 +115,6 @@ optirun gwe --ctrl-display ":8"
 - [x] Add overclock profiles
 - [x] Add option to restore last applied overclock profile on app startup
 - [ ] Disable unsupported preferences
-- [x] Distributing with Flatpak
-- [x] Publishing on Flathub
-- [ ] Distributing with Snap
 - [x] Check if NV-CONTROL is available and tell the user if is not
 - [ ] Add support for multi-GPU
 - [ ] Allow to select profiles from app indicator
@@ -156,7 +122,7 @@ optirun gwe --ctrl-display ":8"
 
 <!--
 ## Application entry
-To add a desktop entry for the application run the following command (not supported by Flatpak):
+To add a desktop entry for the application run the following command:
 ```bash
 gwe --application-entry
 ```
@@ -174,33 +140,6 @@ If you don't want to create this custom rule you can run gwe as root
   |--autostart-on             |Enable automatic start of the app on login |    x   |         |
   |--autostart-off            |Disable automatic start of the app on login|    x   |         |
 
-## 🖥️ Build, install and run with Flatpak
-If you don't have Flatpak installed you can find step by step instructions [here](https://flatpak.org/setup/).
-
-Make sure to have the Flathub remote added to the current user:
-
-```bash
-flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-```
-
-### Clone the repo
-```bash
-git clone --recurse-submodules -j4 https://gitlab.com/leinardi/gwe.git
-```
-It is possible to build the local source or the remote one (the same that Flathub uses)
-### Local repository
-```bash
-./build.sh --flatpak-local --flatpak-install
-```
-### Remote repository
-```bash
-./build.sh --flatpak-remote --flatpak-install
-```
-### Run
-```bash
-flatpak run com.leinardi.gwe --debug
-```
-
 ## ❓ FAQ
 ### I see some message about CoolBits in the Overclock/Fan profile section, what's that?
 Coolbits was a Windows registry hack for Nvidia graphics cards Windows drivers, that allows
@@ -209,56 +148,6 @@ Something similar is available also on Linux and is the only way to enable Overc
 To know more about Coolbits and how to enable them click
 [here](https://wiki.archlinux.org/index.php/NVIDIA/Tips_and_tricks#Enabling_overclocking)
 (to enable both OC and Fan control you need to set it to `12`).
-
-### Can I make the power limit survive a reboot?
-GWE cannot set the power limit automatically because, to change this value, root permission is required.  
-If your distribution is using systemd, you can easily set the power limit on boot creating a custom service.
-
-Simply create a new file `/etc/systemd/system/nvidia-tdp.timer` and paste the following text inside:
-```
-[Unit]
-Description=Set NVIDIA power limit on boot
-
-[Timer]
-OnBootSec=5
-
-[Install]
-WantedBy=timers.target
-```
-
-Then create another file `/etc/systemd/system/nvidia-tdp.service` and paste the following text inside (replace `XXX` with the power limit value you want to set):
-```
-[Unit]
-Description=Set NVIDIA power limit
-
-[Service]
-Type=oneshot
-ExecStartPre=/usr/bin/nvidia-smi -pm 1
-ExecStart=/usr/bin/nvidia-smi -pl XXX
-```
-
-Finally, run the following command:
-```
-sudo systemctl enable nvidia-tdp.timer
-```
-
-### The Flatpak version of GWE is not using my theme, how can I fix it?
-To fix this issue install a Gtk theme from Flathub. This way, Flatpak applications will automatically pick the
-installed Gtk theme and use that instead of Adwaita.
-
-Use this command to get a list of all the available Gtk themes on Flathub:
-```bash
-flatpak --user remote-ls flathub | grep org.gtk.Gtk3theme
-```
-And then just install your preferred theme. For example, to install Yaru:
-```
-flatpak install flathub org.gtk.Gtk3theme.Yaru
-```
-
-### I have installed the app using Flatpak, but all the GWE fields are empty
-This issue can be usually solved by closing GWE, executing `flatpak update` and starting GWE again.
-This is necessary to be sure to have the latest [org.freedesktop.Platform.GL.nvidia](https://github.com/flathub/org.freedesktop.Platform.GL.nvidia).
-If, after the update, all the fields are still empty, feel free to open a new issue on the project tracker.
 
 ### Why the memory overclock offsets effectively applied does not match the one set in the Nvidia Settings app?
 Because Memory Transfer Rate, what Nvidia Settings reports and changes,
@@ -269,18 +158,11 @@ The Memory Transfer Rate is simply double the Memory Clock.
 ### Where are the settings and profiles stored on the filesystem?
 | Installation type |                     Location                     |
 |-------------------|:------------------------------------------------:|
-| Flatpak           |        `$HOME/.var/app/com.leinardi.gwe/`        |
 | Source code       | `$XDG_CONFIG_HOME` (usually `$HOME/.config/gwe`) |
 
 ### GreenWithEnvy, why using such name?
 The name comes from the slogan of the GeForce 8 series, that was "Green with envy".
 Nvidia is meant to be pronounced "invidia", which means envy in Latin (and Italian). And their logo is green so, GreenWithEnvy
-
-## 💚 How to help the project
-### Help is needed for the following topics
- - Snap (see [#18](https://gitlab.com/leinardi/gwe/issues/18))
- - Getting current GTK theme text color (see [#36](https://gitlab.com/leinardi/gwe/issues/36))
- - Making Bumblebee work with Flatpak (see [#35](https://gitlab.com/leinardi/gwe/issues/35))
 
 ### Discord server
 If you want to help testing or developing it would be easier to get in touch using the discord server of the project: https://discord.gg/xBybdRt
@@ -292,6 +174,12 @@ Just write a message on the general channel saying how you want to help (test, d
 Something simple that everyone can do is to star it on both [GitLab](https://gitlab.com/leinardi/gwe) and [GitHub](https://github.com/leinardi/gwe).
 Feedback is always welcome: if you found a bug or would like to suggest a feature,
 feel free to open an issue on the [issue tracker](https://gitlab.com/leinardi/gwe/issues).
+
+## ⚠ Dropped Flatpak support
+Flatpak support (and any other sandboxed packaging like snap or appimage) has been dropped.
+The new design separates GWE into two parts, The GUI that only shows information and handes fans and
+a small subprocess that runs with elevated priveleges to apply overclocking settings. This step was
+necessary to include support for wayland. Other projects like [LACT](https://github.com/ilya-zlobintsev/LACT/blob/master/pkg/README.md#why-is-there-no-appimageflatpakdocker) have taken a similar approach.
 
 ## ⚠ Dropped PyPI support
 Development builds were previously distributed using PyPI. This way of distributing the software is simple
@@ -320,7 +208,6 @@ Thanks to:
  - @999eagle for maintaining the [AUR package](https://aur.archlinux.org/packages/gwe/)
  - @tim74 for maintaining the [COPR package](https://copr.fedorainfracloud.org/coprs/atim/gwe/)
  - Lighty for moderating the [Discord](https://discord.gg/YjPdNff) server
- - fbcotter for the [py3nvml](https://github.com/fbcotter/py3nvml/) library
  - all the devs of the [python-xlib](https://github.com/python-xlib/python-xlib/) library
  - tiheum for the [Faenza](https://www.deviantart.com/tiheum/art/Faenza-Icons-173323228) icons set, from which I took the current GWE launcher icon
  - all the people that helped testing and reported bugs
