@@ -258,7 +258,7 @@ class MainPresenter:
                            "to fetch the latest version of org.freedesktop.Platform.GL.nvidia."
             self.main_view.show_error_message_dialog("NVML Shared Library not found", message)
             get_default_application().quit()
-        elif result == HasNvidiaDriverResult.NV_CONTROL_MISSING and not os.environ['WAYLAND_DISPLAY']:
+        elif result == HasNvidiaDriverResult.NV_CONTROL_MISSING and 'WAYLAND_DISPLAY' not in os.environ:
             _LOG.error("NV-CONTROL missing!")
             self.main_view.show_error_message_dialog(
                 "NV-CONTROL X extension not found",
@@ -267,7 +267,7 @@ class MainPresenter:
                 "current GPU"
             )
             get_default_application().quit()
-        elif result == HasNvidiaDriverResult.DRIVER_VERSION_ERROR and os.environ['WAYLAND_DISPLAY']:
+        elif result == HasNvidiaDriverResult.DRIVER_VERSION_ERROR and 'WAYLAND_DISPLAY' in os.environ:
             _LOG.error("Driver version too old!")
             self.main_view.show_error_message_dialog(
                 "Driver version too old",

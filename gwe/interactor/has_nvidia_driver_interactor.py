@@ -43,7 +43,7 @@ class HasNvidiaDriverInteractor:
     def _has_nvidia_driver(self) -> HasNvidiaDriverResult:
         if not self._nvidia_repository.has_nvml_shared_library():
             return HasNvidiaDriverResult.NVML_MISSING
-        if not self._nvidia_repository.has_nv_control_extension() and not os.environ['WAYLAND_DISPLAY']:
+        if 'WAYLAND_DISPLAY' not in os.environ and not self._nvidia_repository.has_nv_control_extension():
             return HasNvidiaDriverResult.NV_CONTROL_MISSING
         if not self._nvidia_repository.has_min_driver_version():
             return HasNvidiaDriverResult.DRIVER_VERSION_ERROR
