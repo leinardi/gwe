@@ -63,6 +63,7 @@ def _cleanup() -> None:
         composite_disposable.dispose()
         nvidia_repository = INJECTOR.get(NvidiaRepository)
         nvidia_repository.set_all_gpus_fan_to_auto()
+        nvidia_repository.remove_elevated_process()
         database = INJECTOR.get(SqliteDatabase)
         database.close()
         # futures.thread._threads_queues.clear()

@@ -120,3 +120,8 @@ install_data(
   app_id + '.appdata.xml',
   install_dir: join_paths(get_option('datadir'), 'metainfo')
 )
+
+install_data(
+  app_id + '.pkexec.policy',
+  install_dir: join_paths(get_option('datadir'), 'polkit-1/actions')
+)
