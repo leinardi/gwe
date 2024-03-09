@@ -280,6 +280,7 @@ class MainPresenter:
                 "Please make sure to have at least the 535 series of drivers installed."
             )
             get_default_application().quit()
+        self._restore_card_state()
         self._start_refresh()
 
     def _register_db_listeners(self) -> None:
@@ -319,6 +320,23 @@ class MainPresenter:
     def _on_setting_list_changed(self, db_change: DbChange) -> None:
         if db_change.entry.key == 'settings_hysteresis' and self._fan_profile_applied:
             self.main_view.refresh_chart(self._fan_profile_applied)
+
+    def _restore_card_state(self) -> None:
+        if self._settings_interactor.get_bool('settings_load_last_profile'):
+            persistence_mode = self._settings_interactor.get_int('gfx_settings_persistence_mode')
+            power_limit = self._settings_interactor.get_int('gfx_settings_power_limit')
+            if persistence_mode >= 0:
+                self._composite_disposable.add(self._set_persistence_mode_interactor.execute(0, bool(persistence_mode)).pipe(
+                    operators.subscribe_on(self._scheduler),
+                    operators.observe_on(GtkScheduler(GLib)),
+                ).subscribe(on_next=self._handle_set_persistence_mode_result,
+                            on_error=self._handle_set_persistence_mode_result))
+            if power_limit >= 0:
+                self._composite_disposable.add(self._set_power_limit_interactor.execute(0, power_limit).pipe(
+                    operators.subscribe_on(self._scheduler),
+                    operators.observe_on(GtkScheduler(GLib)),
+                ).subscribe(on_next=self._handle_set_power_limit_result,
+                            on_error=self._handle_set_power_limit_result))
 
     def _start_refresh(self) -> None:
         _LOG.debug("start refresh")
@@ -525,9 +543,15 @@ class MainPresenter:
                     on_error=lambda e: _LOG.exception(f"Check new version error: {str(e)}")))
 
     def _handle_set_power_limit_result(self, result: Any) -> None:
+        if isinstance(result, bool) and result:
+            card, power_limit = self.main_view.get_power_limit()
+            self._settings_interactor.set_str('gfx_settings_power_limit', power_limit)
         self._handle_generic_set_result(result, "power limit")
 
     def _handle_set_persistence_mode_result(self, result: Any) -> None:
+        if isinstance(result, bool) and result:
+            card, persistence_mode = self.main_view.get_persistence_mode()
+            self._settings_interactor.set_str('gfx_settings_persistence_mode', int(persistence_mode))
         self._handle_generic_set_result(result, "persistence mode")
 
     def _handle_set_overclock_result(self, result: Any) -> None:

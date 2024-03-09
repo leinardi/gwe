@@ -56,9 +56,10 @@ class PreferencesView(PreferencesViewInterface):
 
     def refresh_settings(self, settings: Dict[str, Any]) -> None:
         for key, value in settings.items():
-            if isinstance(value, bool):
-                switch: Gtk.Switch = self._builder.get_object(key + '_switch')
-                switch.set_active(value)
-            elif isinstance(value, int):
-                spinbutton: Gtk.SpinButton = self._builder.get_object(key + '_spinbutton')
-                spinbutton.set_value(value)
+            if key[:3] != "gfx":
+                if isinstance(value, bool):
+                    switch: Gtk.Switch = self._builder.get_object(key + '_switch')
+                    switch.set_active(value)
+                elif isinstance(value, int):
+                    spinbutton: Gtk.SpinButton = self._builder.get_object(key + '_spinbutton')
+                    spinbutton.set_value(value)
