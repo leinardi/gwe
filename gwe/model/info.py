@@ -34,7 +34,8 @@ class Info:
                  memory_usage: Optional[int] = None,
                  gpu_usage: Optional[int] = None,
                  encoder_usage: Optional[int] = None,
-                 decoder_usage: Optional[int] = None
+                 decoder_usage: Optional[int] = None,
+                 persistence_mode = None,
                  ) -> None:
         self.name: Optional[str] = name
         self.vbios: Optional[str] = vbios
@@ -52,3 +53,4 @@ class Info:
         self.gpu_usage: Optional[int] = gpu_usage
         self.encoder_usage: Optional[int] = encoder_usage
         self.decoder_usage: Optional[int] = decoder_usage
+        self.persistence_mode: Optional[bool] = persistence_mode

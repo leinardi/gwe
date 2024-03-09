@@ -154,6 +154,7 @@ class NvidiaRepository:
                     gpu_usage=util.gpu if util is not None else None,
                     encoder_usage=self._nvml_get_val(py3nvml.nvmlDeviceGetEncoderUtilization, handle)[0],
                     decoder_usage=self._nvml_get_val(py3nvml.nvmlDeviceGetDecoderUtilization, handle)[0],
+                    persistence_mode=self._nvml_get_val(py3nvml.nvmlDeviceGetPersistenceMode, handle)
                 )
 
                 power = self._get_power_from_py3nvml(handle)
@@ -296,6 +297,13 @@ class NvidiaRepository:
         if not self.check_elevated_process():
             return False
         self.elevated_process.stdin.write(str(gpu_index) + " pl " + str(limit) + "\n")
+        result = int(self.elevated_process.stderr.readline())
+        return result == 0
+
+    def set_persistence_mode(self, gpu_index: int, mode: bool) -> bool:
+        if not self.check_elevated_process():
+            return False
+        self.elevated_process.stdin.write(str(gpu_index) + " pm " + str(int(mode)) + "\n")
         result = int(self.elevated_process.stderr.readline())
         return result == 0
 

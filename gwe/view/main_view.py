@@ -152,6 +152,7 @@ class MainView(MainViewInterface):
         self._fan_apply_button: Gtk.Button = self._builder.get_object('fan_apply_button')
         self._overclock_apply_button: Gtk.Button = self._builder.get_object('overclock_apply_button')
         self._power_limit_apply_button: Gtk.Button = self._builder.get_object('power_limit_apply_button')
+        self._persistence_mode_switch: Gtk.Switch = self._builder.get_object('persistence_mode_switch')
         self._fan_liststore: Gtk.ListStore = self._builder.get_object('fan_profile_liststore')
         self._overclock_liststore: Gtk.ListStore = self._builder.get_object('overclock_profile_liststore')
         self._fan_combobox: Gtk.ComboBox = self._builder.get_object('fan_profile_combobox')
@@ -204,6 +205,9 @@ class MainView(MainViewInterface):
 
     def get_power_limit(self) -> Tuple[int, int]:
         return 0, self._power_limit_adjustment.get_value()
+
+    def get_persistence_mode(self) -> Tuple[int, bool]:
+        return 0, self._persistence_mode_switch.get_active()
 
     def set_statusbar_text(self, text: str) -> None:
         self._statusbar.remove_all(self._context)
@@ -295,6 +299,7 @@ class MainView(MainViewInterface):
             if gpu_status.overclock.available:
                 self._set_entry_text(self._overclock_gpu_offset_entry, "{} MHz", gpu_status.overclock.gpu_offset)
                 self._set_entry_text(self._overclock_mem_offset_entry, "{} MHz", gpu_status.overclock.memory_offset)
+            self._persistence_mode_switch.set_active(gpu_status.info.persistence_mode)
             self._set_label_markup(self._temp_gpu_value,
                                    "<span size=\"xx-large\">{}</span> °C", gpu_status.temp.gpu)
             for index, value in enumerate(self._fan_duty):

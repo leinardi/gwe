@@ -38,6 +38,7 @@ from gwe.interactor.has_nvidia_driver_interactor import HasNvidiaDriverInteracto
 from gwe.interactor.set_fan_speed_interactor import SetFanSpeedInteractor
 from gwe.interactor.set_overclock_interactor import SetOverclockInteractor
 from gwe.interactor.set_power_limit_iInteractor import SetPowerLimitInteractor
+from gwe.interactor.set_persistence_mode_interactor import SetPersistenceModeInteractor
 from gwe.interactor.settings_interactor import SettingsInteractor
 from gwe.model import SpeedStep
 from gwe.model.cb_change import DbChange
@@ -113,6 +114,7 @@ class MainPresenter:
                  has_nvidia_driver_interactor: HasNvidiaDriverInteractor,
                  get_status_interactor: GetStatusInteractor,
                  set_power_limit_interactor: SetPowerLimitInteractor,
+                 set_persistence_mode_interactor: SetPersistenceModeInteractor,
                  set_overclock_interactor: SetOverclockInteractor,
                  set_fan_speed_interactor: SetFanSpeedInteractor,
                  settings_interactor: SettingsInteractor,
@@ -133,6 +135,7 @@ class MainPresenter:
         self._has_nvidia_driver_interactor = has_nvidia_driver_interactor
         self._get_status_interactor: GetStatusInteractor = get_status_interactor
         self._set_power_limit_interactor = set_power_limit_interactor
+        self._set_persistence_mode_interactor = set_persistence_mode_interactor
         self._set_overclock_interactor = set_overclock_interactor
         self._settings_interactor = settings_interactor
         self._check_new_version_interactor = check_new_version_interactor
@@ -220,6 +223,13 @@ class MainPresenter:
 
     def on_menu_about_clicked(self, *_: Any) -> None:
         self.main_view.show_about_dialog()
+
+    def on_persistence_mode_selected(self, widget: Any, *_: Any) -> None:
+        self._composite_disposable.add(self._set_persistence_mode_interactor.execute(*self.main_view.get_persistence_mode()).pipe(
+            operators.subscribe_on(self._scheduler),
+            operators.observe_on(GtkScheduler(GLib)),
+        ).subscribe(on_next=self._handle_set_persistence_mode_result,
+                    on_error=self._handle_set_persistence_mode_result))
 
     def on_fan_profile_selected(self, widget: Any, *_: Any) -> None:
         active = widget.get_active()
@@ -516,6 +526,9 @@ class MainPresenter:
 
     def _handle_set_power_limit_result(self, result: Any) -> None:
         self._handle_generic_set_result(result, "power limit")
+
+    def _handle_set_persistence_mode_result(self, result: Any) -> None:
+        self._handle_generic_set_result(result, "persistence mode")
 
     def _handle_set_overclock_result(self, result: Any) -> None:
         if self._handle_generic_set_result(result, "overclock"):
