@@ -51,8 +51,6 @@ SETTINGS_DEFAULTS: Dict[str, Any] = {
     'settings_hysteresis': 2,
     'settings_show_app_indicator': True,
     'settings_app_indicator_show_gpu_temp': True,
-    'gfx_settings_persistence_mode': -1,
-    'gfx_settings_power_limit': -1,
 }
 
 DESKTOP_ENTRY: Dict[str, str] = {

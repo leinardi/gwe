@@ -47,6 +47,7 @@ from gwe.model.current_overclock_profile import CurrentOverclockProfile
 from gwe.model.setting import Setting
 from gwe.model.status import Status
 from gwe.model.overclock_profile import OverclockProfile
+from gwe.model.gpu_attributes import GPUAttributes
 from gwe.model.fan_profile import FanProfile
 from gwe.model.fan_profile_type import FanProfileType
 from gwe.presenter.edit_fan_profile_presenter import EditFanProfilePresenter
@@ -323,16 +324,15 @@ class MainPresenter:
 
     def _restore_card_state(self) -> None:
         if self._settings_interactor.get_bool('settings_load_last_profile'):
-            persistence_mode = self._settings_interactor.get_int('gfx_settings_persistence_mode')
-            power_limit = self._settings_interactor.get_int('gfx_settings_power_limit')
-            if persistence_mode >= 0:
-                self._composite_disposable.add(self._set_persistence_mode_interactor.execute(0, bool(persistence_mode)).pipe(
+            attributes: GPUAttributes = GPUAttributes.get_or_create(gpu=0)[0]
+            if attributes.persistence_mode >= 0:
+                self._composite_disposable.add(self._set_persistence_mode_interactor.execute(0, bool(attributes.persistence_mode)).pipe(
                     operators.subscribe_on(self._scheduler),
                     operators.observe_on(GtkScheduler(GLib)),
                 ).subscribe(on_next=self._handle_set_persistence_mode_result,
                             on_error=self._handle_set_persistence_mode_result))
-            if power_limit >= 0:
-                self._composite_disposable.add(self._set_power_limit_interactor.execute(0, power_limit).pipe(
+            if attributes.power_limit >= 0:
+                self._composite_disposable.add(self._set_power_limit_interactor.execute(0, attributes.power_limit).pipe(
                     operators.subscribe_on(self._scheduler),
                     operators.observe_on(GtkScheduler(GLib)),
                 ).subscribe(on_next=self._handle_set_power_limit_result,
@@ -543,16 +543,18 @@ class MainPresenter:
                     on_error=lambda e: _LOG.exception(f"Check new version error: {str(e)}")))
 
     def _handle_set_power_limit_result(self, result: Any) -> None:
-        if isinstance(result, bool) and result:
+        if self._handle_generic_set_result(result, "power limit"):
             card, power_limit = self.main_view.get_power_limit()
-            self._settings_interactor.set_str('gfx_settings_power_limit', power_limit)
-        self._handle_generic_set_result(result, "power limit")
+            attributes: GPUAttributes = GPUAttributes.get_or_create(gpu=0)[0]
+            attributes.power_limit=power_limit
+            attributes.save()
 
     def _handle_set_persistence_mode_result(self, result: Any) -> None:
-        if isinstance(result, bool) and result:
+        if self._handle_generic_set_result(result, "persistence mode"):
             card, persistence_mode = self.main_view.get_persistence_mode()
-            self._settings_interactor.set_str('gfx_settings_persistence_mode', int(persistence_mode))
-        self._handle_generic_set_result(result, "persistence mode")
+            attributes: GPUAttributes = GPUAttributes.get_or_create(gpu=0)[0]
+            attributes.persistence_mode=persistence_mode
+            attributes.save()
 
     def _handle_set_overclock_result(self, result: Any) -> None:
         if self._handle_generic_set_result(result, "overclock"):

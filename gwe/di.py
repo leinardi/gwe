@@ -36,6 +36,7 @@ _LOG = logging.getLogger(__name__)
 SpeedStepChangedSubject = NewType('SpeedStepChangedSubject', Subject)
 FanProfileChangedSubject = NewType('FanProfileChangedSubject', Subject)
 OverclockProfileChangedSubject = NewType('OverclockProfileChangedSubject', Subject)
+GPUAttributesChangedSubject = NewType('GPUAttributesChangedSubject', Subject)
 SettingChangedSubject = NewType('SettingChangedSubject', Subject)
 MainBuilder = NewType('MainBuilder', Gtk.Builder)
 EditFanProfileBuilder = NewType('EditFanProfileBuilder', Gtk.Builder)
@@ -143,6 +144,11 @@ class ProviderModule(Module):
     @provider
     def provide_overclock_profile_changed_subject(self) -> OverclockProfileChangedSubject:
         return OverclockProfileChangedSubject(Subject())
+
+    @singleton
+    @provider
+    def provide_gpu_attributes_changed_subject(self) -> GPUAttributesChangedSubject:
+        return GPUAttributesChangedSubject(Subject())
 
     @singleton
     @provider

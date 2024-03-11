@@ -34,6 +34,7 @@ from gwe.model.current_fan_profile import CurrentFanProfile
 from gwe.model.current_overclock_profile import CurrentOverclockProfile
 from gwe.model.fan_profile import FanProfile
 from gwe.model.overclock_profile import OverclockProfile
+from gwe.model.gpu_attributes import GPUAttributes
 from gwe.model.setting import Setting
 from gwe.model.speed_step import SpeedStep
 from gwe.util.log import set_log_level
@@ -92,6 +93,7 @@ def _init_database() -> None:
         CurrentFanProfile,
         OverclockProfile,
         CurrentOverclockProfile,
+        GPUAttributes,
         Setting
     ])
 
