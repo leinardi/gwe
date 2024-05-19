@@ -16,14 +16,12 @@
 # along with gwe.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import gi
 from time import sleep
 from enum import Enum
 from gettext import gettext as _
 from typing import Any, Optional, List
-
-from gi.repository import Gtk, Gio, GLib
 from injector import inject, singleton
-
 from gwe.conf import APP_NAME, APP_ID, APP_VERSION, APP_ICON_NAME
 from gwe.di import MainBuilder
 from gwe.model import load_fan_db_default_data, load_overclock_db_default_data
@@ -36,6 +34,9 @@ from gwe.util.desktop_entry import set_autostart_entry, add_application_entry
 from gwe.util.log import LOG_DEBUG_FORMAT
 from gwe.util.view import build_glib_option
 from gwe.view.main_view import MainView
+
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, Gio, GLib
 
 _LOG = logging.getLogger(__name__)
 

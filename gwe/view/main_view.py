@@ -27,19 +27,23 @@ from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCan
 from gwe.interactor.settings_interactor import SettingsInteractor
 from gwe.model.status import Status
 from gwe.model.fan_profile import FanProfile
+_LOG = logging.getLogger(__name__)
 
 try:  # AppIndicator3 may not be installed
     import gi
     gi.require_version('AppIndicator3', '0.1')
     from gi.repository import AppIndicator3
+    # TODO logging debug only works once app.py Application do_activate is called. Therefore we use warning here
+    _LOG.warning("Sucessfully found AppIndicator3")
 except (ImportError, ValueError):
-    AppIndicator3 = None
-try:  # AyatanaAppIndicator3 may not be installed
-    import gi
-    gi.require_version("AyatanaAppIndicator3", "0.1")
-    from gi.repository import AyatanaAppIndicator3 as AppIndicator3
-except (ImportError, ValueError):
-    AppIndicator3 = None
+    try:  # AyatanaAppIndicator3 may not be installed
+        import gi
+        gi.require_version("AyatanaAppIndicator3", "0.1")
+        from gi.repository import AyatanaAppIndicator3 as AppIndicator3
+        _LOG.warning("Sucessfully found AyatanaAppIndicator3")
+    except (ImportError, ValueError):
+        AppIndicator3 = None
+
 from gwe.di import MainBuilder
 from gwe.view.edit_fan_profile_view import EditFanProfileView
 from gwe.util.view import hide_on_delete, init_plot_chart, get_fan_profile_data, is_dazzle_version_supported
@@ -49,7 +53,6 @@ from gwe.view.preferences_view import PreferencesView
 from gwe.conf import APP_PACKAGE_NAME, APP_ID, APP_NAME, APP_VERSION, APP_SOURCE_URL, APP_ICON_NAME_SYMBOLIC
 from gwe.presenter.main_presenter import MainPresenter, MainViewInterface
 
-_LOG = logging.getLogger(__name__)
 if AppIndicator3 is None:
     _LOG.warning("AppIndicator3 is not installed. The App indicator will not be shown.")
 
