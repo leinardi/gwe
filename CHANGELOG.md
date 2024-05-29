@@ -1,3 +1,9 @@
+Version 0.15.9
+==============
+Released: 2024-05-29
+
+ * Fixed version number (thank you @Ariche2!)
+
 Version 0.15.8
 ==============
 Released: 2024-05-27
