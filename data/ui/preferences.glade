@@ -584,7 +584,7 @@ along with GWE.  If not, see <http://www.gnu.org/licenses/>.
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="label" translatable="yes">(AppIndicator3 must be installed)</property>
+                                                <property name="label" translatable="yes">(AppIndicator3 or AyatanaAppIndicator3 must be installed)</property>
                                                 <property name="xalign">0</property>
                                                 <attributes>
                                                   <attribute name="scale" value="0.90000000000000002"/>
