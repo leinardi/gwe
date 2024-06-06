@@ -152,7 +152,7 @@ class MainPresenter:
         self._overclock_profile_selected: Optional[OverclockProfile] = None
         self._overclock_profile_applied: Optional[OverclockProfile] = None
         self._latest_status: Optional[Status] = None
-        self._previous_status: Optional[Status] = None
+        self._latest_update_temp: Optional[int] = None
         self._gpu_index: int = 0
 
     def on_start(self) -> None:
@@ -356,7 +356,6 @@ class MainPresenter:
     def _on_status_updated(self, status: Optional[Status]) -> None:
         if status is not None:
             was_latest_status_none = self._latest_status is None
-            self._previous_status = self._latest_status
             self._latest_status = status
             if was_latest_status_none:
                 self._refresh_overclock_profile_ui(True)
@@ -397,12 +396,13 @@ class MainPresenter:
         # current temperature is hysteresis degrees lower than the temperature that caused the current fan duty to be
         # applied.
         hysteresis = self._settings_interactor.get_int('settings_hysteresis')
-        if self._previous_status is not None and self._latest_status is not None and hysteresis != 0:
-            current_temp = self._latest_status.gpu_status_list[self._gpu_index].temp.gpu
-            previous_temp = self._previous_status.gpu_status_list[self._gpu_index].temp.gpu
-            temp_delta = current_temp - previous_temp
+        current_temp = self._latest_status.gpu_status_list[self._gpu_index].temp.gpu
+        if self._latest_update_temp is not None and hysteresis != 0:
+            temp_delta = current_temp - self._latest_update_temp
             if -hysteresis <= temp_delta <= 0:
                 return False
+            
+        self._latest_update_temp = current_temp
         return True
 
     @staticmethod

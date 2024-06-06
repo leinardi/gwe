@@ -25,3 +25,7 @@ gwe = join_paths(meson.build_root(), 'bin', 'gwe')
 run_target('run',
   command: [gwe]
 )
+
+run_target('debug',
+  command: [gwe, '--debug']
+)
