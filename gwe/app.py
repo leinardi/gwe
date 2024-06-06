@@ -31,6 +31,7 @@ from gwe.model.fan_profile import FanProfile
 from gwe.model.overclock_profile import OverclockProfile
 from gwe.presenter.main_presenter import MainPresenter
 from gwe.repository.nvidia_repository import NvidiaRepository
+from gwe.util.deployment import is_flatpak
 from gwe.util.desktop_entry import set_autostart_entry, add_application_entry
 from gwe.util.log import LOG_DEBUG_FORMAT
 from gwe.util.view import build_glib_option
@@ -145,10 +146,11 @@ class Application(Gtk.Application):
                               description="Specify the NV-CONTROL display (if you use Bumblebee, set this to \":8\" "
                                           "and start GWE with optirun)"),
         ]
-        options.append(build_glib_option(_Options.AUTOSTART_ON.value,
-                                            description="Enable automatic start of the App on login"))
-        options.append(build_glib_option(_Options.AUTOSTART_OFF.value,
-                                            description="Disable automatic start of the App on login"))
+        if not is_flatpak():
+            options.append(build_glib_option(_Options.AUTOSTART_ON.value,
+                                             description="Enable automatic start of the App on login"))
+            options.append(build_glib_option(_Options.AUTOSTART_OFF.value,
+                                             description="Disable automatic start of the App on login"))
         return options
 
 

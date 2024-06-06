@@ -54,6 +54,7 @@ from gwe.presenter.edit_fan_profile_presenter import EditFanProfilePresenter
 from gwe.presenter.edit_overclock_profile_presenter import EditOverclockProfilePresenter
 from gwe.presenter.historical_data_presenter import HistoricalDataPresenter
 from gwe.presenter.preferences_presenter import PreferencesPresenter
+from gwe.util.deployment import is_flatpak
 from gwe.util.view import show_notification, open_uri, get_default_application
 
 _LOG = logging.getLogger(__name__)
@@ -263,6 +264,9 @@ class MainPresenter:
             message = "It was not possible to find the NVML Shared Library.\n" \
                       "Please make sure that the NVIDIA proprietary display drivers are installed and they support " \
                       "your current GPU."
+            if is_flatpak():
+                message += f"\n\nIf you installed {APP_NAME} via Flathub, make sure to run \"flatpak update\" " \
+                           "to fetch the latest version of org.freedesktop.Platform.GL.nvidia."
             self.main_view.show_error_message_dialog("NVML Shared Library not found", message)
             get_default_application().quit()
         elif result == HasNvidiaDriverResult.NV_CONTROL_MISSING and 'WAYLAND_DISPLAY' not in os.environ:

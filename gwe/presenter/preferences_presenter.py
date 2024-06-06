@@ -23,6 +23,7 @@ from injector import singleton, inject
 
 from gwe.conf import SETTINGS_DEFAULTS
 from gwe.interactor.settings_interactor import SettingsInteractor
+from gwe.util.deployment import is_flatpak
 from gwe.util.desktop_entry import set_autostart_entry, AUTOSTART_FILE_PATH
 
 _LOG = logging.getLogger(__name__)
@@ -69,7 +70,7 @@ class PreferencesPresenter:
             value = args[0]
             key = re.sub('_switch$', '', widget.get_name())
             self._settings_interactor.set_bool(key, value)
-            if key == 'settings_launch_on_login':
+            if key == 'settings_launch_on_login' and not is_flatpak():
                 set_autostart_entry(value)
         elif isinstance(widget, Gtk.SpinButton):
             key = re.sub('_spinbutton$', '', widget.get_name())
