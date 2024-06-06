@@ -20,15 +20,12 @@ import subprocess
 import time
 import os
 from typing import List, Dict, Optional, Tuple, Callable, Any
+from ctypes import *
 
 from Xlib import display
 from Xlib.ext.nvcontrol import Gpu, Cooler
 from injector import singleton, inject
-# At the moment we supply our own patched bindings
-# until upstream fixes the following functions
-# nvmlDeviceGetGpcClkMinMaxVfOffset
-# nvmlDeviceGetMemClkMinMaxVfOffset
-import gwe.repository.pynvml as py3nvml
+import pynvml as py3nvml
 
 from gwe.model.clocks import Clocks
 from gwe.model.fan import Fan
@@ -43,6 +40,24 @@ from gwe.util.concurrency import synchronized_with_attr
 _LOG = logging.getLogger(__name__)
 nv_control_extension = False
 
+# Nvidia doesn't know how to make proper python bindings so we do it for them
+def DeviceGetClockOffsets(device, ctype, pstate):
+    c_clockOffsetsInfo = py3nvml.c_nvmlClockOffset_t()
+    c_clockOffsetsInfo.version = py3nvml.nvmlClockOffset_v1
+    c_clockOffsetsInfo.type = ctype
+    c_clockOffsetsInfo.pstate = pstate
+    fn = py3nvml._nvmlGetFunctionPointer("nvmlDeviceGetClockOffsets");
+    ret = fn(device, byref(c_clockOffsetsInfo))
+    py3nvml._nvmlCheckReturn(ret)
+    return c_clockOffsetsInfo
+
+def DeviceGetFanControlPolicy_v2(handle, fan):
+    c_fanControlPolicy = py3nvml._nvmlFanControlPolicy_t()
+    fn = _nvmlGetFunctionPointer("nvmlDeviceGetFanControlPolicy_v2")
+    ret = fn(handle, fan, byref(c_fanControlPolicy))
+    _nvmlCheckReturn(ret)
+    return c_fanControlPolicy.value
+
 
 @singleton
 class NvidiaRepository:
@@ -56,9 +71,12 @@ class NvidiaRepository:
 
     def check_elevated_process(self) -> None:
         if self.elevated_process == None:
-            path = os.path.split(__file__)[0]
+            if 'MESON_BUILD_ROOT' in os.environ:
+                path = os.environ['MESON_BUILD_ROOT'] + '/bin/gwe-agent'
+            else:
+                path = '/usr/bin/gwe-agent'
             self.elevated_process = subprocess.Popen(
-                ['pkexec', 'python', '-B', path + '/overclock-agent.py'],
+                ['pkexec', 'python', '-B', path],
                 bufsize=1,
                 stderr=subprocess.PIPE,
                 stdin=subprocess.PIPE,
@@ -116,7 +134,8 @@ class NvidiaRepository:
         except:
             _LOG.exception("Error while checking NVML Shared Library")
             return False
-        if int(driver.split(".", 1)[0]) >= 535:
+        vmajor = int(driver.split(".", 1)[0])
+        if 'WAYLAND_DISPLAY' not in os.environ and vmajor >= 535 or vmajor >= 555:
             return True
 
     @synchronized_with_attr("_lock")
@@ -213,21 +232,21 @@ class NvidiaRepository:
                         manual_control=manual_control is not None and manual_control,
                     )
                 else:
+                    gpuclockinfo = self._nvml_get_val(DeviceGetClockOffsets, handle, 0, 0)
+                    memclockinfo = self._nvml_get_val(DeviceGetClockOffsets, handle, 2, 0)
                     overclock = Overclock(
-                        # As of driver 550.54.14 and below the clock offset functions
-                        # do not throw the unsupported exception on unsupported cards
-                        available=bool(power.limit and self._nvml_get_val(py3nvml.nvmlDeviceGetGpcClkMinMaxVfOffset, handle)),
-                        gpu_range=self._nvml_get_val(py3nvml.nvmlDeviceGetGpcClkMinMaxVfOffset, handle),
-                        gpu_offset=self._nvml_get_val(py3nvml.nvmlDeviceGetGpcClkVfOffset, handle),
-                        memory_range=self._nvml_get_val(py3nvml.nvmlDeviceGetMemClkMinMaxVfOffset, handle),
-                        memory_offset=self._nvml_get_val(py3nvml.nvmlDeviceGetMemClkVfOffset, handle),
+                        available=True,
+                        gpu_range=(gpuclockinfo.minClockOffsetMHz ,gpuclockinfo.maxClockOffsetMHz),
+                        gpu_offset=gpuclockinfo.clockOffsetMHz,
+                        memory_range=(memclockinfo.minClockOffsetMHz ,memclockinfo.maxClockOffsetMHz),
+                        memory_offset=memclockinfo.clockOffsetMHz,
                         perf_level_max=0
                     )
                     fan_list: Optional[List[Tuple[int, int]]] = None
                     fan_indexes = self._nvml_get_val(py3nvml.nvmlDeviceGetNumFans, handle) or 0
                     manual_control = False
                     if fan_indexes > 0:
-                        manual_control = bool(self._nvml_get_val(py3nvml.nvmlDeviceGetFanControlPolicy_v2, handle, 0))
+                        manual_control = self._nvml_get_val(DeviceGetFanControlPolicy_v2, handle, 0) == py3nvml.NVML_FAN_POLICY_MANUAL
                         fan_list = []
                         for i in range(fan_indexes):
                             duty = self._nvml_get_val(py3nvml.nvmlDeviceGetFanSpeed_v2, handle, i)

@@ -1,7 +1,7 @@
 injector==0.21.0
 matplotlib==3.8.0
 peewee==3.16.3
-nvidia-ml-py==12.535.133
+nvidia-ml-py==12.555.43
 PyGObject==3.44.1
 python-xlib==0.33
 pyxdg==0.28

@@ -13,6 +13,14 @@ configure_file(
   install_dir: get_option('bindir')
 )
 
+configure_file(
+  input: 'gwe-agent.in',
+  output: 'gwe-agent',
+  configuration: conf,
+  install: true,
+  install_dir: get_option('bindir')
+)
+
 gwe = join_paths(meson.build_root(), 'bin', 'gwe')
 run_target('run',
   command: [gwe]

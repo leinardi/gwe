@@ -282,7 +282,7 @@ class MainPresenter:
             _LOG.error("Driver version too old!")
             self.main_view.show_error_message_dialog(
                 "Driver version too old",
-                "Please make sure to have at least the 535 series of drivers installed."
+                "Please make sure to have at least the 535 (555 for Wayland) series of drivers installed."
             )
             get_default_application().quit()
         self._restore_card_state()

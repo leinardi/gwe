@@ -5,13 +5,13 @@
 <policyconfig>
 
   <action id="com.leinardi.gwe">
-    <message>Authentication is required to run apply power limit / overclock</message>
+    <message>Authentication is required to apply power limit / overclock</message>
     <icon_name>gwe</icon_name>
     <defaults>
       <allow_any>yes</allow_any>
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/python</annotate>
-    <annotate key="org.freedesktop.policykit.exec.argv1">/usr/lib/python3.11/site-packages/gwe/repository/overclock-agent.py</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">/usr/bin/gwe-agent</annotate>
   </action>
 
 </policyconfig>
