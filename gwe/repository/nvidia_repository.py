@@ -351,7 +351,7 @@ class NvidiaRepository:
             handle = self._nvml_get_val(py3nvml.nvmlDeviceGetHandleByIndex, gpu_index)
             fan_indexes = self._nvml_get_val(py3nvml.nvmlDeviceGetNumFans, handle)
             if fan_indexes is not None and fan_indexes > 0:
-                for fan_index in fan_indexes:
+                for fan_index in range(fan_indexes):
                     try:
                         if manual_control:
                             py3nvml.nvmlDeviceSetFanSpeed_v2(handle, fan_index, speed)
