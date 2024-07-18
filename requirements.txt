@@ -1,5 +1,6 @@
 injector==0.21.0
 matplotlib==3.8.2
+packaging==24.1
 peewee==3.17.0
 py3nvml==0.2.7
 PyGObject==3.44.2
