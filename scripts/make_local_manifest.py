@@ -2,14 +2,14 @@
 import subprocess
 import sys
 import json
-from distutils.dir_util import copy_tree
 from pathlib import Path
+from shutil import copytree
 
 IN_FILE = sys.argv[1]
 GIT_REPO = Path().cwd() / '.git'
 OUTPUT = sys.argv[2]
 
-copy_tree(str(Path(IN_FILE).parent.absolute()), str(Path(OUTPUT).parent.absolute()))
+copytree(str(Path(IN_FILE).parent.absolute()), str(Path(OUTPUT).parent.absolute()), dirs_exist_ok=True)
 MANIFEST = json.load(open(IN_FILE, encoding='utf-8'))
 MODULE = MANIFEST['modules'][-1]['sources'][0]
 MODULE['url'] = str(GIT_REPO)
