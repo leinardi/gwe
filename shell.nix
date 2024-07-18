@@ -15,6 +15,7 @@ pkgs.mkShell {
     (python3.withPackages (pypkgs: with pypkgs; [
       injector
       matplotlib
+      packaging
       peewee
       pynvml
       pygobject3
@@ -65,4 +66,3 @@ pkgs.mkShell {
 #       --replace "py3nvml.py3nvml" "pynvml" \
 #       --replace "py3nvml" "pynvml"
 #   '';
-
