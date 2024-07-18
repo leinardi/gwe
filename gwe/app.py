@@ -75,12 +75,13 @@ class Application(Gtk.Application):
             self._window: Gtk.ApplicationWindow = self._builder.get_object("application_window")
             self._window.set_icon_name(APP_ICON_NAME)
             self._window.set_application(self)
-            self._window.show_all()
             self._view.show()
-        self._window.present()
+            self._window.show_all()
         if self._start_hidden:
             self._window.hide()
             self._start_hidden = False
+        else:
+            self._window.present()
 
     def do_startup(self) -> None:
         Gtk.Application.do_startup(self)
