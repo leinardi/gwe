@@ -44,6 +44,7 @@ pkgs.mkShell {
     unstable.linuxPackages.nvidia_x11
     #linuxPackages.nvidia_x11
     appstream-glib
+    appstream
     flatpak-builder
     libayatana-appindicator
   ];
