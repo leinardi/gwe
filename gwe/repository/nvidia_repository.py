@@ -235,7 +235,7 @@ class NvidiaRepository:
                '-pl',
                str(limit)]
         result = run_and_get_stdout(cmd)
-        _LOG.info(f"Exit code: {result[0]}. {result[1]}\n{result[1]}")
+        _LOG.info(f"Exit code: {result[0]}. {result[1]}\n{result[2]}")
         return result[0] == 0
 
     def set_all_gpus_fan_to_auto(self) -> None:
