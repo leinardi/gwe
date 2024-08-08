@@ -23,6 +23,7 @@ from typing import Optional, Any, List, Tuple
 import reactivex
 from gi.repository import GLib
 from injector import inject, singleton
+from packaging.version import Version
 from reactivex import Observable, operators
 from reactivex.disposable import CompositeDisposable
 from reactivex.scheduler import ThreadPoolScheduler
@@ -529,13 +530,13 @@ class MainPresenter:
         self.main_view.set_statusbar_text(f'{name.capitalize()} applied')
         return True
 
-    def _handle_new_version_response(self, version: Optional[str]) -> None:
+    def _handle_new_version_response(self, version: Optional[Version]) -> None:
         if version is not None:
             message = f"{APP_NAME} version <b>{version}</b> is available! " \
                       f"Click <a href=\"{self._get_changelog_uri(version)}\"><b>here</b></a> to see what's new."
             self.main_view.show_main_infobar_message(message, True)
             message = f"Version {version} is available! " \
-                      f"Click here to see what's new: {self._get_changelog_uri(version)}"
+                      f"Click here to see what's new: {self._get_changelog_uri(str(version))}"
             show_notification("GWE update available!", message, APP_ID)
 
     @staticmethod
