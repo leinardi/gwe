@@ -53,7 +53,7 @@ def DeviceGetClockOffsets(device, ctype, pstate):
 
 def DeviceGetFanControlPolicy_v2(handle, fan):
     c_fanControlPolicy = py3nvml._nvmlFanControlPolicy_t()
-    fn = _nvmlGetFunctionPointer("nvmlDeviceGetFanControlPolicy_v2")
+    fn = py3nvml._nvmlGetFunctionPointer("nvmlDeviceGetFanControlPolicy_v2")
     ret = fn(handle, fan, byref(c_fanControlPolicy))
     _nvmlCheckReturn(ret)
     return c_fanControlPolicy.value
