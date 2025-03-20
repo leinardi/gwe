@@ -70,6 +70,7 @@ class Application(Gtk.Application):
         self._start_hidden: bool = False
 
     def do_activate(self) -> None:
+        # TODO if not root show error that you can't use full app
         if not self._window:
             self._builder.connect_signals(self._presenter)
             self._window: Gtk.ApplicationWindow = self._builder.get_object("application_window")

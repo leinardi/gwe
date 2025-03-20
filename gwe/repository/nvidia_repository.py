@@ -53,9 +53,9 @@ def DeviceGetClockOffsets(device, ctype, pstate):
 
 def DeviceGetFanControlPolicy_v2(handle, fan):
     c_fanControlPolicy = py3nvml._nvmlFanControlPolicy_t()
-    fn = _nvmlGetFunctionPointer("nvmlDeviceGetFanControlPolicy_v2")
+    fn = py3nvml._nvmlGetFunctionPointer("nvmlDeviceGetFanControlPolicy_v2")
     ret = fn(handle, fan, byref(c_fanControlPolicy))
-    _nvmlCheckReturn(ret)
+    py3nvml._nvmlCheckReturn(ret)
     return c_fanControlPolicy.value
 
 
@@ -331,6 +331,7 @@ class NvidiaRepository:
             self.set_fan_speed(gpu_index, manual_control=False)
 
     def set_fan_speed(self, gpu_index: int, speed: int = 100, manual_control: bool = False) -> bool:
+        _LOG.error("test set_fan_speed")
         if nv_control_extension:
             xlib_display = display.Display(self._ctrl_display)
             gpu = Gpu(gpu_index)
@@ -347,6 +348,8 @@ class NvidiaRepository:
             xlib_display.close()
             return error
         else:
+            _LOG.error("test set_fan_speed 2")
+            # TODO sepereate root code with service
             py3nvml.nvmlInit()
             handle = self._nvml_get_val(py3nvml.nvmlDeviceGetHandleByIndex, gpu_index)
             fan_indexes = self._nvml_get_val(py3nvml.nvmlDeviceGetNumFans, handle)
@@ -354,13 +357,14 @@ class NvidiaRepository:
                 for fan_index in range(fan_indexes):
                     try:
                         if manual_control:
-                            py3nvml.nvmlDeviceSetFanSpeed_v2(handle, fan_index, speed)
+                            ret = py3nvml.nvmlDeviceSetFanSpeed_v2(handle, fan_index, speed)
+                            _LOG.error(f"test set_fan_speed 3: {ret}")
                         else:
-                            py3nvml.nvmlDeviceSetDefaultFanSpeed_v2(handle, fan_index)
+                            ret = py3nvml.nvmlDeviceSetDefaultFanSpeed_v2(handle, fan_index)
+                            _LOG.error(f"test set_fan_speed 4: {ret}")
                     except py3nvml.NVMLError as err:
-                        if err.value == NVML_ERROR_INVALID_ARGUMENT:
-                            _LOG.warning(f"Error setting speed for fan{fan_index} on gpu{gpu_index}")
-                            return True
+                        _LOG.warning(f"Error setting speed for fan{fan_index} on gpu{gpu_index}: {err}")
+                        return True
             py3nvml.nvmlShutdown()
 
     @staticmethod

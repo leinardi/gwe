@@ -39,6 +39,11 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 # gettext.install('trg', localedir)
 
 if __name__ == '__main__':
+    import os
+
+    pythonpath = sys.path
+    print("Python path: ", pythonpath)
+
     import gi
 
     gi.require_version('Gtk', '3.0')
