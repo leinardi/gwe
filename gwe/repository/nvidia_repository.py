@@ -25,7 +25,7 @@ from ctypes import *
 from Xlib import display
 from Xlib.ext.nvcontrol import Gpu, Cooler
 from injector import singleton, inject
-import pynvml as py3nvml
+import pynvml
 
 from gwe.model.clocks import Clocks
 from gwe.model.fan import Fan
@@ -42,20 +42,20 @@ nv_control_extension = False
 
 # Nvidia doesn't know how to make proper python bindings so we do it for them
 def DeviceGetClockOffsets(device, ctype, pstate):
-    c_clockOffsetsInfo = py3nvml.c_nvmlClockOffset_t()
-    c_clockOffsetsInfo.version = py3nvml.nvmlClockOffset_v1
+    c_clockOffsetsInfo = pynvml.c_nvmlClockOffset_t()
+    c_clockOffsetsInfo.version = pynvml.nvmlClockOffset_v1
     c_clockOffsetsInfo.type = ctype
     c_clockOffsetsInfo.pstate = pstate
-    fn = py3nvml._nvmlGetFunctionPointer("nvmlDeviceGetClockOffsets");
+    fn = pynvml._nvmlGetFunctionPointer("nvmlDeviceGetClockOffsets");
     ret = fn(device, byref(c_clockOffsetsInfo))
-    py3nvml._nvmlCheckReturn(ret)
+    pynvml._nvmlCheckReturn(ret)
     return c_clockOffsetsInfo
 
 def DeviceGetFanControlPolicy_v2(handle, fan):
-    c_fanControlPolicy = py3nvml._nvmlFanControlPolicy_t()
-    fn = py3nvml._nvmlGetFunctionPointer("nvmlDeviceGetFanControlPolicy_v2")
+    c_fanControlPolicy = pynvml._nvmlFanControlPolicy_t()
+    fn = pynvml._nvmlGetFunctionPointer("nvmlDeviceGetFanControlPolicy_v2")
     ret = fn(handle, fan, byref(c_fanControlPolicy))
-    py3nvml._nvmlCheckReturn(ret)
+    pynvml._nvmlCheckReturn(ret)
     return c_fanControlPolicy.value
 
 
@@ -118,8 +118,8 @@ class NvidiaRepository:
     @synchronized_with_attr("_lock")
     def has_nvml_shared_library(self) -> bool:
         try:
-            py3nvml.nvmlInit()
-            py3nvml.nvmlShutdown()
+            pynvml.nvmlInit()
+            pynvml.nvmlShutdown()
             return True
         except:
             _LOG.exception("Error while checking NVML Shared Library")
@@ -128,9 +128,9 @@ class NvidiaRepository:
     @synchronized_with_attr("_lock")
     def has_min_driver_version(self) -> bool:
         try:
-            py3nvml.nvmlInit()
-            driver = self._nvml_get_val(py3nvml.nvmlSystemGetDriverVersion)
-            py3nvml.nvmlShutdown()
+            pynvml.nvmlInit()
+            driver = self._nvml_get_val(pynvml.nvmlSystemGetDriverVersion)
+            pynvml.nvmlShutdown()
         except:
             _LOG.exception("Error while checking NVML Shared Library")
             return False
@@ -143,51 +143,51 @@ class NvidiaRepository:
         xlib_display = None
         try:
             time1 = time.time()
-            py3nvml.nvmlInit()
-            self._gpu_count = self._nvml_get_val(py3nvml.nvmlDeviceGetCount)
+            pynvml.nvmlInit()
+            self._gpu_count = self._nvml_get_val(pynvml.nvmlDeviceGetCount)
             gpu_status_list: List[GpuStatus] = []
             for gpu_index in range(self._gpu_count):
                 gpu = Gpu(gpu_index)
-                handle = self._nvml_get_val(py3nvml.nvmlDeviceGetHandleByIndex, gpu_index)
+                handle = self._nvml_get_val(pynvml.nvmlDeviceGetHandleByIndex, gpu_index)
                 memory_total = None
                 memory_used = None
-                mem_info = self._nvml_get_val(py3nvml.nvmlDeviceGetMemoryInfo, handle)
+                mem_info = self._nvml_get_val(pynvml.nvmlDeviceGetMemoryInfo, handle)
                 if mem_info is not None:
                     memory_used = mem_info.used // 1024 // 1024
                     memory_total = mem_info.total // 1024 // 1024
-                util = self._nvml_get_val(py3nvml.nvmlDeviceGetUtilizationRates, handle)
+                util = self._nvml_get_val(pynvml.nvmlDeviceGetUtilizationRates, handle)
                 info = Info(
-                    name=self._nvml_get_val(py3nvml.nvmlDeviceGetName, handle),
-                    vbios=self._nvml_get_val(py3nvml.nvmlDeviceGetVbiosVersion, handle),
-                    driver=self._nvml_get_val(py3nvml.nvmlSystemGetDriverVersion),
-                    pcie_current_generation=self._nvml_get_val(py3nvml.nvmlDeviceGetCurrPcieLinkGeneration, handle),
-                    pcie_max_generation=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxPcieLinkGeneration, handle),
-                    pcie_current_link=self._nvml_get_val(py3nvml.nvmlDeviceGetCurrPcieLinkWidth, handle),
-                    pcie_max_link=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxPcieLinkWidth, handle),
-                    cuda_cores=self._nvml_get_val(py3nvml.nvmlDeviceGetNumGpuCores, handle),
-                    uuid = self._nvml_get_val(py3nvml.nvmlDeviceGetUUID, handle),
+                    name=self._nvml_get_val(pynvml.nvmlDeviceGetName, handle),
+                    vbios=self._nvml_get_val(pynvml.nvmlDeviceGetVbiosVersion, handle),
+                    driver=self._nvml_get_val(pynvml.nvmlSystemGetDriverVersion),
+                    pcie_current_generation=self._nvml_get_val(pynvml.nvmlDeviceGetCurrPcieLinkGeneration, handle),
+                    pcie_max_generation=self._nvml_get_val(pynvml.nvmlDeviceGetMaxPcieLinkGeneration, handle),
+                    pcie_current_link=self._nvml_get_val(pynvml.nvmlDeviceGetCurrPcieLinkWidth, handle),
+                    pcie_max_link=self._nvml_get_val(pynvml.nvmlDeviceGetMaxPcieLinkWidth, handle),
+                    cuda_cores=self._nvml_get_val(pynvml.nvmlDeviceGetNumGpuCores, handle),
+                    uuid = self._nvml_get_val(pynvml.nvmlDeviceGetUUID, handle),
                     memory_total=memory_total,
                     memory_used=memory_used,
-                    memory_interface=self._nvml_get_val(py3nvml.nvmlDeviceGetMemoryBusWidth, handle),
+                    memory_interface=self._nvml_get_val(pynvml.nvmlDeviceGetMemoryBusWidth, handle),
                     memory_usage=util.memory if util is not None else None,
                     gpu_usage=util.gpu if util is not None else None,
-                    encoder_usage=self._nvml_get_val(py3nvml.nvmlDeviceGetEncoderUtilization, handle)[0],
-                    decoder_usage=self._nvml_get_val(py3nvml.nvmlDeviceGetDecoderUtilization, handle)[0],
-                    persistence_mode=self._nvml_get_val(py3nvml.nvmlDeviceGetPersistenceMode, handle)
+                    encoder_usage=self._nvml_get_val(pynvml.nvmlDeviceGetEncoderUtilization, handle)[0],
+                    decoder_usage=self._nvml_get_val(pynvml.nvmlDeviceGetDecoderUtilization, handle)[0],
+                    persistence_mode=self._nvml_get_val(pynvml.nvmlDeviceGetPersistenceMode, handle)
                 )
 
-                power = self._get_power_from_py3nvml(handle)
-                temp = self._get_temp_from_py3nvml(handle)
+                power = self._get_power_from_pynvml(handle)
+                temp = self._get_temp_from_pynvml(handle)
 
                 clocks = Clocks(
-                    graphic_current=self._nvml_get_val(py3nvml.nvmlDeviceGetClockInfo, handle, py3nvml.NVML_CLOCK_GRAPHICS),
-                    graphic_max=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxClockInfo, handle, py3nvml.NVML_CLOCK_GRAPHICS),
-                    sm_current=self._nvml_get_val(py3nvml.nvmlDeviceGetClockInfo, handle, py3nvml.NVML_CLOCK_SM),
-                    sm_max=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxClockInfo, handle, py3nvml.NVML_CLOCK_SM),
-                    memory_current=self._nvml_get_val(py3nvml.nvmlDeviceGetClockInfo, handle, py3nvml.NVML_CLOCK_MEM),
-                    memory_max=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxClockInfo, handle, py3nvml.NVML_CLOCK_MEM),
-                    video_current=self._nvml_get_val(py3nvml.nvmlDeviceGetClockInfo, handle, py3nvml.NVML_CLOCK_VIDEO),
-                    video_max=self._nvml_get_val(py3nvml.nvmlDeviceGetMaxClockInfo, handle, py3nvml.NVML_CLOCK_VIDEO)
+                    graphic_current=self._nvml_get_val(pynvml.nvmlDeviceGetClockInfo, handle, pynvml.NVML_CLOCK_GRAPHICS),
+                    graphic_max=self._nvml_get_val(pynvml.nvmlDeviceGetMaxClockInfo, handle, pynvml.NVML_CLOCK_GRAPHICS),
+                    sm_current=self._nvml_get_val(pynvml.nvmlDeviceGetClockInfo, handle, pynvml.NVML_CLOCK_SM),
+                    sm_max=self._nvml_get_val(pynvml.nvmlDeviceGetMaxClockInfo, handle, pynvml.NVML_CLOCK_SM),
+                    memory_current=self._nvml_get_val(pynvml.nvmlDeviceGetClockInfo, handle, pynvml.NVML_CLOCK_MEM),
+                    memory_max=self._nvml_get_val(pynvml.nvmlDeviceGetMaxClockInfo, handle, pynvml.NVML_CLOCK_MEM),
+                    video_current=self._nvml_get_val(pynvml.nvmlDeviceGetClockInfo, handle, pynvml.NVML_CLOCK_VIDEO),
+                    video_max=self._nvml_get_val(pynvml.nvmlDeviceGetMaxClockInfo, handle, pynvml.NVML_CLOCK_VIDEO)
                 )
 
                 if nv_control_extension:
@@ -243,13 +243,13 @@ class NvidiaRepository:
                         perf_level_max=0
                     )
                     fan_list: Optional[List[Tuple[int, int]]] = None
-                    fan_indexes = self._nvml_get_val(py3nvml.nvmlDeviceGetNumFans, handle) or 0
+                    fan_indexes = self._nvml_get_val(pynvml.nvmlDeviceGetNumFans, handle) or 0
                     manual_control = False
                     if fan_indexes > 0:
-                        manual_control = self._nvml_get_val(DeviceGetFanControlPolicy_v2, handle, 0) == py3nvml.NVML_FAN_POLICY_MANUAL
+                        manual_control = self._nvml_get_val(DeviceGetFanControlPolicy_v2, handle, 0) == pynvml.NVML_FAN_POLICY_MANUAL
                         fan_list = []
                         for i in range(fan_indexes):
-                            duty = self._nvml_get_val(py3nvml.nvmlDeviceGetFanSpeed_v2, handle, i)
+                            duty = self._nvml_get_val(pynvml.nvmlDeviceGetFanSpeed_v2, handle, i)
                             rpm = 0 # No RPM in nvml for now
                             if duty is not None:
                                 fan_list.append((duty, rpm))
@@ -289,7 +289,7 @@ class NvidiaRepository:
             try:
                 if xlib_display:
                     xlib_display.close()
-                py3nvml.nvmlShutdown()
+                pynvml.nvmlShutdown()
             except:
                 _LOG.exception("Error while getting status")
         return None
@@ -350,48 +350,48 @@ class NvidiaRepository:
         else:
             _LOG.error("test set_fan_speed 2")
             # TODO sepereate root code with service
-            py3nvml.nvmlInit()
-            handle = self._nvml_get_val(py3nvml.nvmlDeviceGetHandleByIndex, gpu_index)
-            fan_indexes = self._nvml_get_val(py3nvml.nvmlDeviceGetNumFans, handle)
+            pynvml.nvmlInit()
+            handle = self._nvml_get_val(pynvml.nvmlDeviceGetHandleByIndex, gpu_index)
+            fan_indexes = self._nvml_get_val(pynvml.nvmlDeviceGetNumFans, handle)
             if fan_indexes is not None and fan_indexes > 0:
                 for fan_index in range(fan_indexes):
                     try:
                         if manual_control:
-                            ret = py3nvml.nvmlDeviceSetFanSpeed_v2(handle, fan_index, speed)
+                            ret = pynvml.nvmlDeviceSetFanSpeed_v2(handle, fan_index, speed)
                             _LOG.error(f"test set_fan_speed 3: {ret}")
                         else:
-                            ret = py3nvml.nvmlDeviceSetDefaultFanSpeed_v2(handle, fan_index)
+                            ret = pynvml.nvmlDeviceSetDefaultFanSpeed_v2(handle, fan_index)
                             _LOG.error(f"test set_fan_speed 4: {ret}")
-                    except py3nvml.NVMLError as err:
+                    except pynvml.NVMLError as err:
                         _LOG.warning(f"Error setting speed for fan{fan_index} on gpu{gpu_index}: {err}")
                         return True
-            py3nvml.nvmlShutdown()
+            pynvml.nvmlShutdown()
 
     @staticmethod
     def _nvml_get_val(a_function: Callable, *args: Any) -> Any:
         try:
             return a_function(*args)
-        except py3nvml.NVMLError as err:
-            if err.value == py3nvml.NVML_ERROR_NOT_SUPPORTED:
+        except pynvml.NVMLError as err:
+            if err.value == pynvml.NVML_ERROR_NOT_SUPPORTED:
                 _LOG.debug(f"Function {a_function.__name__} not supported")
                 return None
-            if err.value == py3nvml.NVML_ERROR_UNKNOWN:
+            if err.value == pynvml.NVML_ERROR_UNKNOWN:
                 _LOG.warning(f"Unknown error while executing function {a_function.__name__}")
                 return None
             _LOG.error(f"Error value = {err.value}")
             raise err
 
-    def _get_power_from_py3nvml(self, handle: Any) -> Power:
-        power_con = self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementLimitConstraints, handle)
+    def _get_power_from_pynvml(self, handle: Any) -> Power:
+        power_con = self._nvml_get_val(pynvml.nvmlDeviceGetPowerManagementLimitConstraints, handle)
         return Power(
-            draw=self._convert_milliwatt_to_watt(self._nvml_get_val(py3nvml.nvmlDeviceGetPowerUsage, handle)),
+            draw=self._convert_milliwatt_to_watt(self._nvml_get_val(pynvml.nvmlDeviceGetPowerUsage, handle)),
             limit=self._convert_milliwatt_to_watt(
-                self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementLimit, handle)),
+                self._nvml_get_val(pynvml.nvmlDeviceGetPowerManagementLimit, handle)),
             default=self._convert_milliwatt_to_watt(
-                self._nvml_get_val(py3nvml.nvmlDeviceGetPowerManagementDefaultLimit, handle)),
+                self._nvml_get_val(pynvml.nvmlDeviceGetPowerManagementDefaultLimit, handle)),
             minimum=None if power_con is None else self._convert_milliwatt_to_watt(power_con[0]),
             enforced=self._convert_milliwatt_to_watt(
-                self._nvml_get_val(py3nvml.nvmlDeviceGetEnforcedPowerLimit, handle)),
+                self._nvml_get_val(pynvml.nvmlDeviceGetEnforcedPowerLimit, handle)),
             maximum=None if power_con is None else self._convert_milliwatt_to_watt(power_con[1])
         )
 
@@ -399,13 +399,13 @@ class NvidiaRepository:
     def _convert_milliwatt_to_watt(milliwatt: Optional[int]) -> Optional[float]:
         return None if milliwatt is None else milliwatt / 1000
 
-    def _get_temp_from_py3nvml(self, handle: Any) -> Temp:
+    def _get_temp_from_pynvml(self, handle: Any) -> Temp:
         return Temp(
-            gpu=self._nvml_get_val(py3nvml.nvmlDeviceGetTemperature, handle, py3nvml.NVML_TEMPERATURE_GPU),
+            gpu=self._nvml_get_val(pynvml.nvmlDeviceGetTemperature, handle, pynvml.NVML_TEMPERATURE_GPU),
             maximum=self._nvml_get_val(
-                py3nvml.nvmlDeviceGetTemperatureThreshold, handle, 3),  # NVML_TEMPERATURE_THRESHOLD_GPU_MAX is missing
+                pynvml.nvmlDeviceGetTemperatureThreshold, handle, 3),  # NVML_TEMPERATURE_THRESHOLD_GPU_MAX is missing
             slowdown=self._nvml_get_val(
-                py3nvml.nvmlDeviceGetTemperatureThreshold, handle, py3nvml.NVML_TEMPERATURE_THRESHOLD_SLOWDOWN),
+                pynvml.nvmlDeviceGetTemperatureThreshold, handle, pynvml.NVML_TEMPERATURE_THRESHOLD_SLOWDOWN),
             shutdown=self._nvml_get_val(
-                py3nvml.nvmlDeviceGetTemperatureThreshold, handle, py3nvml.NVML_TEMPERATURE_THRESHOLD_SHUTDOWN),
+                pynvml.nvmlDeviceGetTemperatureThreshold, handle, pynvml.NVML_TEMPERATURE_THRESHOLD_SHUTDOWN),
         )
