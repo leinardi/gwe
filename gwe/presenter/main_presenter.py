@@ -186,12 +186,14 @@ class MainPresenter:
             _LOG.error('Profile is None!')
 
     def on_fan_apply_button_clicked(self, *_: Any) -> None:
+        _LOG.error(f"TEST: apply: {_}")
         if self._fan_profile_selected:
             self._fan_profile_applied = self._fan_profile_selected
             if self._fan_profile_selected.type == FanProfileType.AUTO.value:
                 self._set_fan_speed(self._gpu_index, manual_control=False)
             self._refresh_fan_profile_ui(profile_id=self._fan_profile_selected.id)
             self._update_current_fan_profile(self._fan_profile_selected)
+            self._update_fan(True)
 
     def on_overclock_edit_button_clicked(self, *_: Any) -> None:
         profile = self._overclock_profile_selected
@@ -365,7 +367,9 @@ class MainPresenter:
         else:
             self._set_fan_speed(self._gpu_index, manual_control=False)
 
-    def _update_fan(self) -> None:
+    def _update_fan(self, apply_clicked = False) -> None:
+        if not self._latest_status:
+            return
         fan = self._latest_status.gpu_status_list[self._gpu_index].fan
         if fan.control_allowed:
             if self._fan_profile_selected is None and not fan.manual_control:
@@ -382,7 +386,7 @@ class MainPresenter:
                         if self._fan_profile_applied.vbios_silent_mode and \
                                 gpu_status.temp.gpu < self._fan_profile_applied.steps[0].temperature:
                             self._set_fan_speed(gpu_status.index, manual_control=False)
-                        elif self._should_update_fan_duty(speed):
+                        elif self._should_update_fan_duty(speed) or apply_clicked:
                             self._set_fan_speed(gpu_status.index, round(speed))
                     except ValueError:
                         _LOG.exception(f'Unable to parse temperature {gpu_status.temp.gpu}')

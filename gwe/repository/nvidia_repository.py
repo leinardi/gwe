@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with gst.  If not, see <http://www.gnu.org/licenses/>.
 import logging
-import threading
 import subprocess
+import threading
 import time
 import os
 from typing import List, Dict, Optional, Tuple, Callable, Any
@@ -35,6 +35,7 @@ from gwe.model.overclock import Overclock
 from gwe.model.power import Power
 from gwe.model.status import Status
 from gwe.model.temp import Temp
+from gwe.repository.nvidia_client import NvidiaRootClient
 from gwe.util.concurrency import synchronized_with_attr
 
 _LOG = logging.getLogger(__name__)
@@ -304,6 +305,7 @@ class NvidiaRepository:
                         xlib_display.nvcontrol_set_mem_transfer_rate_offset_all_levels(gpu, memory_offset * 2))
             xlib_display.close()
         else:
+            # TODO maybe remove this setup
             if not self.check_elevated_process():
                 return False
             self.elevated_process.stdin.write(str(gpu_index) + " gpu " + str(gpu_offset) + "\n")
@@ -350,22 +352,8 @@ class NvidiaRepository:
         else:
             _LOG.error("test set_fan_speed 2")
             # TODO sepereate root code with service
-            pynvml.nvmlInit()
-            handle = self._nvml_get_val(pynvml.nvmlDeviceGetHandleByIndex, gpu_index)
-            fan_indexes = self._nvml_get_val(pynvml.nvmlDeviceGetNumFans, handle)
-            if fan_indexes is not None and fan_indexes > 0:
-                for fan_index in range(fan_indexes):
-                    try:
-                        if manual_control:
-                            ret = pynvml.nvmlDeviceSetFanSpeed_v2(handle, fan_index, speed)
-                            _LOG.error(f"test set_fan_speed 3: {ret}")
-                        else:
-                            ret = pynvml.nvmlDeviceSetDefaultFanSpeed_v2(handle, fan_index)
-                            _LOG.error(f"test set_fan_speed 4: {ret}")
-                    except pynvml.NVMLError as err:
-                        _LOG.warning(f"Error setting speed for fan{fan_index} on gpu{gpu_index}: {err}")
-                        return True
-            pynvml.nvmlShutdown()
+            return NvidiaRootClient.set_fan_speed(gpu_index, speed, manual_control)
+
 
     @staticmethod
     def _nvml_get_val(a_function: Callable, *args: Any) -> Any:
