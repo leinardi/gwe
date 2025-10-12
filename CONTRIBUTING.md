@@ -1,20 +1,33 @@
 # Contributing
-Considering that this project is actively maintained, contributions of all types are welcome.
 
+![archived](https://img.shields.io/badge/status-archived-lightgrey)
 
-## Opening issues
-Open a new issue when:
-- you notice an unwanted behavior
-- you want a new feature implemented
-- you have just some doubts
+> **⚠️ Project archived / unmaintained**
+>
+> GreenWithEnvy (GWE) is no longer actively maintained. I switched from NVIDIA to AMD hardware and can't run or test GWE
+> anymore, and I don't have the time required to review, test, or merge contributions in good faith.
 
-To open a new issue, please use the provided issue template and fill it out as much as possible.
-If you are interested to an existing issue, feel free to comment the issue or subscribe to it.
+## Current policy
 
+- **Issues:** New issues are not being triaged or answered.
+- **Pull requests:** New pull requests are not being reviewed or merged.
+- **CI/automation:** Publishing pipelines may be disabled and out of date.
 
-## Submitting pull requests
-If you want to fix a bug or implement a new feature, feel free to submit a new pull request.
-To submit a pull request, you have to fork this repository and fill the PR template.
-When you want to submit a pull request, remember to:
-- follow this project's code style
-- check for PyLint and Mypy errors
+This repository remains available **for historical reference**.
+
+## Want to continue development?
+
+If you'd like to keep GWE alive, please:
+
+1. **Fork** this repository and maintain your own version.
+2. **Publish under a different identifier** that doesn't reference me personally:
+    - **Git hosting:** use your own namespace or an organization (not under `leinardi`).
+    - **Flatpak / Flathub:** choose a new App ID (e.g. `io.github.<yourname>.GWE` or an org-owned ID), **not**
+      `com.leinardi.gwe`.
+
+You're welcome to reuse code under the project's license (GPL-3.0-or-later). Please update names, icons, and metadata as
+appropriate for your fork.
+
+## Thank you
+
+Huge thanks to everyone who contributed, tested, packaged, or supported GWE over the years. 💚

@@ -1,11 +1,31 @@
 # GreenWithEnvy (GWE)
-GWE is a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video card
+
+![archived](https://img.shields.io/badge/status-archived-lightgrey)
+
+> **⚠️ Archived / Unmaintained**
+>
+> GreenWithEnvy (GWE) is **no longer actively maintained**.
+>
+> - I can't run or test GWE anymore after switching my GPU from **NVIDIA to AMD**.
+> - Due to limited free time, I'm unable to review, test, or merge contributions in good faith.
+>
+> If you'd like to continue development:
+>
+> 1. **Fork this repository** and publish your own maintained version.
+> 2. **Use a new identifier** that doesn't reference me personally:
+>    - **Git hosting**: publish under **your** namespace or a dedicated organization (not under `leinardi`).
+>    - **Flatpak / Flathub**: use a new **App ID** (e.g., `io.github.<yourname>.GWE` or an org-owned ID), **not** `com.leinardi.gwe`.
+>
+> I'll keep this repository archived/read-only for historical reference. Thank you to everyone who used, tested, or contributed to GWE over the years. 💚
+
+---
+
+## About (historical)
+
+GWE is/was a GTK system utility designed to provide information, control the fans and overclock your NVIDIA video card
 and graphics processor.
 
-# 🔴 🔴 Looking for new maintainer(s)! 🔴 🔴
-Most probably my next GPU will be an AMD and, if that happens, I won't be able to provide adequate support for this project anymore. For this reason I'm looking for new maintainer(s).
-If you are interested and have adequate knowledge of Python, please get in touch replying to this issue:
-https://gitlab.com/leinardi/gwe/-/issues/195
+> **Note:** The information below is preserved for reference. It may be outdated and is **not supported**.
 
 ## 💡 Features
 <img src="/data/icons/hicolor/48x48@2x/apps/com.leinardi.gwe.png" width="96" align="right" hspace="0" />
